@@ -22,8 +22,7 @@ import (
 	"log"
 )
 
-
-func handleSetConfig(request *ofp.SetConfig){
-	jsonMessage,_ := json.Marshal(request)
-	log.Printf("handleSetConfig %s\n",jsonMessage)
+func handleSetConfig(request *ofp.SetConfig) {
+	jsonMessage, _ := json.Marshal(request)
+	log.Printf("handleSetConfig %s\n", jsonMessage)
 }

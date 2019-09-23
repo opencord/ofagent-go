@@ -19,25 +19,25 @@ package openflow
 import (
 	"context"
 	"encoding/json"
-	ofp "github.com/skydive-project/goloxi/of13"
-	pb "github.com/opencord/voltha-protos/go/voltha"
 	"github.com/opencord/voltha-protos/go/common"
+	pb "github.com/opencord/voltha-protos/go/voltha"
+	ofp "github.com/skydive-project/goloxi/of13"
 	"log"
 )
 
-func handleFeatureRequest(request *ofp.FeaturesRequest,deviceId string,client *Client) error{
-	message,_:=json.Marshal(request)
-	log.Printf("handleFeatureRequest called with %s\n ",message)
+func handleFeatureRequest(request *ofp.FeaturesRequest, deviceId string, client *Client) error {
+	message, _ := json.Marshal(request)
+	log.Printf("handleFeatureRequest called with %s\n ", message)
 	var grpcClient = *getGrpcClient()
-	var id = common.ID{Id:deviceId}
-	logicalDevice,err:=grpcClient.GetLogicalDevice(context.Background(),&id)
-	reply:=createFeaturesRequestReply(request.GetXid(),logicalDevice)
-	err= client.SendMessage(reply)
+	var id = common.ID{Id: deviceId}
+	logicalDevice, err := grpcClient.GetLogicalDevice(context.Background(), &id)
+	reply := createFeaturesRequestReply(request.GetXid(), logicalDevice)
+	err = client.SendMessage(reply)
 	return err
 }
-func createFeaturesRequestReply(xid uint32,device *pb.LogicalDevice) *ofp.FeaturesReply{
+func createFeaturesRequestReply(xid uint32, device *pb.LogicalDevice) *ofp.FeaturesReply {
 
-	featureReply:= ofp.NewFeaturesReply()
+	featureReply := ofp.NewFeaturesReply()
 	featureReply.SetXid(xid)
 	features := device.GetSwitchFeatures()
 	featureReply.SetDatapathId(device.GetDatapathId())

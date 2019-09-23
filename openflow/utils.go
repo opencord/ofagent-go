@@ -24,16 +24,17 @@ import (
 
 var mu sync.Mutex
 var xid uint32 = 1
-func GetXid()(uint32){
+
+func GetXid() uint32 {
 	mu.Lock()
 	defer mu.Unlock()
 	xid++
 	return xid
 }
-func PadString(value string,padSize int)string{
+func PadString(value string, padSize int) string {
 	size := len(value)
-	nullsNeeded := padSize-size
-	null := fmt.Sprintf("%c",'\000')
-	padded:=strings.Repeat(null,nullsNeeded)
-	return fmt.Sprintf("%s%s",value,padded)
+	nullsNeeded := padSize - size
+	null := fmt.Sprintf("%c", '\000')
+	padded := strings.Repeat(null, nullsNeeded)
+	return fmt.Sprintf("%s%s", value, padded)
 }

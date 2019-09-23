@@ -18,14 +18,14 @@ package openflow
 
 import (
 	"encoding/json"
-	ofp "github.com/skydive-project/goloxi/of13"
 	pb "github.com/opencord/voltha-protos/go/voltha"
+	ofp "github.com/skydive-project/goloxi/of13"
 	"log"
-
 )
-func handlePacketOut(packetOut *ofp.PacketOut,deviceId string){
-	jsonMessage,_ := json.Marshal(packetOut)
-	log.Printf("handlePacketOut called with %s",jsonMessage)
+
+func handlePacketOut(packetOut *ofp.PacketOut, deviceId string) {
+	jsonMessage, _ := json.Marshal(packetOut)
+	log.Printf("handlePacketOut called with %s", jsonMessage)
 	pktOut := pb.OfpPacketOut{}
 	pktOut.BufferId = packetOut.GetBufferId()
 	pktOut.InPort = uint32(packetOut.GetInPort())

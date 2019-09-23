@@ -22,9 +22,9 @@ import (
 	"log"
 )
 
-func handleRoleRequest(request *ofp.RoleRequest,client *Client){
-	jsonMessage,_:=json.Marshal(request)
-	log.Printf("handleRoleRequest called with %s",jsonMessage)
+func handleRoleRequest(request *ofp.RoleRequest, client *Client) {
+	jsonMessage, _ := json.Marshal(request)
+	log.Printf("handleRoleRequest called with %s", jsonMessage)
 
 	reply := ofp.NewRoleReply()
 	reply.SetXid(request.GetXid())

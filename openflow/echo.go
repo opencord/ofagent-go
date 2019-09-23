@@ -22,9 +22,9 @@ import (
 	"log"
 )
 
-func handleEchoRequest(request *ofp.EchoRequest,client *Client){
-	jsonMessage,_ := json.Marshal(request)
-	log.Printf("handleEchoRequest called with %s",jsonMessage)
+func handleEchoRequest(request *ofp.EchoRequest, client *Client) {
+	jsonMessage, _ := json.Marshal(request)
+	log.Printf("handleEchoRequest called with %s", jsonMessage)
 	reply := ofp.NewEchoReply()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())

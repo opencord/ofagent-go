@@ -39,8 +39,9 @@ type Client struct {
 	DeviceId        string
 	KeepRunning     bool
 }
-func NewClient(ofServerAddress string,port uint16,deviceId string,keepRunning bool)*Client{
-	client:= Client{OfServerAddress:ofServerAddress,Port:port,DeviceId:deviceId,KeepRunning:keepRunning}
+
+func NewClient(ofServerAddress string, port uint16, deviceId string, keepRunning bool) *Client {
+	client := Client{OfServerAddress: ofServerAddress, Port: port, DeviceId: deviceId, KeepRunning: keepRunning}
 	go client.Start()
 	return &client
 }
@@ -65,7 +66,7 @@ func (client *Client) Start() {
 			defer conn.Close()
 			hello := ofp.NewHello()
 			hello.Xid = uint32(GetXid())
-			var	elements  []ofp.IHelloElem
+			var elements []ofp.IHelloElem
 
 			elem := ofp.NewHelloElemVersionbitmap()
 			elem.SetType(ofp.OFPHETVersionbitmap)
@@ -75,7 +76,7 @@ func (client *Client) Start() {
 
 			elem.SetBitmaps(bitmaps)
 
-			elements = append(elements,elem)
+			elements = append(elements, elem)
 
 			hello.SetElements(elements)
 			e = client.SendMessage(hello)
@@ -86,7 +87,7 @@ func (client *Client) Start() {
 				buf := make([]byte, 1500)
 				read, e := conn.Read(buf)
 				if e != nil {
-					log.Printf("Connection has died %v",e)
+					log.Printf("Connection has died %v", e)
 					break
 				}
 				decoder := goloxi.NewDecoder(buf)
@@ -146,19 +147,19 @@ func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
 		go handleErrMsg(errMsg)
 	case 2:
 		echoReq := header.(*ofp.EchoRequest)
-		go handleEchoRequest(echoReq,client)
+		go handleEchoRequest(echoReq, client)
 	case 3:
 		//EchoReply
 	case 4:
 		//Expirementer
 	case 5:
 		featReq := header.(*ofp.FeaturesRequest)
-		go handleFeatureRequest(featReq,client.DeviceId,client)
+		go handleFeatureRequest(featReq, client.DeviceId, client)
 	case 6:
 		//feature reply
 	case 7:
 		configReq := header.(*ofp.GetConfigRequest)
-		go handleGetConfigRequest(configReq,client)
+		go handleGetConfigRequest(configReq, client)
 	case 8:
 		//GetConfigReply
 	case 9:
@@ -173,29 +174,29 @@ func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
 		//portStatus
 	case 13:
 		packetOut := header.(*ofp.PacketOut)
-		go handlePacketOut(packetOut,client.DeviceId)
+		go handlePacketOut(packetOut, client.DeviceId)
 	case 14:
 		flowModType := uint8(buf[25])
-		switch flowModType{
+		switch flowModType {
 		case 0:
 			flowAdd := header.(*ofp.FlowAdd)
-			go handleFlowAdd(flowAdd,client.DeviceId)
+			go handleFlowAdd(flowAdd, client.DeviceId)
 			//return DecodeFlowAdd(_flowmod, decoder)
 		case 1:
 			flowMod := header.(*ofp.FlowMod)
-			go handleFlowMod(flowMod,client.DeviceId)
+			go handleFlowMod(flowMod, client.DeviceId)
 			//return DecodeFlowModify(_flowmod, decoder)
 		case 2:
 			flowModStrict := header.(*ofp.FlowModifyStrict)
-			go handleFlowModStrict(flowModStrict,client.DeviceId)
+			go handleFlowModStrict(flowModStrict, client.DeviceId)
 			//return DecodeFlowModifyStrict(_flowmod, decoder)
 		case 3:
 			flowDelete := header.(*ofp.FlowDelete)
-			go handleFlowDelete(flowDelete,client.DeviceId)
+			go handleFlowDelete(flowDelete, client.DeviceId)
 			//return DecodeFlowDelete(_flowmod, decoder)
 		case 4:
 			flowDeleteStrict := header.(*ofp.FlowDeleteStrict)
-			go handleFlowDeleteStrict(flowDeleteStrict,client.DeviceId)
+			go handleFlowDeleteStrict(flowDeleteStrict, client.DeviceId)
 			//return DecodeFlowDeleteStrict(_flowmod, decoder)
 		default:
 			//return nil, fmt.Errorf("Invalid type '%d' for 'FlowMod'", _flowmod.Command)
@@ -204,13 +205,13 @@ func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
 	case 18:
 		var statType uint16 = uint16(buf[8]<<8 + buf[9])
 		log.Println("statsType", statType)
-		go handleStatsRequest(header, statType,client.DeviceId,client)
+		go handleStatsRequest(header, statType, client.DeviceId, client)
 	case 20:
 		barRequest := header.(*ofp.BarrierRequest)
-		go handleBarrierRequest(barRequest,client)
+		go handleBarrierRequest(barRequest, client)
 	case 24:
 		roleReq := header.(*ofp.RoleRequest)
-		go handleRoleRequest(roleReq,client)
+		go handleRoleRequest(roleReq, client)
 
 	}
 }
@@ -220,20 +221,19 @@ type OpenFlowMessage interface {
 	Serialize(encoder *goloxi.Encoder) error
 }
 
-func (client *Client)SendMessage(message OpenFlowMessage) error {
+func (client *Client) SendMessage(message OpenFlowMessage) error {
 	jsonMessage, _ := json.Marshal(message)
 	log.Printf("send message called %s\n", jsonMessage)
 	enc := goloxi.NewEncoder()
 	message.Serialize(enc)
-	jMessage,_ := json.Marshal(message)
-	log.Printf("message after serialize %s",jMessage)
+	jMessage, _ := json.Marshal(message)
+	log.Printf("message after serialize %s", jMessage)
 
-
-	for{
-		if conn==nil{
+	for {
+		if conn == nil {
 			log.Println("CONN IS NIL")
-			time.Sleep(10*time.Millisecond)
-		}else{
+			time.Sleep(10 * time.Millisecond)
+		} else {
 			break
 		}
 	}

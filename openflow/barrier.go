@@ -22,10 +22,10 @@ import (
 	"log"
 )
 
-func handleBarrierRequest(request *ofp.BarrierRequest,client *Client){
-	jsonRequest,_ := json.Marshal(request)
-	log.Printf("handleBarrierRequest called with %s",jsonRequest)
-	reply:=ofp.NewBarrierReply()
+func handleBarrierRequest(request *ofp.BarrierRequest, client *Client) {
+	jsonRequest, _ := json.Marshal(request)
+	log.Printf("handleBarrierRequest called with %s", jsonRequest)
+	reply := ofp.NewBarrierReply()
 	reply.SetXid(request.GetXid())
 	client.SendMessage(reply)
 }

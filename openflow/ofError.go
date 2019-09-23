@@ -21,8 +21,9 @@ import (
 	ofp "github.com/skydive-project/goloxi/of13"
 	"log"
 )
+
 func handleErrMsg(message *ofp.ErrorMsg) {
-	jsonMessage ,_:= json.Marshal(message)
-	log.Printf("handleErrMsg called with %s",jsonMessage)
+	jsonMessage, _ := json.Marshal(message)
+	log.Printf("handleErrMsg called with %s", jsonMessage)
 	//Not sure yet what if anything to do here
 }
