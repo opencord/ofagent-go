@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/skydive-project/goloxi"
+	"github.com/donNewtonAlpha/goloxi"
 )
 
 type Oxm struct {

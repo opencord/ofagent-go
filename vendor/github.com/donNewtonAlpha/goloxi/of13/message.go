@@ -13,9 +13,10 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"log"
 	"net"
 
-	"github.com/skydive-project/goloxi"
+	"github.com/donNewtonAlpha/goloxi"
 )
 
 type Header struct {
@@ -9623,8 +9624,10 @@ func DecodePacketOut(parent *Header, decoder *goloxi.Decoder) (*PacketOut, error
 	_packetout.InPort.Decode(decoder)
 	_packetout.ActionsLen = uint16(decoder.ReadUint16())
 	decoder.Skip(6)
+	var actLen uint16
+	actLen = 0
 
-	for i := 0; i < int(_packetout.ActionsLen); i++ {
+	/*for i := 0; i < int(_packetout.ActionsLen); i++ {
 		item, err := DecodeAction(decoder)
 		if err != nil {
 			return nil, err
@@ -9632,6 +9635,24 @@ func DecodePacketOut(parent *Header, decoder *goloxi.Decoder) (*PacketOut, error
 		if item != nil {
 			_packetout.Actions = append(_packetout.Actions, item)
 		}
+	}
+	*/
+	for{
+
+		item, err := DecodeAction(decoder)
+		if err != nil {
+			return nil, err
+		}
+		actLen += item.GetLen()
+		log.Printf("ACTION LEN %d and actLen %d",_packetout.ActionsLen,actLen)
+
+		if item != nil {
+			_packetout.Actions = append(_packetout.Actions, item)
+		}
+		if actLen == _packetout.ActionsLen{
+			break
+		}
+
 	}
 	_packetout.Data = decoder.Read(int(decoder.Length()))
 	return _packetout, nil
