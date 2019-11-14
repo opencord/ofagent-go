@@ -18,7 +18,7 @@ package openflow
 
 import (
 	"encoding/json"
-	ofp "github.com/skydive-project/goloxi/of13"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"log"
 )
 
@@ -26,6 +26,7 @@ func handleGetConfigRequest(request *ofp.GetConfigRequest, client *Client) {
 	jsonReq, _ := json.Marshal(request)
 	log.Printf("handleGetConfigRequest called with %s", jsonReq)
 	reply := ofp.NewGetConfigReply()
+	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())
 	reply.SetMissSendLen(ofp.OFPCMLNoBuffer)
 	client.SendMessage(reply)
