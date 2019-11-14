@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/donNewtonAlpha/goloxi"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	pb "github.com/opencord/voltha-protos/go/voltha"
-	"github.com/skydive-project/goloxi"
-	ofp "github.com/skydive-project/goloxi/of13"
 
 	"log"
 	"net"
@@ -138,80 +138,66 @@ func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
 
 	log.Printf("parseHeader called with type %d", header.GetType())
 	switch header.GetType() {
-	case 0:
+	case ofp.OFPTHello:
 		x := header.(*ofp.Hello)
 		log.Printf("helloMessage : %+v", x)
-		//nothing real to do
-	case 1:
+	case ofp.OFPTError:
 		errMsg := header.(*ofp.ErrorMsg)
 		go handleErrMsg(errMsg)
-	case 2:
+	case ofp.OFPTEchoRequest:
 		echoReq := header.(*ofp.EchoRequest)
 		go handleEchoRequest(echoReq, client)
-	case 3:
-		//EchoReply
-	case 4:
-		//Expirementer
-	case 5:
+	case ofp.OFPTEchoReply:
+	case ofp.OFPTExperimenter:
+	case ofp.OFPTFeaturesRequest:
 		featReq := header.(*ofp.FeaturesRequest)
 		go handleFeatureRequest(featReq, client.DeviceId, client)
-	case 6:
-		//feature reply
-	case 7:
+	case ofp.OFPTFeaturesReply:
+	case ofp.OFPTGetConfigRequest:
 		configReq := header.(*ofp.GetConfigRequest)
 		go handleGetConfigRequest(configReq, client)
-	case 8:
-		//GetConfigReply
-	case 9:
+	case ofp.OFPTGetConfigReply:
+	case ofp.OFPTSetConfig:
 		setConf := header.(*ofp.SetConfig)
 		go handleSetConfig(setConf)
-	case 10:
-		//packetIn := header.(*ofp.PacketIn)
-		//go handlePacketIn(packetIn)
-	case 11:
-		//FlowRemoved
-	case 12:
-		//portStatus
-	case 13:
+	case ofp.OFPTPacketIn:
+	case ofp.OFPTFlowRemoved:
+	case ofp.OFPTPortStatus:
+	case ofp.OFPTPacketOut:
 		packetOut := header.(*ofp.PacketOut)
 		go handlePacketOut(packetOut, client.DeviceId)
-	case 14:
+	case ofp.OFPTFlowMod:
 		flowModType := uint8(buf[25])
 		switch flowModType {
-		case 0:
+		case ofp.OFPFCAdd:
 			flowAdd := header.(*ofp.FlowAdd)
 			go handleFlowAdd(flowAdd, client.DeviceId)
-			//return DecodeFlowAdd(_flowmod, decoder)
-		case 1:
+		case ofp.OFPFCModify:
 			flowMod := header.(*ofp.FlowMod)
 			go handleFlowMod(flowMod, client.DeviceId)
-			//return DecodeFlowModify(_flowmod, decoder)
-		case 2:
+		case ofp.OFPFCModifyStrict:
 			flowModStrict := header.(*ofp.FlowModifyStrict)
 			go handleFlowModStrict(flowModStrict, client.DeviceId)
-			//return DecodeFlowModifyStrict(_flowmod, decoder)
-		case 3:
+		case ofp.OFPFCDelete:
 			flowDelete := header.(*ofp.FlowDelete)
 			go handleFlowDelete(flowDelete, client.DeviceId)
-			//return DecodeFlowDelete(_flowmod, decoder)
-		case 4:
+		case ofp.OFPFCDeleteStrict:
 			flowDeleteStrict := header.(*ofp.FlowDeleteStrict)
 			go handleFlowDeleteStrict(flowDeleteStrict, client.DeviceId)
-			//return DecodeFlowDeleteStrict(_flowmod, decoder)
-		default:
-			//return nil, fmt.Errorf("Invalid type '%d' for 'FlowMod'", _flowmod.Command)
-
 		}
-	case 18:
+	case ofp.OFPTStatsRequest:
 		var statType = uint16(buf[8])<<8 + uint16(buf[9])
 		log.Println("statsType", statType)
 		go handleStatsRequest(header, statType, client.DeviceId, client)
-	case 20:
+	case ofp.OFPTBarrierRequest:
 		barRequest := header.(*ofp.BarrierRequest)
 		go handleBarrierRequest(barRequest, client)
-	case 24:
+	case ofp.OFPTRoleRequest:
 		roleReq := header.(*ofp.RoleRequest)
 		go handleRoleRequest(roleReq, client)
+	case ofp.OFPTMeterMod:
+		meterMod := header.(*ofp.MeterMod)
+		go handleMeterModRequest(meterMod, client)
 
 	}
 }
@@ -227,7 +213,8 @@ func (client *Client) SendMessage(message OpenFlowMessage) error {
 	enc := goloxi.NewEncoder()
 	message.Serialize(enc)
 	jMessage, _ := json.Marshal(message)
-	log.Printf("message after serialize %s", jMessage)
+	bytes := enc.Bytes()
+	log.Printf("message after serialize %d for message %s", bytes, jMessage)
 
 	for {
 		if conn == nil {
@@ -237,10 +224,12 @@ func (client *Client) SendMessage(message OpenFlowMessage) error {
 			break
 		}
 	}
-	_, err := conn.Write(enc.Bytes())
+	_, err := conn.Write(bytes)
 	if err != nil {
-		log.Printf("SendMessage had error %s", err)
+		log.Printf("SendMessage had error %v \n %s\n********", err, jMessage)
 		return err
+	} else {
+		log.Printf("message after send %s", jMessage)
 	}
 	return nil
 }

@@ -18,7 +18,7 @@ package openflow
 
 import (
 	"encoding/json"
-	ofp "github.com/skydive-project/goloxi/of13"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"log"
 )
 

@@ -19,9 +19,9 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-protos/go/common"
 	pb "github.com/opencord/voltha-protos/go/voltha"
-	ofp "github.com/skydive-project/goloxi/of13"
 	"log"
 )
 
@@ -38,6 +38,7 @@ func handleFeatureRequest(request *ofp.FeaturesRequest, deviceId string, client 
 func createFeaturesRequestReply(xid uint32, device *pb.LogicalDevice) *ofp.FeaturesReply {
 
 	featureReply := ofp.NewFeaturesReply()
+	featureReply.SetVersion(4)
 	featureReply.SetXid(xid)
 	features := device.GetSwitchFeatures()
 	featureReply.SetDatapathId(device.GetDatapathId())

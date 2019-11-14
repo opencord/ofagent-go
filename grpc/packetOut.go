@@ -17,6 +17,8 @@
 package grpc
 
 import (
+	"encoding/json"
+	"github.com/opencord/ofagent-go/openflow"
 	pb "github.com/opencord/voltha-protos/go/voltha"
 	"google.golang.org/grpc"
 	"log"
@@ -31,8 +33,11 @@ func streamPacketOut(client pb.VolthaServiceClient) {
 		log.Printf("Error creating packetout stream %v", err)
 	}
 	packetOutChannel := make(chan pb.PacketOut)
+	openflow.SetPacketOutChannel(packetOutChannel)
 	for {
 		ofPacketOut := <-packetOutChannel
+		js, _ := json.Marshal(ofPacketOut)
+		log.Printf("RECEIVED PACKET OUT FROM CHANNEL %s", js)
 		outClient.Send(&ofPacketOut)
 	}
 

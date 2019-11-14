@@ -33,6 +33,9 @@ COPY vendor ./vendor
 COPY grpc ./grpc
 COPY openflow ./openflow
 COPY *.go ./
+COPY go.mod ./
+COPY go.sum ./
+
 
 ARG org_label_schema_version=unknown
 ARG org_label_schema_vcs_url=unknown
@@ -43,7 +46,8 @@ ARG org_opencord_vcs_dirty=unknown
 
 # Build ofagent-go
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
-RUN go build -o /build/ofagent-go \
+ENV GO111MODULE=on
+RUN go build -mod=vendor -o /build/ofagent-go \
 	-ldflags \
 	"-X github.com/opencord/ofagent-go/config/version.version=$org_label_schema_version \
 	 -X github.com/opencord/ofagent-go/config/version.vcsRef=$org_label_schema_vcs_ref  \

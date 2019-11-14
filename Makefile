@@ -109,12 +109,12 @@ lint-sanity:
 	@go vet ./...
 	@echo "Sanity check OK"
 
-lint-dep:
+lint-mod:
 	@echo "Running dependency check..."
-	@dep check
+	@go mod verify
 	@echo "Dependency check OK"
 
-lint: lint-style lint-sanity lint-dep
+lint: lint-style lint-sanity lint-mod
 
 GO_JUNIT_REPORT:=$(shell which go-junit-report)
 GOCOVER_COBERTURA:=$(shell which gocover-cobertura)

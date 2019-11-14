@@ -19,10 +19,11 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+	"log"
+
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-protos/go/openflow_13"
 	pb "github.com/opencord/voltha-protos/go/voltha"
-	ofp "github.com/skydive-project/goloxi/of13"
-	"log"
 )
 
 var oxmMap = map[string]int32{
@@ -147,6 +148,11 @@ func handleFlowAdd(flowAdd *ofp.FlowAdd, deviceId string) {
 			var value pb.OfpOxmOfbField_UdpDst
 			value.UdpDst = uint32(udpDst)
 			field.Value = &value
+		case pb.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
+			vid := val.(uint16) & 0xfff
+			var value pb.OfpOxmOfbField_VlanVid
+			value.VlanVid = uint32(vid)
+			field.Value = &value
 		}
 		oxmList = append(oxmList, &ofpOxmField)
 	}
@@ -160,18 +166,22 @@ func handleFlowAdd(flowAdd *ofp.FlowAdd, deviceId string) {
 		instructionType := ofpInstruction.GetType()
 		instruction.Type = uint32(instructionType)
 		switch instructionType {
-		case 1:
+		case ofp.OFPITGotoTable:
 			goToTable := ofpInstruction.(ofp.IInstructionGotoTable)
 			var ofpGoToTable openflow_13.OfpInstruction_GotoTable
+			var oGoToTable openflow_13.OfpInstructionGotoTable
+			ofpGoToTable.GotoTable = &oGoToTable
 			ofpGoToTable.GotoTable.TableId = uint32(goToTable.GetTableId())
 			instruction.Data = &ofpGoToTable
-		case 2:
+		case ofp.OFPITWriteMetadata:
 			writeMetaData := ofpInstruction.(ofp.IInstructionWriteMetadata)
 			var ofpWriteMetadata openflow_13.OfpInstruction_WriteMetadata
+			var writeMetadata openflow_13.OfpInstructionWriteMetadata
+			ofpWriteMetadata.WriteMetadata = &writeMetadata
 			ofpWriteMetadata.WriteMetadata.Metadata = writeMetaData.GetMetadata()
 			ofpWriteMetadata.WriteMetadata.MetadataMask = writeMetaData.GetMetadataMask()
 			instruction.Data = &ofpWriteMetadata
-		case 3:
+		case ofp.OFPITWriteActions:
 			writeAction := ofpInstruction.(ofp.IInstructionWriteActions)
 			var ofpInstructionActions openflow_13.OfpInstruction_Actions
 			var ofpActions []*openflow_13.OfpAction
@@ -182,7 +192,7 @@ func handleFlowAdd(flowAdd *ofp.FlowAdd, deviceId string) {
 				ofpActions = append(ofpActions, ofpAction)
 			}
 			instruction.Data = &ofpInstructionActions
-		case 4:
+		case ofp.OFPITApplyActions:
 			applyAction := ofpInstruction.(ofp.IInstructionApplyActions)
 			var ofpInstructionActions openflow_13.OfpInstruction_Actions
 			var ofpActions []*openflow_13.OfpAction
@@ -196,7 +206,14 @@ func handleFlowAdd(flowAdd *ofp.FlowAdd, deviceId string) {
 			actionsHolder.Actions = ofpActions
 			ofpInstructionActions.Actions = &actionsHolder
 			instruction.Data = &ofpInstructionActions
+		case ofp.OFPITMeter:
+			var instructionMeter = ofpInstruction.(ofp.IInstructionMeter)
+			var meterInstruction openflow_13.OfpInstruction_Meter
+			var meter openflow_13.OfpInstructionMeter
 
+			meter.MeterId = instructionMeter.GetMeterId()
+			meterInstruction.Meter = &meter
+			instruction.Data = &meterInstruction
 		}
 		instructions = append(instructions, &instruction)
 	}
@@ -232,52 +249,5 @@ func handleFlowDelete(flowDelete *ofp.FlowDelete, deviceId string) {
 func handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict, deviceId string) {
 	js, _ := json.Marshal(flowDeleteStrict)
 	log.Printf("handleFlowDeleteStrict called with %s", js)
-
-}
-func extractAction(action ofp.IAction) *openflow_13.OfpAction {
-	var ofpAction openflow_13.OfpAction
-	switch action.GetType() {
-	case 0: // Output
-		var outputAction openflow_13.OfpAction_Output
-		loxiOutputAction := action.(*ofp.ActionOutput)
-		var output openflow_13.OfpActionOutput
-		output.Port = uint32(loxiOutputAction.Port)
-		output.MaxLen = uint32(loxiOutputAction.MaxLen)
-		outputAction.Output = &output
-		ofpAction.Action = &outputAction
-	case 11: //CopyTtlOut
-	case 12: //CopyTtlIn
-	case 15: //SetMplsTtl
-	case 16: //DecMplsTtl
-	case 17: //PushVlan
-		var pushVlan openflow_13.OfpAction_Push
-		loxiPushAction := action.(*ofp.ActionPopVlan)
-		fields := loxiPushAction.GetActionFields()
-		fieldsJS, _ := json.Marshal(fields)
-		log.Printf("\n\nPushVlan fields %s\n\n", fieldsJS)
-		pushVlan.Push.Ethertype = 0x8100 //TODO This should be available in the fields
-		ofpAction.Type = openflow_13.OfpActionType_OFPAT_PUSH_VLAN
-	case 18: //PopVlan
-		ofpAction.Type = openflow_13.OfpActionType_OFPAT_POP_VLAN
-	case 19: //PushMpls
-	case 20: //PopMpls
-	case 21: //SetQueue
-	case 22: //ActionGroup
-	case 23: //SetNwTtl
-	case 24: //DecNwTtl
-	case 25: //SetField
-		var setField openflow_13.OfpAction_SetField
-		loxiSetField := action.(*ofp.ActionSetField)
-		fields := loxiSetField.GetActionFields()
-		fieldsJS, _ := json.Marshal(fields)
-		log.Printf("\n\nSet Fields fields %s\n\n", fieldsJS)
-
-		ofpAction.Action = &setField
-	case 26: //PushPbb
-	case 27: //PopPbb
-	case 65535: //Experimenter
-
-	}
-	return &ofpAction
 
 }

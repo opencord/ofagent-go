@@ -19,15 +19,16 @@ package openflow
 import (
 	"context"
 	"encoding/json"
-	"github.com/opencord/voltha-protos/go/openflow_13"
-	"github.com/skydive-project/goloxi"
+
 	"log"
 	"net"
 	"unsafe"
 
+	"github.com/opencord/voltha-protos/go/openflow_13"
+
+	"github.com/donNewtonAlpha/goloxi"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-protos/go/common"
-	pb "github.com/opencord/voltha-protos/go/voltha"
-	ofp "github.com/skydive-project/goloxi/of13"
 )
 
 func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, client *Client) error {
@@ -36,7 +37,7 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 	var id = common.ID{Id: deviceId}
 
 	switch statType {
-	case 0:
+	case ofp.OFPSTDesc:
 		statsReq := request.(*ofp.DescStatsRequest)
 		response, err := handleDescStatsRequest(statsReq, id)
 		if err != nil {
@@ -44,29 +45,32 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		}
 		client.SendMessage(response)
 
-	case 1:
+	case ofp.OFPSTFlow:
 		statsReq := request.(*ofp.FlowStatsRequest)
 		response, _ := handleFlowStatsRequest(statsReq, id)
+		response.Length = uint16(unsafe.Sizeof(*response))
+		jResponse, _ := json.Marshal(response)
+		log.Printf("HANDLE FLOW STATS REQUEST response\n\n\n %s \n\n\n", jResponse)
 		err := client.SendMessage(response)
 		if err != nil {
 			return err
 		}
 
-	case 2:
+	case ofp.OFPSTAggregate:
 		statsReq := request.(*ofp.AggregateStatsRequest)
 		aggregateStatsReply, err := handleAggregateStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(aggregateStatsReply)
-	case 3:
+	case ofp.OFPSTTable:
 		statsReq := request.(*ofp.TableStatsRequest)
 		tableStatsReply, e := handleTableStatsRequest(statsReq, id)
 		if e != nil {
 			return e
 		}
 		client.SendMessage(tableStatsReply)
-	case 4:
+	case ofp.OFPSTPort:
 		statsReq := request.(*ofp.PortStatsRequest)
 		response, err := handlePortStatsRequest(statsReq, id)
 		if err != nil {
@@ -74,63 +78,66 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		}
 		client.SendMessage(response)
 
-	case 5:
+	case ofp.OFPSTQueue:
 		statsReq := request.(*ofp.QueueStatsRequest)
 		response, err := handleQueueStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 6:
+	case ofp.OFPSTGroup:
 		statsReq := request.(*ofp.GroupStatsRequest)
 		response, err := handleGroupStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
+
 		client.SendMessage(response)
-	case 7:
+	case ofp.OFPSTGroupDesc:
 		statsReq := request.(*ofp.GroupDescStatsRequest)
 		response, err := handleGroupStatsDescRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 8:
+
+	case ofp.OFPSTGroupFeatures:
 		statsReq := request.(*ofp.GroupFeaturesStatsRequest)
 		response, err := handleGroupFeatureStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 9:
+	case ofp.OFPSTMeter:
 		statsReq := request.(*ofp.MeterStatsRequest)
 		response, err := handleMeterStatsRequest(statsReq, id)
 		if err != nil {
+			log.Printf("ERROR HANDLE METER STATS REQUEST %v", err)
 			return err
 		}
 		client.SendMessage(response)
-	case 10:
+	case ofp.OFPSTMeterConfig:
 		statsReq := request.(*ofp.MeterConfigStatsRequest)
 		response, err := handleMeterConfigStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 11:
+	case ofp.OFPSTMeterFeatures:
 		statsReq := request.(*ofp.MeterFeaturesStatsRequest)
 		response, err := handleMeterFeatureStatsRequest(statsReq)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 12:
+	case ofp.OFPSTTableFeatures:
 		statsReq := request.(*ofp.TableFeaturesStatsRequest)
 		response, err := handleTableFeaturesStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
 		client.SendMessage(response)
-	case 13:
+	case ofp.OFPSTPortDesc:
 		statsReq := request.(*ofp.PortDescStatsRequest)
 		response, err := handlePortDescStatsRequest(statsReq, deviceId)
 		if err != nil {
@@ -138,7 +145,7 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		}
 		client.SendMessage(response)
 
-	case 65535:
+	case ofp.OFPSTExperimenter:
 		statsReq := request.(*ofp.ExperimenterStatsRequest)
 		response, err := handleExperimenterStatsRequest(statsReq, id)
 		if err != nil {
@@ -153,6 +160,8 @@ func handleDescStatsRequest(request *ofp.DescStatsRequest, id common.ID) (*ofp.D
 	response := ofp.NewDescStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+
 	client := *getGrpcClient()
 	resp, err := client.GetLogicalDevice(context.Background(), &id)
 	if err != nil {
@@ -165,33 +174,30 @@ func handleDescStatsRequest(request *ofp.DescStatsRequest, id common.ID) (*ofp.D
 	response.SetSwDesc(PadString(desc.GetSwDesc(), 256))
 	response.SetSerialNum(PadString(desc.GetSerialNum(), 32))
 	response.SetDpDesc(PadString(desc.GetDpDesc(), 256))
-	//jsonRes,_ := json.Marshal(response)
-	//log.Printf("handleDescStatsRequest response : %s",jsonRes)
 	return response, nil
 }
 func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.FlowStatsReply, error) {
 	log.Println("****************************************\n***********************************")
 	response := ofp.NewFlowStatsReply()
 	response.SetXid(request.GetXid())
-	response.SetVersion(request.GetVersion())
+	response.SetVersion(4)
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	client := *getGrpcClient()
 	resp, err := client.ListLogicalDeviceFlows(context.Background(), &id)
 	if err != nil {
-		log.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		log.Printf("err in handleFlowStatsRequest calling ListLogicalDeviceFlows %v", err)
 		return nil, err
 	}
-	log.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	js, _ := json.Marshal(resp.GetItems())
-	log.Printf("||||||||||||||||||||||||||||||||||||HandFlowStat %s|||||||||||||||||||||||||||||||||||||||||", js)
+	js, _ := json.Marshal(resp)
+	log.Printf("HandleFlowStats response: %s", js)
 	var flow []*ofp.FlowStatsEntry
 	items := resp.GetItems()
 
 	for i := 0; i < len(items); i++ {
-		item := items[1]
-		var entry ofp.FlowStatsEntry
+		item := items[i]
+		entry := ofp.NewFlowStatsEntry()
 
-		entry.SetTableId(uint8(item.GetId()))
+		entry.SetTableId(uint8(item.GetTableId()))
 		entry.SetDurationSec(item.GetDurationSec())
 		entry.SetDurationNsec(item.GetDurationNsec())
 		entry.SetPriority(uint16(item.GetPriority()))
@@ -201,86 +207,55 @@ func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.F
 		entry.SetCookie(item.GetCookie())
 		entry.SetPacketCount(item.GetPacketCount())
 		entry.SetByteCount(item.GetByteCount())
-		var match ofp.Match
+		var entrySize uint16
+		entrySize = 48
+		match := ofp.NewMatchV3()
 		pbMatch := item.GetMatch()
-
 		var fields []goloxi.IOxm
 		match.SetType(uint16(pbMatch.GetType()))
 		oxFields := pbMatch.GetOxmFields()
+		var size uint16
+		size = 4
 		for i := 0; i < len(oxFields); i++ {
-			js, _ := json.Marshal(oxFields[i])
-			log.Printf("oxfields %s", js)
 			oxmField := oxFields[i]
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			switch ofbField.Type {
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
-				ofpInPort := ofp.NewOxmInPort()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Port)
-				ofpInPort.Value = ofp.Port(val.Port)
-				fields = append(fields, ofpInPort)
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
-				ofpInPhyPort := ofp.NewOxmInPhyPort()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_PhysicalPort)
-				ofpInPhyPort.Value = ofp.Port(val.PhysicalPort)
-				fields = append(fields, ofpInPhyPort)
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
-				ofpIpProto := ofp.NewOxmIpProto()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
-				ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
-				fields = append(fields, ofpIpProto)
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
-				ofpUdpSrc := ofp.NewOxmUdpSrc()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
-				ofpUdpSrc.Value = uint16(val.UdpSrc)
-				fields = append(fields, ofpUdpSrc)
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
-				ofpUdpDst := ofp.NewOxmUdpSrc()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpDst)
-				ofpUdpDst.Value = uint16(val.UdpDst)
-				fields = append(fields, ofpUdpDst)
-			case pb.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
-				ofpVlanVid := ofp.NewOxmVlanVid()
-				val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_VlanVid)
-				ofpVlanVid.Value = uint16(val.VlanVid)
-				fields = append(fields, ofpVlanVid)
-			default:
-				log.Printf("handleFlowStatsRequest   Unhandled OxmField %v", ofbField.Type)
+			iOxm, oxmSize := parseOxm(ofbField)
+			log.Printf("OXMSIZE %d", oxmSize)
+			fields = append(fields, iOxm)
+			if oxmSize > 0 {
+				size += 4 //header for oxm
 			}
-
+			size += oxmSize
+			log.Printf("SIZE %d", size)
 		}
+
+		log.Printf("entrySize %d += size %d", entrySize, size)
+		log.Printf("new entrySize %d", entrySize)
 		match.OxmList = fields
-		match.Length = uint16(unsafe.Sizeof(match))
-		entry.SetMatch(match)
+		match.Length = uint16(size)
+		//account for 8 byte alignment
+		log.Printf("Size was %d", size)
+		if size%8 != 0 {
+			size = ((size / 8) + 1) * 8
+		}
+		log.Printf("Size is %d", size)
+		entrySize += size
+		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		ofpInstructions := item.Instructions
 		for i := 0; i < len(ofpInstructions); i++ {
-			ofpInstruction := ofpInstructions[i]
-			instType := ofpInstruction.Type
-			switch instType {
-			case uint32(openflow_13.OfpInstructionType_OFPIT_APPLY_ACTIONS):
-				ofpActions := ofpInstruction.GetActions().Actions
-				for i := 0; i < len(ofpActions); i++ {
-					ofpAction := ofpActions[i]
-					var actions []*ofp.Action
-					switch ofpAction.Type {
-					case openflow_13.OfpActionType_OFPAT_OUTPUT:
-						ofpOutputAction := ofpAction.GetOutput()
-						outputAction := ofp.NewActionOutput()
-						outputAction.Port = ofp.Port(ofpOutputAction.Port)
-						outputAction.MaxLen = uint16(ofpOutputAction.MaxLen)
-						actions = append(actions, outputAction.Action)
-					}
-				}
-				instruction := ofp.NewInstruction(uint16(instType))
-				instructions = append(instructions, instruction)
-			}
-
+			instruction, size := parseInstructions(ofpInstructions[i])
+			instructions = append(instructions, instruction)
+			entrySize += size
 		}
 		entry.Instructions = instructions
-		entry.Length = uint16(unsafe.Sizeof(entry))
-		flow = append(flow, &entry)
-
+		log.Printf("entrysize was %d", entrySize)
+		entrySizeMeasured := uint16(unsafe.Sizeof(*entry))
+		log.Printf("entrysize measure %d", entrySizeMeasured)
+		entry.Length = entrySize
+		entrySize = 0
+		flow = append(flow, entry)
 	}
 	response.SetEntries(flow)
 	return response, nil
@@ -289,6 +264,7 @@ func handleAggregateStatsRequest(request *ofp.AggregateStatsRequest, id common.I
 	response := ofp.NewAggregateStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	response.SetFlowCount(0)
 	//TODO wire this to voltha core when it implements
 	return response, nil
@@ -297,6 +273,7 @@ func handleGroupStatsRequest(request *ofp.GroupStatsRequest, id common.ID) (*ofp
 	response := ofp.NewGroupStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	client := *getGrpcClient()
 	reply, err := client.ListLogicalDeviceFlowGroups(context.Background(), &id)
 	if err != nil {
@@ -333,6 +310,7 @@ func handleGroupStatsDescRequest(request *ofp.GroupDescStatsRequest, id common.I
 	response := ofp.NewGroupDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	client := *getGrpcClient()
 	reply, err := client.ListLogicalDeviceFlowGroups(context.Background(), &id)
 	if err != nil {
@@ -362,6 +340,7 @@ func handleGroupFeatureStatsRequest(request *ofp.GroupFeaturesStatsRequest, id c
 	response := ofp.NewGroupFeaturesStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	//TODO wire this to voltha core when it implements
 	return response, nil
 }
@@ -369,38 +348,70 @@ func handleMeterStatsRequest(request *ofp.MeterStatsRequest, id common.ID) (*ofp
 	response := ofp.NewMeterStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
-	//TODO wire this to voltha core when it implements
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+	client := *getGrpcClient()
+	resp, err := client.ListLogicalDeviceMeters(context.Background(), &id)
+	if err != nil {
+		return nil, err
+	}
+	size := uint16(40)
+	items := resp.Items
+	var meterStats []*ofp.MeterStats
+	for i := 0; i < len(items); i++ {
+		meterStat := ofp.NewMeterStats()
+		item := items[i]
+		stats := item.Stats
+		meterStat.DurationNsec = stats.DurationNsec
+		meterStat.DurationSec = stats.DurationSec
+		meterStat.ByteInCount = stats.ByteInCount
+		meterStat.FlowCount = stats.FlowCount
+		meterStat.MeterId = stats.MeterId
+		var bandStats []*ofp.MeterBandStats
+		bStats := stats.BandStats
+		for j := 0; j < len(bStats); j++ {
+			bStat := bStats[j]
+			bandStat := ofp.NewMeterBandStats()
+			bandStat.ByteBandCount = bStat.ByteBandCount
+			bandStat.PacketBandCount = bStat.PacketBandCount
+			bandStats = append(bandStats, bandStat)
+			size += 16
+		}
+		meterStat.SetBandStats(bandStats)
+		meterStat.Len = size
+		meterStats = append(meterStats, meterStat)
+	}
+	response.SetEntries(meterStats)
 	return response, nil
 }
-
-//statsReq := request.(*ofp.MeterConfigStatsRequest)
 func handleMeterConfigStatsRequest(request *ofp.MeterConfigStatsRequest, id common.ID) (*ofp.MeterConfigStatsReply, error) {
 	response := ofp.NewMeterConfigStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	//TODO wire this to voltha core when it implements
 	return response, nil
 }
-
-//statsReq := request.(*ofp.TableFeaturesStatsRequest)
 func handleTableFeaturesStatsRequest(request *ofp.TableFeaturesStatsRequest, id common.ID) (*ofp.TableFeaturesStatsReply, error) {
 	response := ofp.NewTableFeaturesStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	//TODO wire this to voltha core when it implements
 	return response, nil
 }
 func handleTableStatsRequest(request *ofp.TableStatsRequest, id common.ID) (*ofp.TableStatsReply, error) {
-	var tableStatsReply = ofp.NewTableStatsReply()
-	tableStatsReply.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	tableStatsReply.SetVersion(request.GetVersion())
-	tableStatsReply.SetXid(request.GetXid())
-	return tableStatsReply, nil
+	var response = ofp.NewTableStatsReply()
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+	response.SetVersion(request.GetVersion())
+	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+	return response, nil
 }
 func handleQueueStatsRequest(request *ofp.QueueStatsRequest, id common.ID) (*ofp.QueueStatsReply, error) {
 	response := ofp.NewQueueStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	//TODO wire this to voltha core when it implements
 	return response, nil
 }
@@ -409,7 +420,7 @@ func handlePortStatsRequest(request *ofp.PortStatsRequest, id common.ID) (*ofp.P
 	response := ofp.NewPortStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
-	//response.SetFlags(ofp.flagsrequest.GetFlags())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	client := *getGrpcClient()
 	reply, err := client.ListLogicalDevicePorts(context.Background(), &id)
 	//reply,err := client.GetLogicalDevicePort(context.Background(),&id)
@@ -441,30 +452,12 @@ func handlePortStatsRequest(request *ofp.PortStatsRequest, id common.ID) (*ofp.P
 	return response, nil
 
 }
-func parsePortStats(port *pb.LogicalPort) ofp.PortStatsEntry {
-	stats := port.OfpPortStats
-	var entry ofp.PortStatsEntry
-	entry.SetPortNo(ofp.Port(stats.GetPortNo()))
-	entry.SetRxPackets(stats.GetRxPackets())
-	entry.SetTxPackets(stats.GetTxPackets())
-	entry.SetRxBytes(stats.GetRxBytes())
-	entry.SetTxBytes(stats.GetTxBytes())
-	entry.SetRxDropped(stats.GetRxDropped())
-	entry.SetTxDropped(stats.GetTxDropped())
-	entry.SetRxErrors(stats.GetRxErrors())
-	entry.SetTxErrors(stats.GetTxErrors())
-	entry.SetRxFrameErr(stats.GetRxFrameErr())
-	entry.SetRxOverErr(stats.GetRxOverErr())
-	entry.SetRxCrcErr(stats.GetRxCrcErr())
-	entry.SetCollisions(stats.GetCollisions())
-	entry.SetDurationSec(stats.GetDurationSec())
-	entry.SetDurationNsec(stats.GetDurationNsec())
-	return entry
-}
+
 func handlePortDescStatsRequest(request *ofp.PortDescStatsRequest, deviceId string) (*ofp.PortDescStatsReply, error) {
 	response := ofp.NewPortDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	var grpcClient = *getGrpcClient()
 	var id = common.ID{Id: deviceId}
 	logicalDevice, err := grpcClient.GetLogicalDevice(context.Background(), &id)
@@ -507,12 +500,21 @@ func handleMeterFeatureStatsRequest(request *ofp.MeterFeaturesStatsRequest) (*of
 	response := ofp.NewMeterFeaturesStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+	meterFeatures := ofp.NewMeterFeatures()
+	meterFeatures.Capabilities = ofp.OFPMFKbps
+	meterFeatures.BandTypes = ofp.OFPMBTDrop
+	meterFeatures.MaxMeter = 0xffffffff
+	meterFeatures.MaxBands = 0xff
+	meterFeatures.MaxColor = 0xff
+	response.Features = *meterFeatures
 	return response, nil
 }
 func handleExperimenterStatsRequest(request *ofp.ExperimenterStatsRequest, id common.ID) (*ofp.ExperimenterStatsReply, error) {
 	response := ofp.NewExperimenterStatsReply(request.GetExperimenter())
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
+	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	//TODO wire this to voltha core when it implements
 	return response, nil
 }
