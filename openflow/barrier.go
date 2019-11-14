@@ -18,7 +18,7 @@ package openflow
 
 import (
 	"encoding/json"
-	ofp "github.com/skydive-project/goloxi/of13"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"log"
 )
 
@@ -26,6 +26,7 @@ func handleBarrierRequest(request *ofp.BarrierRequest, client *Client) {
 	jsonRequest, _ := json.Marshal(request)
 	log.Printf("handleBarrierRequest called with %s", jsonRequest)
 	reply := ofp.NewBarrierReply()
+	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())
 	client.SendMessage(reply)
 }
