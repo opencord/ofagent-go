@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e34aed67_8eb69c2a",
+        "filename": "grpc/changeEvent.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2019-11-14T19:53:20Z",
+      "side": 1,
+      "message": "2019?",
+      "revId": "e0d34a8c6e028d85b1adb261b3eb0d2fb4e853e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a11c1018_228697a4",
+        "filename": "grpc/client.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2019-11-14T19:53:20Z",
+      "side": 1,
+      "message": "Depending on the use case, at times i find it easier to use a syncmap or mutex on regular map for concurrent access.",
+      "revId": "e0d34a8c6e028d85b1adb261b3eb0d2fb4e853e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b624011c_12be9e6d",
+        "filename": "grpc/packetIn.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2019-11-14T19:53:20Z",
+      "side": 1,
+      "message": "In the voltha-go-lib package there are some openflow utils.  I am not sure if they are relevant for your use case.  If they are they can be handy.",
+      "revId": "e0d34a8c6e028d85b1adb261b3eb0d2fb4e853e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94f45e58_337b5748",
+        "filename": "openflow/utils.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2019-11-14T19:53:20Z",
+      "side": 1,
+      "message": "Candidate for the utils in voltha-lib-go eventually?",
+      "revId": "e0d34a8c6e028d85b1adb261b3eb0d2fb4e853e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
