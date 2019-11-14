@@ -19,10 +19,10 @@ package grpc
 import (
 	"context"
 	"encoding/json"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/openflow"
 	pb "github.com/opencord/voltha-protos/go/voltha"
-	ofp "github.com/skydive-project/goloxi/of13"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -50,7 +50,6 @@ func receiveChangeEvent(client pb.VolthaServiceClient) {
 			log.Printf("Received change event that was not port status %v", jsonMessage)
 			break
 		}
-		log.Println("???????????????????????????????????????????????????????????????????")
 		ofPortStatus := ofp.NewPortStatus()
 		ofPortStatus.SetXid(openflow.GetXid())
 		ofPortStatus.SetVersion(4)

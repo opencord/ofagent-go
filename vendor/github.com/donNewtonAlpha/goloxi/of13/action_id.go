@@ -13,7 +13,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/skydive-project/goloxi"
+	"github.com/donNewtonAlpha/goloxi"
 )
 
 type ActionId struct {

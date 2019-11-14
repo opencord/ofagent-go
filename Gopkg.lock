@@ -2,6 +2,17 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:abc92c8bbc1fc9a199406cd0cb7c5609b11b331ed4a9bbfc1ef7a7968b8d8c0a"
+  name = "github.com/donNewtonAlpha/goloxi"
+  packages = [
+    ".",
+    "of13",
+  ]
+  pruneopts = "UT"
+  revision = "bd20251d74c1fd14d06c304908079d42bef9777d"
+
+[[projects]]
   digest = "1:cfa1d2efbf3e87436a105e7e552034738ae75f3525f01bf2f0cadc47859d955b"
   name = "github.com/golang/protobuf"
   packages = [
@@ -27,23 +38,12 @@
     "go/voltha",
   ]
   pruneopts = "UT"
-  revision = "78ea333b402a315e5d755cb438fc842d8449882a"
-  version = "1.0.1"
+  revision = "b6b797cceae987556bc705acc6273b1c7e43ce05"
+  version = "v1.0.3"
 
 [[projects]]
   branch = "master"
-  digest = "1:1e777399fab485b5f683268626a5737f5cf04475bd6e4e8746f8df2959a7bdcf"
-  name = "github.com/skydive-project/goloxi"
-  packages = [
-    ".",
-    "of13",
-  ]
-  pruneopts = "UT"
-  revision = "db2324197a3e1b3aff408c7a4a56197a0994d7af"
-
-[[projects]]
-  branch = "master"
-  digest = "1:ec0b21c65dd414b1306ee9b9f6f2e7d631029dd4c4b274a7d37f332c5fbabe28"
+  digest = "1:484c8bf6b3155a318ef96834afd9777b05a64fb6585ffadbfa12cac91ad9e618"
   name = "golang.org/x/net"
   packages = [
     "http/httpguts",
@@ -54,15 +54,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "aa69164e4478b84860dc6769c710c699c67058a3"
+  revision = "72f939374954d0a1b2a1e27dcda950e2724dd5c1"
 
 [[projects]]
   branch = "master"
-  digest = "1:efaeaf7e03393d54963ece1e4c1866915d712a07adf4be8ea8105a67e3418e8f"
+  digest = "1:3e7ac264ca261c2d429880bfd6c3121c36a0f12b6a050d8a747aa29f6f6b2be0"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "0a153f010e6963173baba2306531d173aa843137"
+  revision = "543471e840be449c53d44b32c7adf1261ad67e37"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -91,17 +91,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:21a386effcf814b07fda8b1f53b96a5b355f556b495e0aeeafe9c29a390137a8"
+  digest = "1:47f71acc1fcf36eab181789c2c0735ddcaa22592091a551375c841a912a0a1df"
   name = "google.golang.org/genproto"
   packages = [
     "googleapis/api/annotations",
     "googleapis/rpc/status",
   ]
   pruneopts = "UT"
-  revision = "f660b865573183437d2d868f703fe88bb8af0b55"
+  revision = "a023cd5227bd25fd1f5c5633743ff3eacc93d169"
 
 [[projects]]
-  digest = "1:2e18183989c76d073e9088f1a56f8b1c46ca920b74b529a50c2d7e5877ff18ac"
+  digest = "1:6cd77d0b616d2dcebd363dfecba593f27b0151fc82cdb5fbfb96c5a7cfbc95b5"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -139,19 +139,19 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "39e8a7b072a67ca2a75f57fa2e0d50995f5b22f6"
-  version = "v1.23.1"
+  revision = "f6d0f9ee430895e87ef1ceb5ac8f39725bafceef"
+  version = "v1.24.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/donNewtonAlpha/goloxi",
+    "github.com/donNewtonAlpha/goloxi/of13",
     "github.com/golang/protobuf/ptypes/empty",
     "github.com/opencord/voltha-protos/go/common",
     "github.com/opencord/voltha-protos/go/openflow_13",
     "github.com/opencord/voltha-protos/go/voltha",
-    "github.com/skydive-project/goloxi",
-    "github.com/skydive-project/goloxi/of13",
     "google.golang.org/grpc",
   ]
   solver-name = "gps-cdcl"
