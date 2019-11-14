@@ -18,8 +18,8 @@ package openflow
 
 import (
 	"encoding/json"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	pb "github.com/opencord/voltha-protos/go/voltha"
-	ofp "github.com/skydive-project/goloxi/of13"
 	"log"
 )
 
@@ -33,12 +33,18 @@ func handlePacketOut(packetOut *ofp.PacketOut, deviceId string) {
 	inActions := packetOut.GetActions()
 	for i := 0; i < len(inActions); i++ {
 		action := inActions[i]
-		var newAction = pb.OfpAction{}
+		newAction := extractAction(action)
+		/*var newAction = pb.OfpAction{}
 		newAction.Type = pb.OfpActionType(action.GetType())
-		actions = append(actions, &newAction)
+		action.
+
+		*/
+		actions = append(actions, newAction)
 	}
 	pktOut.Actions = actions
 	pktOut.Data = packetOut.GetData()
+	js, _ := json.Marshal(pktOut)
+	log.Printf("PacketOut %s", js)
 	pbPacketOut := pb.PacketOut{}
 	pbPacketOut.PacketOut = &pktOut
 	pbPacketOut.Id = deviceId

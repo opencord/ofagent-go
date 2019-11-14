@@ -99,3 +99,6 @@ func addClient(deviceId string) *openflow.Client {
 	clientMap[deviceId] = client
 	return client
 }
+func GetClient(deviceId string) *openflow.Client {
+	return clientMap[deviceId]
+}
