@@ -18,12 +18,13 @@ package grpc
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/openflow"
-	"github.com/opencord/voltha-protos/go/openflow_13"
-	pb "github.com/opencord/voltha-protos/go/voltha"
+	"github.com/opencord/voltha-protos/v2/go/openflow_13"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
 	"log"
 )
@@ -41,6 +42,8 @@ func receivePacketIn(client pb.VolthaServiceClient) {
 		if err != nil {
 			log.Fatalf("error on stream.Rec %v", err)
 		}
+		js, _ := json.Marshal(packetIn)
+		log.Printf("PACKET IN %s", js)
 		deviceID := packet.GetId()
 		ofPacketIn := ofp.NewPacketIn()
 		ofPacketIn.SetVersion(uint8(4))

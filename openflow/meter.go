@@ -18,7 +18,7 @@ package openflow
 import (
 	"encoding/json"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/go/openflow_13"
+	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 	"golang.org/x/net/context"
 	"log"
 )
@@ -38,19 +38,14 @@ func handleMeterModRequest(request *ofp.MeterMod, client *Client) {
 	ofpBands := request.GetMeters()
 	for i := 0; i < len(ofpBands); i++ {
 		ofpBand := ofpBands[i]
-
 		bandType := ofpBand.GetType()
 		var band openflow_13.OfpMeterBandHeader
 		switch bandType {
 		case ofp.OFPMBTDrop:
 			ofpDrop := ofpBand.(ofp.IMeterBandDrop)
-			band.BurstSize = ofpDrop.GetBurstSize()
 			band.Type = openflow_13.OfpMeterBandType_OFPMBT_DROP
 			band.Rate = ofpDrop.GetRate()
-			var meterBandHeaderDrop openflow_13.OfpMeterBandHeader_Drop
-			var drop openflow_13.OfpMeterBandDrop
-			meterBandHeaderDrop.Drop = &drop
-			band.Data = &meterBandHeaderDrop
+			band.BurstSize = ofpDrop.GetBurstSize()
 		case ofp.OFPMBTDSCPRemark:
 			ofpDscpRemark := ofpBand.(ofp.IMeterBandDscpRemark)
 			var dscpRemark openflow_13.OfpMeterBandDscpRemark
@@ -58,9 +53,12 @@ func handleMeterModRequest(request *ofp.MeterMod, client *Client) {
 			band.BurstSize = ofpDscpRemark.GetBurstSize()
 			band.Rate = ofpDscpRemark.GetRate()
 			dscpRemark.PrecLevel = uint32(ofpDscpRemark.GetPrecLevel())
-			var meterBandHeaderDscp openflow_13.OfpMeterBandHeader_DscpRemark
-			meterBandHeaderDscp.DscpRemark = &dscpRemark
-			band.Data = &meterBandHeaderDscp
+			/*
+				var meterBandHeaderDscp openflow_13.OfpMeterBandHeader_DscpRemark
+				meterBandHeaderDscp.DscpRemark = &dscpRemark
+				band.Data = &meterBandHeaderDscp
+
+			*/
 		case ofp.OFPMBTExperimenter:
 			ofpExperimenter := ofpBand.(ofp.IMeterBandExperimenter)
 			var experimenter openflow_13.OfpMeterBandExperimenter
@@ -68,9 +66,12 @@ func handleMeterModRequest(request *ofp.MeterMod, client *Client) {
 			band.Type = openflow_13.OfpMeterBandType_OFPMBT_EXPERIMENTER
 			band.BurstSize = ofpExperimenter.GetBurstSize()
 			band.Rate = ofpExperimenter.GetRate()
-			var meterBandHeaderExperimenter openflow_13.OfpMeterBandHeader_Experimenter
-			meterBandHeaderExperimenter.Experimenter = &experimenter
-			band.Data = &meterBandHeaderExperimenter
+			/*
+				var meterBandHeaderExperimenter openflow_13.OfpMeterBandHeader_Experimenter
+				meterBandHeaderExperimenter.Experimenter = &experimenter
+				band.Data = &meterBandHeaderExperimenter
+
+			*/
 		}
 		bands = append(bands, &band)
 	}

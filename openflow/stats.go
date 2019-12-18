@@ -24,11 +24,11 @@ import (
 	"net"
 	"unsafe"
 
-	"github.com/opencord/voltha-protos/go/openflow_13"
+	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/go/common"
+	"github.com/opencord/voltha-protos/v2/go/common"
 )
 
 func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, client *Client) error {
@@ -47,11 +47,14 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 
 	case ofp.OFPSTFlow:
 		statsReq := request.(*ofp.FlowStatsRequest)
-		response, _ := handleFlowStatsRequest(statsReq, id)
+		response, err := handleFlowStatsRequest(statsReq, id)
+		if err != nil {
+			return err
+		}
 		response.Length = uint16(unsafe.Sizeof(*response))
 		jResponse, _ := json.Marshal(response)
 		log.Printf("HANDLE FLOW STATS REQUEST response\n\n\n %s \n\n\n", jResponse)
-		err := client.SendMessage(response)
+		err = client.SendMessage(response)
 		if err != nil {
 			return err
 		}
@@ -239,6 +242,7 @@ func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.F
 		if size%8 != 0 {
 			size = ((size / 8) + 1) * 8
 		}
+
 		log.Printf("Size is %d", size)
 		entrySize += size
 		entry.SetMatch(*match)

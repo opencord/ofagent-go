@@ -19,10 +19,11 @@ package openflow
 import (
 	"context"
 	"encoding/json"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/go/common"
-	pb "github.com/opencord/voltha-protos/go/voltha"
 	"log"
+
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/voltha-protos/v2/go/common"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 )
 
 func handleFeatureRequest(request *ofp.FeaturesRequest, deviceId string, client *Client) error {

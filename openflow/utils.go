@@ -24,7 +24,7 @@ import (
 	"sync"
 
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/go/openflow_13"
+	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 )
 
 var mu sync.Mutex
@@ -51,11 +51,19 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 		var outputAction openflow_13.OfpAction_Output
 		loxiOutputAction := action.(*ofp.ActionOutput)
 		var output openflow_13.OfpActionOutput
-		output.Port = uint32(loxiOutputAction.Port)
-		output.MaxLen = uint32(loxiOutputAction.MaxLen)
+		output.Port = uint32(loxiOutputAction.GetPort())
+		/*
+			var maxLen uint16
+			maxLen = loxiOutputAction.GetMaxLen()
+			output.MaxLen = uint32(maxLen)
+
+		*/
+		output.MaxLen = 0
 		outputAction.Output = &output
 		ofpAction.Action = &outputAction
 		ofpAction.Type = openflow_13.OfpActionType_OFPAT_OUTPUT
+		js, _ := json.Marshal(outputAction)
+		log.Printf("EXTRACT ACTION %s", js)
 	case ofp.OFPATCopyTtlOut: //CopyTtltOut
 	case ofp.OFPATCopyTtlIn: //CopyTtlIn
 	case ofp.OFPATSetMplsTtl: //SetMplsTtl
@@ -105,6 +113,7 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 		ofpActionSetField.Field = &ofpOxmField
 		ofpAction_SetField.SetField = &ofpActionSetField
 		ofpAction.Action = &ofpAction_SetField
+
 	case ofp.OFPATPushPbb: //PushPbb
 	case ofp.OFPATPopPbb: //PopPbb
 	case ofp.OFPATExperimenter: //Experimenter

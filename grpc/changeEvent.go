@@ -22,7 +22,7 @@ import (
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/openflow"
-	pb "github.com/opencord/voltha-protos/go/voltha"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -33,7 +33,7 @@ func receiveChangeEvent(client pb.VolthaServiceClient) {
 	opt := grpc.EmptyCallOption{}
 	stream, err := client.ReceiveChangeEvents(context.Background(), &empty.Empty{}, opt)
 	if err != nil {
-		log.Fatalln("Unable to establish stream")
+		log.Fatalln("Unable to establish Receive Change Event Stream")
 	}
 	for {
 		changeEvent, err := stream.Recv()
@@ -80,7 +80,6 @@ func receiveChangeEvent(client pb.VolthaServiceClient) {
 		var client = clientMap[deviceId]
 		if client == nil {
 			client = addClient(deviceId)
-
 			time.Sleep(2 * time.Second)
 		}
 		client.SendMessage(ofPortStatus)
