@@ -18,6 +18,7 @@ package grpc
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -27,7 +28,7 @@ import (
 	"fmt"
 	"log"
 
-	pb "github.com/opencord/voltha-protos/go/voltha"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
 )
 
@@ -35,6 +36,7 @@ var client pb.VolthaServiceClient
 var clientMap map[string]*openflow.Client
 var ofAddress string
 var ofPort uint16
+var mapLock sync.Mutex
 
 func StartClient(endpointAddress string, endpointPort uint16, openFlowAddress string, openFlowPort uint16) {
 	ofAddress = openFlowAddress
@@ -69,6 +71,7 @@ func StartClient(endpointAddress string, endpointPort uint16, openFlowAddress st
 }
 func refreshDeviceList(devices []*pb.LogicalDevice) {
 	//first find the new ones
+
 	var toAdd []string
 	var toDel []string
 	var deviceIdMap = make(map[string]string)
@@ -91,12 +94,20 @@ func refreshDeviceList(devices []*pb.LogicalDevice) {
 	}
 	for i := 0; i < len(toDel); i++ {
 		clientMap[toDel[i]].End()
+		mapLock.Lock()
 		delete(clientMap, toDel[i])
+		mapLock.Unlock()
 	}
 }
 func addClient(deviceId string) *openflow.Client {
-	client := openflow.NewClient(ofAddress, ofPort, deviceId, true)
-	clientMap[deviceId] = client
+	mapLock.Lock()
+	var client *openflow.Client
+	client = clientMap[deviceId]
+	if client == nil {
+		client = openflow.NewClient(ofAddress, ofPort, deviceId, true)
+		clientMap[deviceId] = client
+	}
+	mapLock.Unlock()
 	return client
 }
 func GetClient(deviceId string) *openflow.Client {

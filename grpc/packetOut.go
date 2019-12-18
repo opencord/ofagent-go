@@ -19,7 +19,7 @@ package grpc
 import (
 	"encoding/json"
 	"github.com/opencord/ofagent-go/openflow"
-	pb "github.com/opencord/voltha-protos/go/voltha"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
 	"log"
 )

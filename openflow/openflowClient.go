@@ -23,7 +23,7 @@ import (
 
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	pb "github.com/opencord/voltha-protos/go/voltha"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 
 	"log"
 	"net"
@@ -55,6 +55,7 @@ func (client *Client) Start() {
 	if e != nil {
 		errMessage := fmt.Errorf("Unable to resolve %s", addressLine)
 		fmt.Println(errMessage)
+		return
 	}
 	for {
 		if client.KeepRunning {
@@ -64,26 +65,11 @@ func (client *Client) Start() {
 				log.Fatalf("unable to connect to %v", raddr)
 			}
 			defer conn.Close()
-			hello := ofp.NewHello()
-			hello.Xid = uint32(GetXid())
-			var elements []ofp.IHelloElem
-
-			elem := ofp.NewHelloElemVersionbitmap()
-			elem.SetType(ofp.OFPHETVersionbitmap)
-			elem.SetLength(8)
-			var bitmap = ofp.Uint32{Value: 16}
-			bitmaps := []*ofp.Uint32{&bitmap}
-
-			elem.SetBitmaps(bitmaps)
-
-			elements = append(elements, elem)
-
-			hello.SetElements(elements)
-			e = client.SendMessage(hello)
-			if e != nil {
-				log.Fatal(e)
-			}
+			client.sayHello()
 			for {
+				if !client.KeepRunning {
+					return
+				}
 				buf := make([]byte, 1500)
 				read, e := conn.Read(buf)
 				if e != nil {
@@ -91,9 +77,7 @@ func (client *Client) Start() {
 					break
 				}
 				decoder := goloxi.NewDecoder(buf)
-				log.Printf("decoder offset %d baseOffset %d", decoder.Offset(), decoder.BaseOffset())
 				header, e := ofp.DecodeHeader(decoder)
-				log.Printf("received packet read: %d", read)
 
 				if e != nil {
 					log.Printf("decodeheader threw error %v", e)
@@ -103,7 +87,6 @@ func (client *Client) Start() {
 				client.parseHeader(header, buf) //first one is ready
 				len := header.GetLength()
 				if len < uint16(read) {
-					log.Printf("Len %d was less than read %d", len, read)
 					for {
 						read = read - int(len)
 						newBuf := buf[len:]
@@ -117,10 +100,8 @@ func (client *Client) Start() {
 						len = newHeader.GetLength()
 						client.parseHeader(newHeader, newBuf)
 						if read == int(len) {
-							log.Printf(" not continuing read %d len %d", read, len)
 							break
 						} else {
-							log.Printf("continuing read %d len %d", read, len)
 						}
 						buf = newBuf
 					}
@@ -133,14 +114,32 @@ func (client *Client) Start() {
 		break
 	}
 }
+func (client *Client) sayHello() {
 
+	hello := ofp.NewHello()
+	hello.Xid = uint32(GetXid())
+	var elements []ofp.IHelloElem
+
+	elem := ofp.NewHelloElemVersionbitmap()
+	elem.SetType(ofp.OFPHETVersionbitmap)
+	elem.SetLength(8)
+	var bitmap = ofp.Uint32{Value: 16}
+	bitmaps := []*ofp.Uint32{&bitmap}
+
+	elem.SetBitmaps(bitmaps)
+
+	elements = append(elements, elem)
+
+	hello.SetElements(elements)
+	e := client.SendMessage(hello)
+	if e != nil {
+		log.Fatal(e)
+	}
+}
 func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
-
-	log.Printf("parseHeader called with type %d", header.GetType())
 	switch header.GetType() {
 	case ofp.OFPTHello:
-		x := header.(*ofp.Hello)
-		log.Printf("helloMessage : %+v", x)
+		//x := header.(*ofp.Hello)
 	case ofp.OFPTError:
 		errMsg := header.(*ofp.ErrorMsg)
 		go handleErrMsg(errMsg)

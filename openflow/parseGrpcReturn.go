@@ -17,15 +17,17 @@ package openflow
 
 import (
 	"encoding/json"
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/go/openflow_13"
-	pb "github.com/opencord/voltha-protos/go/voltha"
 	"log"
 	"unsafe"
+
+	"github.com/donNewtonAlpha/goloxi"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/voltha-protos/v2/go/openflow_13"
+	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 )
 
 func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
+	log.Printf("PARSE OXM")
 	switch ofbField.Type {
 	case pb.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
 		ofpInPort := ofp.NewOxmInPort()
@@ -62,10 +64,12 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 		val := ofbField.GetValue()
 		if val != nil {
 			vlanId := val.(*openflow_13.OfpOxmOfbField_VlanVid)
-			ofpVlanVid.Value = uint16(vlanId.VlanVid) + 0x1000
+			ofpVlanVid.Value = uint16(vlanId.VlanVid) | 0x1000
 		} else {
 			ofpVlanVid.Value = uint16(0)
 		}
+		js, _ := json.Marshal(ofpVlanVid)
+		log.Printf("PARSE OXM VLAN VID %s", js)
 		return ofpVlanVid, 2
 	case pb.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
 		ofpMetadata := ofp.NewOxmMetadata()
@@ -153,8 +157,8 @@ func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
 
 		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField())
 		setFieldAction.Field = iOxm
-		setFieldAction.Len = 10
-		return setFieldAction, 10
+		setFieldAction.Len = 16
+		return setFieldAction, 16
 	default:
 		js, _ := json.Marshal(ofpAction)
 		log.Printf("UNKNOWN ACTION %s", js)

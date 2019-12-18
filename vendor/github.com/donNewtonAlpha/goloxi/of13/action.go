@@ -5699,6 +5699,7 @@ func (self *ActionSetField) Serialize(encoder *goloxi.Encoder) error {
 	self.Field.Serialize(encoder)
 
 	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	encoder.SkipAlign()
 
 	return nil
 }
