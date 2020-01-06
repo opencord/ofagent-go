@@ -17,9 +17,7 @@
 package openflow
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"strings"
 	"sync"
 
@@ -62,8 +60,6 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 		outputAction.Output = &output
 		ofpAction.Action = &outputAction
 		ofpAction.Type = openflow_13.OfpActionType_OFPAT_OUTPUT
-		js, _ := json.Marshal(outputAction)
-		log.Printf("EXTRACT ACTION %s", js)
 	case ofp.OFPATCopyTtlOut: //CopyTtltOut
 	case ofp.OFPATCopyTtlIn: //CopyTtlIn
 	case ofp.OFPATSetMplsTtl: //SetMplsTtl
@@ -71,9 +67,6 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 	case ofp.OFPATPushVLAN: //PushVlan
 		var pushVlan openflow_13.OfpAction_Push
 		loxiPushAction := action.(*ofp.ActionPushVlan)
-		fields := loxiPushAction.GetActionFields()
-		fieldsJS, _ := json.Marshal(fields)
-		log.Printf("\n\nPushVlan fields %s\n\n", fieldsJS)
 		var push openflow_13.OfpActionPush
 		push.Ethertype = uint32(loxiPushAction.Ethertype) //TODO This should be available in the fields
 		pushVlan.Push = &push
@@ -98,6 +91,7 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 		loxiSetField := action.(*ofp.ActionSetField)
 		oxmName := loxiSetField.Field.GetOXMName()
 		switch oxmName {
+		//TODO handle set field sith other fields
 		case "vlan_vid":
 			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID
 			var vlanVid openflow_13.OfpOxmOfbField_VlanVid
@@ -105,8 +99,6 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 			vlanVid.VlanVid = uint32(VlanVid)
 
 			ofpOxmOfbField.Value = &vlanVid
-		default:
-			log.Printf("UNHANDLED SET FIELD %s", oxmName)
 		}
 		ofpOxmField_OfbField.OfbField = &ofpOxmOfbField
 		ofpOxmField.Field = &ofpOxmField_OfbField
