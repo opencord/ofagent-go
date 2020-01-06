@@ -113,6 +113,30 @@
     },
     {
       "key": {
+        "uuid": "4b4841c6_6c9db016",
+        "filename": "grpc/changeEvent.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-06T20:25:33Z",
+      "side": 1,
+      "message": "does that mean this patchset wrt the per device logging is mute? i am still in favor of post-processing the log as opposed to adding a filtering capability here.",
+      "parentUuid": "3a6f5cef_77842423",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ddc1e93_4292c9b1",
         "filename": "grpc/client.go",
         "patchSetId": 1
