@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "53233731_2963cfe7",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-01-06T18:23:58Z",
+      "side": 1,
+      "message": "all the other voltha components use the \"-log_level\" flag to set the log level, should we be consistend with that?",
+      "range": {
+        "startLine": 21,
+        "startChar": 24,
+        "endLine": 21,
+        "endChar": 30
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db6312c4_34764ea7",
         "filename": "grpc/changeEvent.go",
         "patchSetId": 1
