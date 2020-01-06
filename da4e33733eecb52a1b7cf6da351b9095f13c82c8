@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "47854134_029af5ac",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "that is fine",
+      "parentUuid": "53233731_2963cfe7",
+      "range": {
+        "startLine": 21,
+        "startChar": 24,
+        "endLine": 21,
+        "endChar": 30
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db6312c4_34764ea7",
         "filename": "grpc/changeEvent.go",
         "patchSetId": 1
@@ -53,6 +77,30 @@
       "writtenOn": "2020-01-06T18:14:12Z",
       "side": 1,
       "message": "have you done any performance tests with this check? concerned that it would be costly to check every device ID if \"debug\" is set. Also, this means that some sort of garbage collection might be needed for no longer used devices. Might it be simpler to log everything and then filter the log for what you need?",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a6f5cef_77842423",
+        "filename": "grpc/changeEvent.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "Is the concern the per device aspect? or the debug check in general?  Talking with Matt,I am now aware that we are currently targeting one olt per ofagent so having per olt debugging would be moot.",
+      "parentUuid": "db6312c4_34764ea7",
       "range": {
         "startLine": 36,
         "startChar": 0,
@@ -82,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "cd427388_8101c4f5",
+        "filename": "grpc/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "Not implemented yet, but I needed something for the getDebug call.",
+      "parentUuid": "8ddc1e93_4292c9b1",
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bceac73f_830c3aa7",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -105,6 +171,30 @@
     },
     {
       "key": {
+        "uuid": "c1941d0a_aa2c68d1",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "Will update",
+      "parentUuid": "bceac73f_830c3aa7",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ee6f4bf_f6ec963d",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -116,6 +206,24 @@
       "writtenOn": "2020-01-06T18:28:45Z",
       "side": 1,
       "message": "Is there a need to have logging that granular in the code?  Currently, we can control logging at package level or filter logs based on deviceId.  Are those options  insufficient for ofagent?",
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c835a72_b77112a9",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "In development phase no,  if, down the road, a single ofagent supports 200 olts yes.\nNormally in production, the operations folks never want debug logs unless you suspect something is wrong and then you would only want to see the device you are interested in.",
+      "parentUuid": "3ee6f4bf_f6ec963d",
       "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
@@ -156,6 +264,30 @@
       "writtenOn": "2020-01-06T18:14:12Z",
       "side": 1,
       "message": "why an accessor here as opposed to just index the array directly?",
+      "range": {
+        "startLine": 35,
+        "startChar": 5,
+        "endLine": 35,
+        "endChar": 19
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "176d9fa0_6fc02491",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T19:57:44Z",
+      "side": 1,
+      "message": "It is not an array it is a map with deviceId as the key",
+      "parentUuid": "b26302a4_6b7e2ade",
       "range": {
         "startLine": 35,
         "startChar": 5,
