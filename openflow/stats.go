@@ -20,10 +20,12 @@ import (
 	"context"
 	"encoding/json"
 
-	"log"
 	"net"
+
 	"unsafe"
 
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 
 	"github.com/donNewtonAlpha/goloxi"
@@ -31,11 +33,12 @@ import (
 	"github.com/opencord/voltha-protos/v2/go/common"
 )
 
-func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, client *Client) error {
-	message, _ := json.Marshal(request)
-	log.Printf("handleStatsRequest called with %s\n ", message)
-	var id = common.ID{Id: deviceId}
-
+func handleStatsRequest(request ofp.IHeader, statType uint16, DeviceID string, client *Client) error {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleStatsRequest called", l.Fields{"DeviceID": DeviceID, "StatType": statType, "rquest": js})
+	}
+	var id = common.ID{Id: DeviceID}
 	switch statType {
 	case ofp.OFPSTDesc:
 		statsReq := request.(*ofp.DescStatsRequest)
@@ -43,43 +46,62 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
-
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTFlow:
 		statsReq := request.(*ofp.FlowStatsRequest)
-		response, err := handleFlowStatsRequest(statsReq, id)
+		response, err := handleFlowStatsRequest(statsReq, id, DeviceID)
 		if err != nil {
 			return err
 		}
 		response.Length = uint16(unsafe.Sizeof(*response))
-		jResponse, _ := json.Marshal(response)
-		log.Printf("HANDLE FLOW STATS REQUEST response\n\n\n %s \n\n\n", jResponse)
-		err = client.SendMessage(response)
-		if err != nil {
-			return err
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
 		}
+		return client.SendMessage(response)
 
 	case ofp.OFPSTAggregate:
 		statsReq := request.(*ofp.AggregateStatsRequest)
-		aggregateStatsReply, err := handleAggregateStatsRequest(statsReq, id)
+		response, err := handleAggregateStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(aggregateStatsReply)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTTable:
 		statsReq := request.(*ofp.TableStatsRequest)
-		tableStatsReply, e := handleTableStatsRequest(statsReq, id)
+		response, e := handleTableStatsRequest(statsReq, id)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
 		if e != nil {
 			return e
 		}
-		client.SendMessage(tableStatsReply)
+		return client.SendMessage(response)
 	case ofp.OFPSTPort:
 		statsReq := request.(*ofp.PortStatsRequest)
 		response, err := handlePortStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 
 	case ofp.OFPSTQueue:
 		statsReq := request.(*ofp.QueueStatsRequest)
@@ -87,14 +109,23 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTGroup:
 		statsReq := request.(*ofp.GroupStatsRequest)
 		response, err := handleGroupStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
-
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
 		client.SendMessage(response)
 	case ofp.OFPSTGroupDesc:
 		statsReq := request.(*ofp.GroupDescStatsRequest)
@@ -102,7 +133,12 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 
 	case ofp.OFPSTGroupFeatures:
 		statsReq := request.(*ofp.GroupFeaturesStatsRequest)
@@ -110,43 +146,72 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTMeter:
 		statsReq := request.(*ofp.MeterStatsRequest)
 		response, err := handleMeterStatsRequest(statsReq, id)
 		if err != nil {
-			log.Printf("ERROR HANDLE METER STATS REQUEST %v", err)
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTMeterConfig:
 		statsReq := request.(*ofp.MeterConfigStatsRequest)
 		response, err := handleMeterConfigStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTMeterFeatures:
 		statsReq := request.(*ofp.MeterFeaturesStatsRequest)
 		response, err := handleMeterFeatureStatsRequest(statsReq)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTTableFeatures:
 		statsReq := request.(*ofp.TableFeaturesStatsRequest)
 		response, err := handleTableFeaturesStatsRequest(statsReq, id)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	case ofp.OFPSTPortDesc:
 		statsReq := request.(*ofp.PortDescStatsRequest)
-		response, err := handlePortDescStatsRequest(statsReq, deviceId)
+		response, err := handlePortDescStatsRequest(statsReq, DeviceID)
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 
 	case ofp.OFPSTExperimenter:
 		statsReq := request.(*ofp.ExperimenterStatsRequest)
@@ -154,7 +219,12 @@ func handleStatsRequest(request ofp.IHeader, statType uint16, deviceId string, c
 		if err != nil {
 			return err
 		}
-		client.SendMessage(response)
+		if settings.GetDebug(DeviceID) {
+			reqJs, _ := json.Marshal(statsReq)
+			resJs, _ := json.Marshal(response)
+			logger.Debugw("HandleStatsRequest GRPC", l.Fields{"DeviceID": DeviceID, "Req": reqJs, "Res": resJs})
+		}
+		return client.SendMessage(response)
 	}
 	return nil
 }
@@ -179,8 +249,7 @@ func handleDescStatsRequest(request *ofp.DescStatsRequest, id common.ID) (*ofp.D
 	response.SetDpDesc(PadString(desc.GetDpDesc(), 256))
 	return response, nil
 }
-func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.FlowStatsReply, error) {
-	log.Println("****************************************\n***********************************")
+func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID, DeviceID string) (*ofp.FlowStatsReply, error) {
 	response := ofp.NewFlowStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(4)
@@ -188,18 +257,13 @@ func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.F
 	client := *getGrpcClient()
 	resp, err := client.ListLogicalDeviceFlows(context.Background(), &id)
 	if err != nil {
-		log.Printf("err in handleFlowStatsRequest calling ListLogicalDeviceFlows %v", err)
 		return nil, err
 	}
-	js, _ := json.Marshal(resp)
-	log.Printf("HandleFlowStats response: %s", js)
 	var flow []*ofp.FlowStatsEntry
 	items := resp.GetItems()
-
 	for i := 0; i < len(items); i++ {
 		item := items[i]
 		entry := ofp.NewFlowStatsEntry()
-
 		entry.SetTableId(uint8(item.GetTableId()))
 		entry.SetDurationSec(item.GetDurationSec())
 		entry.SetDurationNsec(item.GetDurationNsec())
@@ -223,40 +287,30 @@ func handleFlowStatsRequest(request *ofp.FlowStatsRequest, id common.ID) (*ofp.F
 			oxmField := oxFields[i]
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm, oxmSize := parseOxm(ofbField)
-			log.Printf("OXMSIZE %d", oxmSize)
+			iOxm, oxmSize := parseOxm(ofbField, DeviceID)
 			fields = append(fields, iOxm)
 			if oxmSize > 0 {
 				size += 4 //header for oxm
 			}
 			size += oxmSize
-			log.Printf("SIZE %d", size)
 		}
 
-		log.Printf("entrySize %d += size %d", entrySize, size)
-		log.Printf("new entrySize %d", entrySize)
 		match.OxmList = fields
 		match.Length = uint16(size)
 		//account for 8 byte alignment
-		log.Printf("Size was %d", size)
 		if size%8 != 0 {
 			size = ((size / 8) + 1) * 8
 		}
-
-		log.Printf("Size is %d", size)
 		entrySize += size
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		ofpInstructions := item.Instructions
 		for i := 0; i < len(ofpInstructions); i++ {
-			instruction, size := parseInstructions(ofpInstructions[i])
+			instruction, size := parseInstructions(ofpInstructions[i], DeviceID)
 			instructions = append(instructions, instruction)
 			entrySize += size
 		}
 		entry.Instructions = instructions
-		log.Printf("entrysize was %d", entrySize)
-		entrySizeMeasured := uint16(unsafe.Sizeof(*entry))
-		log.Printf("entrysize measure %d", entrySizeMeasured)
 		entry.Length = entrySize
 		entrySize = 0
 		flow = append(flow, entry)
@@ -420,7 +474,6 @@ func handleQueueStatsRequest(request *ofp.QueueStatsRequest, id common.ID) (*ofp
 	return response, nil
 }
 func handlePortStatsRequest(request *ofp.PortStatsRequest, id common.ID) (*ofp.PortStatsReply, error) {
-	log.Println("HERE")
 	response := ofp.NewPortStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
@@ -429,11 +482,8 @@ func handlePortStatsRequest(request *ofp.PortStatsRequest, id common.ID) (*ofp.P
 	reply, err := client.ListLogicalDevicePorts(context.Background(), &id)
 	//reply,err := client.GetLogicalDevicePort(context.Background(),&id)
 	if err != nil {
-		log.Printf("error calling ListDevicePorts %v", err)
 		return nil, err
 	}
-	js, _ := json.Marshal(reply)
-	log.Printf("PORT STATS REPLY %s", js)
 	ports := reply.GetItems()
 	var entries []*ofp.PortStatsEntry
 	if request.GetPortNo() == 0xffffffff { //all ports
@@ -451,19 +501,16 @@ func handlePortStatsRequest(request *ofp.PortStatsRequest, id common.ID) (*ofp.P
 		}
 	}
 	response.SetEntries(entries)
-	js, _ = json.Marshal(response)
-	log.Printf("handlePortStatsResponse %s", js)
 	return response, nil
-
 }
 
-func handlePortDescStatsRequest(request *ofp.PortDescStatsRequest, deviceId string) (*ofp.PortDescStatsReply, error) {
+func handlePortDescStatsRequest(request *ofp.PortDescStatsRequest, DeviceID string) (*ofp.PortDescStatsReply, error) {
 	response := ofp.NewPortDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	var grpcClient = *getGrpcClient()
-	var id = common.ID{Id: deviceId}
+	var id = common.ID{Id: DeviceID}
 	logicalDevice, err := grpcClient.GetLogicalDevice(context.Background(), &id)
 	if err != nil {
 		return nil, err

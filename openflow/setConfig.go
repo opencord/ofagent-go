@@ -18,11 +18,16 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"log"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 )
 
-func handleSetConfig(request *ofp.SetConfig) {
-	jsonMessage, _ := json.Marshal(request)
-	log.Printf("handleSetConfig %s\n", jsonMessage)
+func handleSetConfig(request *ofp.SetConfig, DeviceID string) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleSetConfig called", l.Fields{"DeviceID": DeviceID, "request": js})
+
+	}
 }

@@ -17,18 +17,22 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 	"golang.org/x/net/context"
-	"log"
 )
 
-func handleMeterModRequest(request *ofp.MeterMod, client *Client) {
-	jsonRequest, _ := json.Marshal(request)
-	log.Printf("handleMeterModRequest called with %s", jsonRequest)
+func handleMeterModRequest(request *ofp.MeterMod, DeviceID string, client *Client) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleMeterModRequest called", l.Fields{"DeviceID": DeviceID, "request": js})
+	}
 
 	var meterModUpdate openflow_13.MeterModUpdate
-	meterModUpdate.Id = client.DeviceId
+	meterModUpdate.Id = DeviceID
 	var meterMod openflow_13.OfpMeterMod
 	meterMod.MeterId = request.MeterId
 	meterMod.Flags = uint32(request.Flags)
@@ -78,12 +82,13 @@ func handleMeterModRequest(request *ofp.MeterMod, client *Client) {
 	meterMod.Bands = bands
 	meterModUpdate.MeterMod = &meterMod
 	grpcClient := *getGrpcClient()
-	meterModJS, _ := json.Marshal(meterModUpdate)
-	log.Printf("METER MOD UPDATE %s", meterModJS)
-	empty, err := grpcClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate)
-	if err != nil {
-		log.Printf("ERROR DOING METER MOD ADD %v", err)
+	if settings.GetDebug(DeviceID) {
+		meterModJS, _ := json.Marshal(meterModUpdate)
+		logger.Debugw("handleMeterModUpdate sending request",
+			l.Fields{"DeviceID": DeviceID, "MeterModRequest": meterModJS})
 	}
-	emptyJs, _ := json.Marshal(empty)
-	log.Printf("METER MOD RESPONSE %s", emptyJs)
+	_, err := grpcClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate)
+	if err != nil {
+		logger.Errorw("Error calling UpdateLogicalDeviceMeterTable", l.Fields{"DeviceID": DeviceID, "error": err})
+	}
 }

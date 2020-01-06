@@ -19,31 +19,38 @@ package grpc
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/openflow"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
-	"log"
 )
 
 func receivePacketIn(client pb.VolthaServiceClient) {
+	if settings.GetDebug(grpcDeviceID) {
+		logger.Debugln("Starting ReceivePacketIn Stream")
+	}
 	opt := grpc.EmptyCallOption{}
 	stream, err := client.ReceivePacketsIn(context.Background(), &empty.Empty{}, opt)
 	if err != nil {
-		log.Fatalln("Unable to establish stream")
+		logger.Fatalw("Unable to establish PacketIn stream", l.Fields{"Error": err})
 	}
 	for {
 		packet, err := stream.Recv()
 		packetIn := packet.GetPacketIn()
 
 		if err != nil {
-			log.Fatalf("error on stream.Rec %v", err)
+			logger.Fatalw("ReceivePacketIn unable to receive packet", l.Fields{"Error": err})
 		}
-		js, _ := json.Marshal(packetIn)
-		log.Printf("PACKET IN %s", js)
+		if settings.GetDebug(grpcDeviceID) {
+			js, _ := json.Marshal(packetIn)
+			logger.Debugw("ReceivePacketIn Recieved", l.Fields{"PacketIn": js})
+		}
 		deviceID := packet.GetId()
 		ofPacketIn := ofp.NewPacketIn()
 		ofPacketIn.SetVersion(uint8(4))
@@ -113,7 +120,7 @@ func receivePacketIn(client pb.VolthaServiceClient) {
 
 				fields = append(fields, ofpVlanVid)
 			default:
-				log.Printf("handleFlowStatsRequest   Unhandled OxmField %v", ofbField.Type)
+				logger.Warnw("receivePacketIn   Unhandled OxmField ", l.Fields{"Field": ofbField.Type})
 			}
 		}
 		match.SetLength(size)

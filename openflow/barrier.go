@@ -18,13 +18,19 @@ package openflow
 
 import (
 	"encoding/json"
+
+	"github.com/opencord/ofagent-go/settings"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"log"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 )
 
-func handleBarrierRequest(request *ofp.BarrierRequest, client *Client) {
-	jsonRequest, _ := json.Marshal(request)
-	log.Printf("handleBarrierRequest called with %s", jsonRequest)
+func handleBarrierRequest(request *ofp.BarrierRequest, DeviceID string, client *Client) {
+
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleBarrierRequest called with %s", l.Fields{"DeviceID": DeviceID, "request": js})
+	}
 	reply := ofp.NewBarrierReply()
 	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())

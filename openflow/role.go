@@ -18,14 +18,17 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"log"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 )
 
-func handleRoleRequest(request *ofp.RoleRequest, client *Client) {
-	jsonMessage, _ := json.Marshal(request)
-	log.Printf("handleRoleRequest called with %s", jsonMessage)
-
+func handleRoleRequest(request *ofp.RoleRequest, DeviceID string, client *Client) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleRoleRequest called", l.Fields{"DeviceID": client.DeviceID, "request": js})
+	}
 	reply := ofp.NewRoleReply()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())
