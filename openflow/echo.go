@@ -18,13 +18,17 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"log"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 )
 
-func handleEchoRequest(request *ofp.EchoRequest, client *Client) {
-	jsonMessage, _ := json.Marshal(request)
-	log.Printf("handleEchoRequest called with %s", jsonMessage)
+func handleEchoRequest(request *ofp.EchoRequest, DeviceID string, client *Client) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleEchoRequest called", l.Fields{"DeviceID": DeviceID, "request": js})
+	}
 	reply := ofp.NewEchoReply()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())

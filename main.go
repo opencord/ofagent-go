@@ -18,20 +18,41 @@ package main
 
 import (
 	"flag"
-	"log"
+	"github.com/opencord/ofagent-go/settings"
 
 	"github.com/opencord/ofagent-go/grpc"
-	//"log"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 )
 
 func main() {
-	logConfig := flag.String("logconfig", "", "logConfigFile")
-	log.Printf("LogConfig:%s", *logConfig)
+	debug := flag.Bool("debug", false, "Set Debug Level Logging")
+	var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to `file`")
+	var memprofile = flag.String("memprofile", "", "write memory profile to `file`")
+
 	openflowAddress := flag.String("ofaddress", "localhost", "address of the openflow server")
 	openflowPort := flag.Uint("openflowPort", 6653, "port the openflow server is listening on")
 	volthaAddress := flag.String("volthaAddress", "localhost", "address for voltha core / afrouter")
 	volthaPort := flag.Uint("volthaPort", 50057, "port that voltha core / afrouter listens on ")
 	flag.Parse()
+
+	logLevel := l.InfoLevel
+	if *debug {
+		logLevel = l.DebugLevel
+		settings.SetDebug(true)
+	} else {
+		settings.SetDebug(false)
+	}
+	_, err := l.AddPackage(l.JSON, logLevel, nil)
+	if err != nil {
+		l.Errorw("unable-to-register-package-to-the-log-map", l.Fields{"error": err})
+	}
+	l.Infow("ofagent-startup params", l.Fields{"OpenFlowAddress": *openflowAddress,
+		"OpenFlowPort":  *openflowPort,
+		"VolthaAddress": *volthaAddress,
+		"VolthaPort":    *volthaPort,
+		"LogLevel":      logLevel,
+		"CpuProfile":    *cpuprofile,
+		"MemProfile":    *memprofile})
 
 	grpc.StartClient(*volthaAddress, uint16(*volthaPort), *openflowAddress, uint16(*openflowPort))
 }

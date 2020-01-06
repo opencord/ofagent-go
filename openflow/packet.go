@@ -18,14 +18,18 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
-	"log"
 )
 
-func handlePacketOut(packetOut *ofp.PacketOut, deviceId string) {
-	jsonMessage, _ := json.Marshal(packetOut)
-	log.Printf("handlePacketOut called with %s", jsonMessage)
+func handlePacketOut(packetOut *ofp.PacketOut, DeviceID string) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(packetOut)
+		logger.Debugw("handlePacketOut called", l.Fields{"DeviceID": DeviceID, "packetOut": js})
+	}
 	pktOut := pb.OfpPacketOut{}
 	pktOut.BufferId = packetOut.GetBufferId()
 	pktOut.InPort = uint32(packetOut.GetInPort())
@@ -34,21 +38,16 @@ func handlePacketOut(packetOut *ofp.PacketOut, deviceId string) {
 	for i := 0; i < len(inActions); i++ {
 		action := inActions[i]
 		newAction := extractAction(action)
-		js, _ := json.Marshal(newAction)
-		log.Printf("PACKET_OUT ACTION %s", js)
-		/*var newAction = pb.OfpAction{}
-		newAction.Type = pb.OfpActionType(action.GetType())
-		action.
-
-		*/
 		actions = append(actions, newAction)
 	}
 	pktOut.Actions = actions
 	pktOut.Data = packetOut.GetData()
-	js, _ := json.Marshal(pktOut)
-	log.Printf("PacketOut %s", js)
 	pbPacketOut := pb.PacketOut{}
 	pbPacketOut.PacketOut = &pktOut
-	pbPacketOut.Id = deviceId
+	pbPacketOut.Id = DeviceID
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(pbPacketOut)
+		logger.Debugw("handlePacketOut sending", l.Fields{"DeviceID": DeviceID, "packetOut": js})
+	}
 	packetOutChannel <- pbPacketOut
 }

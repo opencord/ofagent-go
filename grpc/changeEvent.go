@@ -19,35 +19,44 @@ package grpc
 import (
 	"context"
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/openflow"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
-	"log"
+
 	"net"
 	"time"
 )
 
 func receiveChangeEvent(client pb.VolthaServiceClient) {
+	if settings.GetDebug(grpcDeviceID) {
+		logger.Debugln("GrpcClient receiveChangeEvent called")
+	}
 	opt := grpc.EmptyCallOption{}
 	stream, err := client.ReceiveChangeEvents(context.Background(), &empty.Empty{}, opt)
 	if err != nil {
-		log.Fatalln("Unable to establish Receive Change Event Stream")
+		logger.Fatalln("Unable to establish Receive Change Event Stream")
 	}
 	for {
 		changeEvent, err := stream.Recv()
 		if err != nil {
-			log.Printf("Error receiving change event %v", err)
+			logger.Errorw("Error receiving change event", l.Fields{"Error": err})
 		}
-		js, _ := json.Marshal(changeEvent)
-
-		log.Printf("Received Change Event   \n\n\n %s \n\n\n", js)
-		deviceId := changeEvent.GetId()
+		deviceID := changeEvent.GetId()
 		portStatus := changeEvent.GetPortStatus()
+		if settings.GetDebug(grpcDeviceID) {
+			//js, _ := json.Marshal(changeEvent)
+
+			logger.Debugw("Received Change Event", l.Fields{"DeviceID": deviceID, "PortStatus": portStatus})
+		}
+
 		if portStatus == nil {
-			jsonMessage, _ := json.Marshal(changeEvent.GetEvent())
-			log.Printf("Received change event that was not port status %v", jsonMessage)
+			js, _ := json.Marshal(changeEvent.GetEvent())
+			logger.Warnw("Received change event that was not port status", l.Fields{"ChangeEvent": js})
 			break
 		}
 		ofPortStatus := ofp.NewPortStatus()
@@ -77,9 +86,9 @@ func receiveChangeEvent(client pb.VolthaServiceClient) {
 		ofDesc.SetState(ofp.PortState(desc.GetState()))
 		ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
 		ofPortStatus.SetDesc(*ofDesc)
-		var client = clientMap[deviceId]
+		var client = clientMap[deviceID]
 		if client == nil {
-			client = addClient(deviceId)
+			client = addClient(deviceID)
 			time.Sleep(2 * time.Second)
 		}
 		client.SendMessage(ofPortStatus)

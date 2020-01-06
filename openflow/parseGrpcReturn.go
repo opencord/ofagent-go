@@ -17,17 +17,21 @@ package openflow
 
 import (
 	"encoding/json"
-	"log"
-	"unsafe"
 
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	"github.com/opencord/voltha-protos/v2/go/openflow_13"
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 )
 
-func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
-	log.Printf("PARSE OXM")
+func parseOxm(ofbField *openflow_13.OfpOxmOfbField, DeviceID string) (goloxi.IOxm, uint16) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(ofbField)
+		logger.Debugw("parseOxm called", l.Fields{"DeviceID": DeviceID, "ofbField": js})
+	}
+
 	switch ofbField.Type {
 	case pb.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
 		ofpInPort := ofp.NewOxmInPort()
@@ -68,8 +72,6 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 		} else {
 			ofpVlanVid.Value = uint16(0)
 		}
-		js, _ := json.Marshal(ofpVlanVid)
-		log.Printf("PARSE OXM VLAN VID %s", js)
 		return ofpVlanVid, 2
 	case pb.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
 		ofpMetadata := ofp.NewOxmMetadata()
@@ -77,11 +79,16 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 		ofpMetadata.Value = val.TableMetadata
 		return ofpMetadata, 8
 	default:
-		log.Printf("handleFlowStatsRequest   Unhandled OxmField %v", ofbField.Type)
+		js, _ := json.Marshal(ofbField)
+		logger.Warnw("ParseOXM Unhandled OxmField", l.Fields{"DeviceID": DeviceID, "OfbField": js})
 	}
 	return nil, 0
 }
-func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) (ofp.IInstruction, uint16) {
+func parseInstructions(ofpInstruction *openflow_13.OfpInstruction, DeviceID string) (ofp.IInstruction, uint16) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(ofpInstruction)
+		logger.Debugw("parseInstructions called", l.Fields{"DeviceID": DeviceID, "Instruction": js})
+	}
 	instType := ofpInstruction.Type
 	data := ofpInstruction.GetData()
 	switch instType {
@@ -111,29 +118,28 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) (ofp.IInstruc
 		var actions []goloxi.IAction
 		for i := 0; i < len(ofpActions); i++ {
 			ofpAction := ofpActions[i]
-			action, actionSize := parseAction(ofpAction)
-			js, _ := json.Marshal(action)
-			log.Printf("ACTION size(%d) value %s", actionSize, js)
+			action, actionSize := parseAction(ofpAction, DeviceID)
 			actions = append(actions, action)
 			instructionSize += actionSize
-			mySize := unsafe.Sizeof(*instruction)
-			log.Printf("Calculated Size %d Measured size %d", instructionSize, mySize)
 
 		}
 		instruction.Actions = actions
 		instruction.SetLen(instructionSize)
-		js, _ := json.Marshal(instruction)
-		log.Printf("INSTRUCTION %s", js)
+		if settings.GetDebug(DeviceID) {
+			js, _ := json.Marshal(instruction)
+			l.Debugw("parseInstructions returning", l.Fields{"DeviceID": DeviceID,
+				"Size": instructionSize, "ParsedInstruction": js})
+		}
 		return instruction, instructionSize
 	}
 	//shouldn't have reached here :<
-	js, _ := json.Marshal(ofpInstruction)
-	log.Printf("Parse Instruction Failed ofpInstruction : %s", js)
 	return nil, 0
 }
-func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
-	js, _ := json.Marshal(ofpAction)
-	log.Printf("ACTION BEFORE %s", js)
+func parseAction(ofpAction *openflow_13.OfpAction, DeviceID string) (goloxi.IAction, uint16) {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(ofpAction)
+		logger.Debugw("parseAction called", l.Fields{"DeviceID": DeviceID, "Action": js})
+	}
 	switch ofpAction.Type {
 	case openflow_13.OfpActionType_OFPAT_OUTPUT:
 		ofpOutputAction := ofpAction.GetOutput()
@@ -155,13 +161,13 @@ func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
 		ofpActionSetField := ofpAction.GetSetField()
 		setFieldAction := ofp.NewActionSetField()
 
-		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField())
+		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField(), DeviceID)
 		setFieldAction.Field = iOxm
 		setFieldAction.Len = 16
 		return setFieldAction, 16
 	default:
 		js, _ := json.Marshal(ofpAction)
-		log.Printf("UNKNOWN ACTION %s", js)
+		logger.Warnw("parseAction unknow action", l.Fields{"DeviceID": DeviceID, "Action": js})
 	}
 	return nil, 0
 }

@@ -26,19 +26,29 @@ import (
 	"github.com/opencord/ofagent-go/openflow"
 
 	"fmt"
-	"log"
+
+	"github.com/opencord/ofagent-go/settings"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 	"google.golang.org/grpc"
 )
 
+var grpcDeviceID = "GRPC_CLIENT"
 var client pb.VolthaServiceClient
 var clientMap map[string]*openflow.Client
 var ofAddress string
 var ofPort uint16
 var mapLock sync.Mutex
+var logger, _ = l.AddPackage(l.JSON, l.DebugLevel, nil)
 
+//StartClient - make the inital connection to voltha and kicks off io streams
 func StartClient(endpointAddress string, endpointPort uint16, openFlowAddress string, openFlowPort uint16) {
+
+	if settings.GetDebug(grpcDeviceID) {
+		logger.Debugw("Starting GRPC - VOLTHA client", l.Fields{"EndPointAddr": endpointAddress,
+			"EndPointPort": endpointPort, "OpenFlowAddress": openFlowAddress, "OpenFlowPort": openFlowPort})
+	}
 	ofAddress = openFlowAddress
 	ofPort = openFlowPort
 	clientMap = make(map[string]*openflow.Client)
@@ -48,7 +58,7 @@ func StartClient(endpointAddress string, endpointPort uint16, openFlowAddress st
 	conn, err := grpc.Dial(endpoint, opts...)
 	defer conn.Close()
 	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
+		l.Fatalw("StartClient failed opening GRPC connecton", l.Fields{"EndPoint": endpoint, "Error": err})
 	}
 	client = pb.NewVolthaServiceClient(conn)
 
@@ -58,15 +68,16 @@ func StartClient(endpointAddress string, endpointPort uint16, openFlowAddress st
 
 	openflow.SetGrpcClient(&client)
 	for {
-		log.Println("entering device refresh pull")
+		if settings.GetDebug(grpcDeviceID) {
+			logger.Debugln("GrpcClient entering device refresh pull")
+		}
 		deviceList, err := client.ListLogicalDevices(context.Background(), &empty.Empty{})
 		if err != nil {
-			log.Printf("ERROR GET DEVICE LIST %v", err)
+			logger.Errorw("GrpcClient getDeviceList failed", l.Fields{"Error": err})
 		}
 		devices := deviceList.GetItems()
 		refreshDeviceList(devices)
 		time.Sleep(time.Minute)
-		log.Println("waking up")
 	}
 }
 func refreshDeviceList(devices []*pb.LogicalDevice) {
@@ -74,19 +85,21 @@ func refreshDeviceList(devices []*pb.LogicalDevice) {
 
 	var toAdd []string
 	var toDel []string
-	var deviceIdMap = make(map[string]string)
+	var deviceIDMap = make(map[string]string)
 	for i := 0; i < len(devices); i++ {
-		log.Printf("Device ID %s", devices[i].GetId())
-		deviceId := devices[i].GetId()
-		deviceIdMap[deviceId] = deviceId
-		if clientMap[deviceId] == nil {
-			toAdd = append(toAdd, deviceId)
+		deviceID := devices[i].GetId()
+		deviceIDMap[deviceID] = deviceID
+		if clientMap[deviceID] == nil {
+			toAdd = append(toAdd, deviceID)
 		}
 	}
-	for key, _ := range clientMap {
-		if deviceIdMap[key] == "" {
+	for key := range clientMap {
+		if deviceIDMap[key] == "" {
 			toDel = append(toDel, key)
 		}
+	}
+	if settings.GetDebug(grpcDeviceID) {
+		logger.Debugw("GrpcClient refreshDeviceList", l.Fields{"ToAdd": toAdd, "ToDel": toDel})
 	}
 	for i := 0; i < len(toAdd); i++ {
 		var client = addClient(toAdd[i])
@@ -99,17 +112,28 @@ func refreshDeviceList(devices []*pb.LogicalDevice) {
 		mapLock.Unlock()
 	}
 }
-func addClient(deviceId string) *openflow.Client {
+func addClient(deviceID string) *openflow.Client {
+	if settings.GetDebug(grpcDeviceID) {
+		logger.Debugw("GrpcClient addClient called ", l.Fields{"DeviceID": deviceID})
+	}
 	mapLock.Lock()
 	var client *openflow.Client
-	client = clientMap[deviceId]
+	client = clientMap[deviceID]
 	if client == nil {
-		client = openflow.NewClient(ofAddress, ofPort, deviceId, true)
-		clientMap[deviceId] = client
+		client = openflow.NewClient(ofAddress, ofPort, deviceID, true)
+		go client.Start()
+		clientMap[deviceID] = client
 	}
 	mapLock.Unlock()
+	logger.Debugw("Finished with addClient", l.Fields{"deviceID": deviceID})
 	return client
 }
-func GetClient(deviceId string) *openflow.Client {
-	return clientMap[deviceId]
+
+//GetClient Returns a pointer to the OpenFlow client
+func GetClient(deviceID string) *openflow.Client {
+	client := clientMap[deviceID]
+	if client == nil {
+		client = addClient(deviceID)
+	}
+	return client
 }

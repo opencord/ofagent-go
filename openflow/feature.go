@@ -19,20 +19,29 @@ package openflow
 import (
 	"context"
 	"encoding/json"
-	"log"
+
+	"github.com/opencord/ofagent-go/settings"
 
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	l "github.com/opencord/voltha-lib-go/v2/pkg/log"
 	"github.com/opencord/voltha-protos/v2/go/common"
 	pb "github.com/opencord/voltha-protos/v2/go/voltha"
 )
 
-func handleFeatureRequest(request *ofp.FeaturesRequest, deviceId string, client *Client) error {
-	message, _ := json.Marshal(request)
-	log.Printf("handleFeatureRequest called with %s\n ", message)
+func handleFeatureRequest(request *ofp.FeaturesRequest, DeviceID string, client *Client) error {
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(request)
+		logger.Debugw("handleFeatureRequest called", l.Fields{"DeviceID": DeviceID, "request": js})
+	}
 	var grpcClient = *getGrpcClient()
-	var id = common.ID{Id: deviceId}
+	var id = common.ID{Id: DeviceID}
 	logicalDevice, err := grpcClient.GetLogicalDevice(context.Background(), &id)
 	reply := createFeaturesRequestReply(request.GetXid(), logicalDevice)
+
+	if settings.GetDebug(DeviceID) {
+		js, _ := json.Marshal(reply)
+		logger.Debugw("handleFeatureRequestReturn", l.Fields{"DeviceID": DeviceID, "reply": js})
+	}
 	err = client.SendMessage(reply)
 	return err
 }
