@@ -253,6 +253,30 @@
     },
     {
       "key": {
+        "uuid": "24e7ff85_86fcf971",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-06T20:23:41Z",
+      "side": 1,
+      "message": "map",
+      "parentUuid": "af6645ed_91a40e8e",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 24
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b26302a4_6b7e2ade",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -288,6 +312,30 @@
       "side": 1,
       "message": "It is not an array it is a map with deviceId as the key",
       "parentUuid": "b26302a4_6b7e2ade",
+      "range": {
+        "startLine": 35,
+        "startChar": 5,
+        "endLine": 35,
+        "endChar": 19
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28545470_14d8ef5d",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-06T20:23:41Z",
+      "side": 1,
+      "message": "yes, it is an array, same question \u0027s/index/key/g\u0027 and \u0027s/array/map/g\u0027?",
+      "parentUuid": "176d9fa0_6fc02491",
       "range": {
         "startLine": 35,
         "startChar": 5,
