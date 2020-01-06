@@ -301,6 +301,30 @@
     },
     {
       "key": {
+        "uuid": "f2f2338b_98711ab3",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T21:10:53Z",
+      "side": 1,
+      "message": "do you expect olts to be added and subtracted at a high enough rate that that this map would grow unreasonably?  The current plan is to only support a single olt per ofagent so the most this could ever hold is a 16 character string and a single bool.  Even with 100 olts that is less than 2KB.",
+      "parentUuid": "af6645ed_91a40e8e",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 24
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b26302a4_6b7e2ade",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -360,6 +384,30 @@
       "side": 1,
       "message": "yes, it is an array, same question \u0027s/index/key/g\u0027 and \u0027s/array/map/g\u0027?",
       "parentUuid": "176d9fa0_6fc02491",
+      "range": {
+        "startLine": 35,
+        "startChar": 5,
+        "endLine": 35,
+        "endChar": 19
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2f88be4_2dcdd435",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-06T21:10:53Z",
+      "side": 1,
+      "message": "so you are suggesting I use a non-idiomatic way of accessing a map value?  Why? For performance? Certainly not for readability",
+      "parentUuid": "28545470_14d8ef5d",
       "range": {
         "startLine": 35,
         "startChar": 5,
