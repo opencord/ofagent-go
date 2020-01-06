@@ -65,6 +65,23 @@
     },
     {
       "key": {
+        "uuid": "8ddc1e93_4292c9b1",
+        "filename": "grpc/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-06T18:28:45Z",
+      "side": 1,
+      "message": "grpcDeviceID is set to \"GRPC_CLIENT\".   I could not find where the setting to set a debug level using a deviceId is done.  Is it set somewhere or this is work in progress?",
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bceac73f_830c3aa7",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -82,6 +99,23 @@
         "endLine": 2,
         "endChar": 17
       },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ee6f4bf_f6ec963d",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-06T18:28:45Z",
+      "side": 1,
+      "message": "Is there a need to have logging that granular in the code?  Currently, we can control logging at package level or filter logs based on deviceId.  Are those options  insufficient for ofagent?",
       "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
