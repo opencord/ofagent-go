@@ -325,6 +325,30 @@
     },
     {
       "key": {
+        "uuid": "e49efcea_a3523f39",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-07T05:05:46Z",
+      "side": 1,
+      "message": "when i saw device, i was assuming a device could be either an olt or onu. in either case, it is sort of preferred to have memory cleaned up.",
+      "parentUuid": "f2f2338b_98711ab3",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 24
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b26302a4_6b7e2ade",
         "filename": "settings/settings.go",
         "patchSetId": 1
@@ -408,6 +432,30 @@
       "side": 1,
       "message": "so you are suggesting I use a non-idiomatic way of accessing a map value?  Why? For performance? Certainly not for readability",
       "parentUuid": "28545470_14d8ef5d",
+      "range": {
+        "startLine": 35,
+        "startChar": 5,
+        "endLine": 35,
+        "endChar": 19
+      },
+      "revId": "da4e33733eecb52a1b7cf6da351b9095f13c82c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a02a3d_66b55b65",
+        "filename": "settings/settings.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-07T05:05:46Z",
+      "side": 1,
+      "message": "why the separate private method to access the map as opposed to just accessing the map. i.e. remove the getDeviceDebug method. Also, do we have to worry about concurrent access to the array?",
+      "parentUuid": "c2f88be4_2dcdd435",
       "range": {
         "startLine": 35,
         "startChar": 5,
