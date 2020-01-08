@@ -32,6 +32,7 @@ COPY config ./config
 COPY vendor ./vendor
 COPY grpc ./grpc
 COPY openflow ./openflow
+COPY settings ./settings
 COPY *.go ./
 COPY go.mod ./
 COPY go.sum ./
