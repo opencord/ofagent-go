@@ -16,6 +16,24 @@
       "revId": "7577f07af92cf5c47d49a2c4fe404599f02b6475",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c0310d4_f74f5274",
+        "filename": "settings/settings.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-08T18:49:47Z",
+      "side": 1,
+      "message": "I don\u0027t know, but the debate on logging is impacting my ability to work.  So I commented out the device lookup.  The debate needs to happen but not here.",
+      "parentUuid": "312087f6_fc9cb8f6",
+      "revId": "7577f07af92cf5c47d49a2c4fe404599f02b6475",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
