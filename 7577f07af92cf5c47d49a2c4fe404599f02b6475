@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "312087f6_fc9cb8f6",
+        "filename": "settings/settings.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-08T18:30:33Z",
+      "side": 1,
+      "message": "Will deviceId be eventually used?",
+      "revId": "7577f07af92cf5c47d49a2c4fe404599f02b6475",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
