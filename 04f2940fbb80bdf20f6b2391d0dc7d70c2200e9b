@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfce5f85_26af8388",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-13T16:40:33Z",
+      "side": 1,
+      "message": "My main problem with this pattern is, I have to dig into the logging package to understand what it means. \n\nAt first glance it is counter intuitive to me that you would debug log if the log level was less than debug.  In my opinion that is likely a flaw in the logging package or just history on my part.  When I first read I assumed you messed up.  \n\nIf it was \u003d\u003d instead it would be clear, especially since in the enumeration you can\u0027t have a lower(numerically) log level than debug.",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
