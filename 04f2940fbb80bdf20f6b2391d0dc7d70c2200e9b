@@ -2,6 +2,91 @@
   "comments": [
     {
       "key": {
+        "uuid": "c6dc6ee4_a186fab2",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "duplicate?",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9c1aceb_012af4ec",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "In the python version we allow for multiple controller endpoints for redundancy in the form of \"\u003chostname1\u003e:\u003cport1\u003e \u003chostname2\u003e:\u003cport2\u003e \u003chostname3\u003e:\u003cport3\u003e ...\"",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87df51af_81084df7",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "duplicate",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2565b8d2_80956cc9",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "duplicate",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b35acc8c_183cf184",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "duplicate",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cfce5f85_26af8388",
         "filename": "internal/pkg/ofagent/changeEvent.go",
         "patchSetId": 1
@@ -13,6 +98,23 @@
       "writtenOn": "2020-01-13T16:40:33Z",
       "side": 1,
       "message": "My main problem with this pattern is, I have to dig into the logging package to understand what it means. \n\nAt first glance it is counter intuitive to me that you would debug log if the log level was less than debug.  In my opinion that is likely a flaw in the logging package or just history on my part.  When I first read I assumed you messed up.  \n\nIf it was \u003d\u003d instead it would be clear, especially since in the enumeration you can\u0027t have a lower(numerically) log level than debug.",
+      "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db4e2a8e_6c8f7b8d",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-13T16:59:38Z",
+      "side": 1,
+      "message": "It\u0027s better to use a logger for this package (i.e. the logger returned after an AddPackage).  This already knows its log level and therefore logger.Debug() won\u0027t need to do a package log level lookup.\n\nWhen there is an expensive operation (e.g. json marshalling) needed for log only then in those cases it makes sense to check the log level before doing that operation.",
       "revId": "04f2940fbb80bdf20f6b2391d0dc7d70c2200e9b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
