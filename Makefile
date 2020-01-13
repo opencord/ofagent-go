@@ -149,9 +149,8 @@ endif
 	exit $$RETURN
 
 clean:
-	rm -rf sca-report
+	rm -rf sca-report output build
 
 distclean: clean
-	rm -rf ${VENVDIR}
 
 # end file
