@@ -3,7 +3,7 @@ module github.com/opencord/ofagent-go
 go 1.12
 
 require (
-	github.com/donNewtonAlpha/goloxi v0.0.0-20191114190442-56ef1a8d7bcc
+	github.com/donNewtonAlpha/goloxi v1.0.0
 	github.com/golang/protobuf v1.3.2
 	github.com/opencord/voltha-lib-go/v2 v2.2.23
 	github.com/opencord/voltha-protos/v2 v2.1.0
