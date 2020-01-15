@@ -1,4 +1,4 @@
-# github.com/donNewtonAlpha/goloxi v0.0.0-20191114190442-56ef1a8d7bcc
+# github.com/donNewtonAlpha/goloxi v1.0.0
 github.com/donNewtonAlpha/goloxi
 github.com/donNewtonAlpha/goloxi/of13
 # github.com/golang/protobuf v1.3.2

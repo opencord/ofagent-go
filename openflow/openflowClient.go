@@ -193,30 +193,36 @@ func (client *Client) parseHeader(header ofp.IHeader, buf []byte) {
 		packetOut := header.(*ofp.PacketOut)
 		go handlePacketOut(packetOut, client.DeviceID)
 	case ofp.OFPTFlowMod:
+		/* Not using go routine to handle flow* messages or barrier requests
+		onos typically issues barrier requests just before a flow* message.
+		by handling in this thread I ensure all flow* are handled when barrier
+		request is issued.
+		*/
 		flowModType := uint8(buf[25])
 		switch flowModType {
 		case ofp.OFPFCAdd:
 			flowAdd := header.(*ofp.FlowAdd)
-			go handleFlowAdd(flowAdd, client.DeviceID)
+			handleFlowAdd(flowAdd, client.DeviceID)
 		case ofp.OFPFCModify:
 			flowMod := header.(*ofp.FlowMod)
-			go handleFlowMod(flowMod, client.DeviceID)
+			handleFlowMod(flowMod, client.DeviceID)
 		case ofp.OFPFCModifyStrict:
 			flowModStrict := header.(*ofp.FlowModifyStrict)
-			go handleFlowModStrict(flowModStrict, client.DeviceID)
+			handleFlowModStrict(flowModStrict, client.DeviceID)
 		case ofp.OFPFCDelete:
 			flowDelete := header.(*ofp.FlowDelete)
-			go handleFlowDelete(flowDelete, client.DeviceID)
+			handleFlowDelete(flowDelete, client.DeviceID)
 		case ofp.OFPFCDeleteStrict:
 			flowDeleteStrict := header.(*ofp.FlowDeleteStrict)
-			go handleFlowDeleteStrict(flowDeleteStrict, client.DeviceID)
+			handleFlowDeleteStrict(flowDeleteStrict, client.DeviceID)
 		}
 	case ofp.OFPTStatsRequest:
 		var statType = uint16(buf[8])<<8 + uint16(buf[9])
 		go handleStatsRequest(header, statType, client.DeviceID, client)
 	case ofp.OFPTBarrierRequest:
+		/* See note above at case ofp.OFPTFlowMod:*/
 		barRequest := header.(*ofp.BarrierRequest)
-		go handleBarrierRequest(barRequest, client.DeviceID, client)
+		handleBarrierRequest(barRequest, client.DeviceID, client)
 	case ofp.OFPTRoleRequest:
 		roleReq := header.(*ofp.RoleRequest)
 		go handleRoleRequest(roleReq, client.DeviceID, client)

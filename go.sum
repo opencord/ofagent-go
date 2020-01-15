@@ -34,6 +34,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/donNewtonAlpha/goloxi v0.0.0-20191114190442-56ef1a8d7bcc h1:o0ijbscb9OjCFSg13kkfGtdWkU6ep66eiKbX3h94BEk=
 github.com/donNewtonAlpha/goloxi v0.0.0-20191114190442-56ef1a8d7bcc/go.mod h1:mf2669Q9OEthwDwxdgO6fmRVZhM/3F+hhlvkFD7V/JI=
+github.com/donNewtonAlpha/goloxi v1.0.0 h1:aMRErR0P1PXN0JqfWwhjn33gD/NS5YB7bHi/ydsC36I=
+github.com/donNewtonAlpha/goloxi v1.0.0/go.mod h1:mf2669Q9OEthwDwxdgO6fmRVZhM/3F+hhlvkFD7V/JI=
 github.com/dustin/go-humanize v0.0.0-20171111073723-bb3d318650d4/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/eapache/go-resiliency v1.1.0/go.mod h1:kFI+JgMyC7bLPUVY133qvEBtVayf5mFgVsvEsIPBvNs=
 github.com/eapache/go-resiliency v1.2.0/go.mod h1:kFI+JgMyC7bLPUVY133qvEBtVayf5mFgVsvEsIPBvNs=
