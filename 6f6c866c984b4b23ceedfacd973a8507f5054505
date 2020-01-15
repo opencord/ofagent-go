@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2b0ee54_dedd1759",
+        "filename": "vendor/modules.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-15T21:15:52Z",
+      "side": 1,
+      "message": "Is goloxi mature enough to move into the voltha-lib-go repo?",
+      "revId": "6f6c866c984b4b23ceedfacd973a8507f5054505",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
