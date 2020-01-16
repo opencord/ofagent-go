@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e186469_b822f844",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "For better performance it\u0027s better to use the logger returned during an Addpackage.   This will prevent the runtime package name lookup required if we invoke the log package directly.",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d0db928_34d3c62e",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "A check on the logger level would be helpful here",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93aa327f_fa3e67a8",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "To prevent future confusion it may be helpful to use logicalDeviceID instead of deviceID.",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95889fd0_6586faa9",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "Is the sleep required for  the client to be ready?",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3a0dc62_e08d13a8",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "A comment to specify what is a grpcDeviceID will be helpful",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98d1e7ba_2674730f",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "Should this be 0 base on the condition below?",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53be3143_d8e2d52f",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:42:51Z",
+      "side": 1,
+      "message": "Run instead of Start?",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
