@@ -121,6 +121,23 @@
     },
     {
       "key": {
+        "uuid": "d2897faa_ad6ed5ae",
+        "filename": "internal/pkg/openflow/openflowClient.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:49:07Z",
+      "side": 1,
+      "message": "Are we connecting to OF Controller or Voltha Core?   Do we need to crash the container if there is no connection at that time?",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dbdfbc_a1230f03",
         "filename": "internal/pkg/openflow/utils.go",
         "patchSetId": 7
