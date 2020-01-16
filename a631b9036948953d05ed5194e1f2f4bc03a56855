@@ -121,6 +121,23 @@
     },
     {
       "key": {
+        "uuid": "c63f0b74_f54a3e24",
+        "filename": "internal/pkg/ofagent/packetOut.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:52:37Z",
+      "side": 1,
+      "message": "Should all OFAgent functions (e.g. streamPacketOut) be in the same file?  Otherwise, cross-referring elements (e.g. o.packetOutChannel) will be tricky.",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2897faa_ad6ed5ae",
         "filename": "internal/pkg/openflow/openflowClient.go",
         "patchSetId": 7
