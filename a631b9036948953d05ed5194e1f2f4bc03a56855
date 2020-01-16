@@ -118,6 +118,23 @@
       "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dbdfbc_a1230f03",
+        "filename": "internal/pkg/openflow/utils.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T15:45:36Z",
+      "side": 1,
+      "message": "There is a flow utils in voltha-lib-go.  It may be useful to add these functions into that library as well.",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
