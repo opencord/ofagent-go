@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1ae1335d_039ac8e2",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-16T16:44:44Z",
+      "side": 1,
+      "message": "you put the comment here on the warn message but did you really mean up at line 47 on the debug message?",
+      "parentUuid": "2d0db928_34d3c62e",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93aa327f_fa3e67a8",
         "filename": "internal/pkg/ofagent/changeEvent.go",
         "patchSetId": 7
@@ -64,6 +82,24 @@
       "writtenOn": "2020-01-16T15:42:51Z",
       "side": 1,
       "message": "Is the sleep required for  the client to be ready?",
+      "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54ed98db_e6818fce",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-16T16:44:44Z",
+      "side": 1,
+      "message": "Likely it could be replaced with some flag on the openflow client that signals when the hello conversation is concluded.  The problem is there is no OF reply to port status so if ONOS discards the message because that object isn\u0027t addressable yet, the message is lost.  no port status no flowmod so if we lose a race the OLT will never come online.  It will need real testing so I would suggest a jira ticket to capture this.",
+      "parentUuid": "95889fd0_6586faa9",
       "revId": "a631b9036948953d05ed5194e1f2f4bc03a56855",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
