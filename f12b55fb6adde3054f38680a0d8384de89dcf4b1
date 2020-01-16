@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b1f1137_2a876d5f",
+        "filename": "internal/pkg/grpc/changeEvent.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-16T22:51:19Z",
+      "side": 1,
+      "message": "If you have a package logger use that instead of log.V() which is more expensive.",
+      "revId": "f12b55fb6adde3054f38680a0d8384de89dcf4b1",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
