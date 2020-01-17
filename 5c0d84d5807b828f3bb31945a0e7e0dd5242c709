@@ -153,6 +153,30 @@
     },
     {
       "key": {
+        "uuid": "cadf7e77_f997346f",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T22:07:34Z",
+      "side": 1,
+      "message": "I think logicalDeviceID is a better fit.   If we support other types of devices that are not necessarily PON devices or OFagent being used as a proxy for any device type that needs OF support then we would need a generic name.  For now, if deviceID is all over the code then we may want to comment somewhere that it means logicaldeviceId,",
+      "parentUuid": "ff742557_2dff371c",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 11
+      },
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ea31e44_3a8433cd",
         "filename": "internal/pkg/ofagent/packetIn.go",
         "patchSetId": 12
@@ -288,6 +312,24 @@
       "side": 1,
       "message": "not sure i follow, are you suggesting the xid is not currently send in the code below and needs to be?",
       "parentUuid": "db16a387_cd3af24a",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8608e07d_d3150a96",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T22:07:34Z",
+      "side": 1,
+      "message": "Currently, in the python ofagent, xid is not sent down as we don\u0027t have a need for it.   Once we fully implement transactions in the Core then we will need it.",
+      "parentUuid": "bf2f68ec_98adc7f6",
       "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
