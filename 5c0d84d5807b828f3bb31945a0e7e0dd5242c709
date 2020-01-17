@@ -1,0 +1,146 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e50b8ace_5dca3931",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "Is it a good Go practice to separate a struct with many functions into a package with multiple files?   It sure helps when multiple folks are working on the same struct but different functions.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96f2bafa_32a84c51",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "When marshalling to json , it makes sense to have \"log.V()\" check before the marshalling.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4125d0a2_28ffc212",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "For these scenarios the check log.V() is not really required.  I am working on adding this check inside the logger in cases where there are the fields objects, hence preventing the additional \"marshalling\" of the fields if not needed.  The performance gain is not much but a little bit here and there adds up.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "efaa9866_87a8f108",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "This is a good use case where the check is good.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3294093e_dd4b2597",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "I would change the deviceID to logicalDeviceID as it is a true representation of the ID.  If ofagent can be used to connect to different type of logical devices then maybe switchID or something similar would make sense.",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 11
+      },
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ea31e44_3a8433cd",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "I tend to always find it troublesome to get the size right all the time.   If there a way to programmatically deduct it - i understand there could be a performance hit in trying to do so.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b196baa_ee88aa41",
+        "filename": "internal/pkg/ofagent/refresh.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "In the above case a check to nil is made while here it\u0027s a check to \"\".  Is that expected?",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db16a387_cd3af24a",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-17T14:19:36Z",
+      "side": 1,
+      "message": "As a side note, we will need to also send the xid from ONOS to Voltha in the scenario where a flow addition fail.  In such a case Voltha will send back a failure event using that xid (not in place yet).",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
