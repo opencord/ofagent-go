@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1d35a4dc_1ce63c1f",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "guarded in soon to be pushed patchset. the odd think is that the data in the log is not actually json. it is encoded (uuencode?). very strange and unfortunate.\n\ni will take another look through the code in hopes to catch any of these that i have missed.",
+      "parentUuid": "96f2bafa_32a84c51",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4125d0a2_28ffc212",
         "filename": "internal/pkg/ofagent/ofagent.go",
         "patchSetId": 12
@@ -47,6 +65,24 @@
       "writtenOn": "2020-01-17T14:19:36Z",
       "side": 1,
       "message": "For these scenarios the check log.V() is not really required.  I am working on adding this check inside the logger in cases where there are the fields objects, hence preventing the additional \"marshalling\" of the fields if not needed.  The performance gain is not much but a little bit here and there adds up.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42b0d4cc_5188bbea",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "yep, caught some missed others (like this one). will do another once over to see if there are more that are missed.",
+      "parentUuid": "4125d0a2_28ffc212",
       "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
@@ -93,6 +129,30 @@
     },
     {
       "key": {
+        "uuid": "ff742557_2dff371c",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "deviceID is used all throughout this code. are you suggesting the logical device ID fits better? what is the use case for ofagent connecting to other types (and what other types) of logical devices? you mean other than PON devices?",
+      "parentUuid": "3294093e_dd4b2597",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 11
+      },
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ea31e44_3a8433cd",
         "filename": "internal/pkg/ofagent/packetIn.go",
         "patchSetId": 12
@@ -104,6 +164,24 @@
       "writtenOn": "2020-01-17T14:19:36Z",
       "side": 1,
       "message": "I tend to always find it troublesome to get the size right all the time.   If there a way to programmatically deduct it - i understand there could be a performance hit in trying to do so.",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f88b7cc_1968a814",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "here the size is calculated as items are added, so that is programmatically deducting it, isn\u0027t it?",
+      "parentUuid": "0ea31e44_3a8433cd",
       "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
@@ -127,6 +205,24 @@
     },
     {
       "key": {
+        "uuid": "058dec4a_fb6d4892",
+        "filename": "internal/pkg/ofagent/refresh.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "yeah, this seemed odd to me as well, but things were sort of working so i left it. although i haven\u0027t really tested a delete device yet.",
+      "parentUuid": "9b196baa_ee88aa41",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db16a387_cd3af24a",
         "filename": "internal/pkg/openflow/flowMod.go",
         "patchSetId": 12
@@ -138,6 +234,24 @@
       "writtenOn": "2020-01-17T14:19:36Z",
       "side": 1,
       "message": "As a side note, we will need to also send the xid from ONOS to Voltha in the scenario where a flow addition fail.  In such a case Voltha will send back a failure event using that xid (not in place yet).",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf2f68ec_98adc7f6",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-17T17:18:05Z",
+      "side": 1,
+      "message": "not sure i follow, are you suggesting the xid is not currently send in the code below and needs to be?",
+      "parentUuid": "db16a387_cd3af24a",
       "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
