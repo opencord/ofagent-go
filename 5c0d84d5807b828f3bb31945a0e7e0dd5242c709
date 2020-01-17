@@ -188,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "6012d382_b370f8ad",
+        "filename": "internal/pkg/ofagent/packetIn.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-17T19:02:00Z",
+      "side": 1,
+      "message": "You could approach it where something returns the size based on the field type.  Slightly more work but might have some value elsewhere.",
+      "parentUuid": "1f88b7cc_1968a814",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b196baa_ee88aa41",
         "filename": "internal/pkg/ofagent/refresh.go",
         "patchSetId": 12
@@ -217,6 +235,24 @@
       "side": 1,
       "message": "yeah, this seemed odd to me as well, but things were sort of working so i left it. although i haven\u0027t really tested a delete device yet.",
       "parentUuid": "9b196baa_ee88aa41",
+      "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6b7da44_84e7fbce",
+        "filename": "internal/pkg/ofagent/refresh.go",
+        "patchSetId": 12
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-01-17T19:02:00Z",
+      "side": 1,
+      "message": "Likely I fixed the add size but never actually tested the delete side.  The next thing I was going to be tackling was OLT lifecycle / ofagent-go lifecycle.  there really hasn\u0027t been any testing so don\u0027t look for much thought to be reflected.",
+      "parentUuid": "058dec4a_fb6d4892",
       "revId": "5c0d84d5807b828f3bb31945a0e7e0dd5242c709",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
