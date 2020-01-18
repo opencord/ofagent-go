@@ -17,26 +17,8 @@
 
 FROM golang:1.12-alpine3.9 AS build-env
 
-# Install required packages
-RUN apk add --no-cache wget git make build-base protobuf protobuf-dev
-
-# Prepare directory structure
-RUN ["mkdir", "-p", "/build"]
-RUN ["mkdir", "-p", "$GOPATH/src", "$GOPATH/pkg", "$GOPATH/bin"]
-RUN ["mkdir", "-p", "$GOPATH/src/github.com/opencord"]
-RUN ["mkdir", "-p", "$GOPATH/src/github.com/opencord/ofagent-go"]
-
-WORKDIR $GOPATH/src/github.com/opencord/ofagent-go
-
-COPY config ./config
-COPY vendor ./vendor
-COPY grpc ./grpc
-COPY openflow ./openflow
-COPY settings ./settings
-COPY *.go ./
-COPY go.mod ./
-COPY go.sum ./
-
+WORKDIR /src/
+COPY . /src/
 
 ARG org_label_schema_version=unknown
 ARG org_label_schema_vcs_url=unknown
@@ -48,15 +30,16 @@ ARG org_opencord_vcs_dirty=unknown
 # Build ofagent-go
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 ENV GO111MODULE=on
-RUN go build -mod=vendor -o /build/ofagent-go \
+RUN go build -mod=vendor -o /build/ofagent \
 	-ldflags \
-	"-X github.com/opencord/ofagent-go/config/version.version=$org_label_schema_version \
-	 -X github.com/opencord/ofagent-go/config/version.vcsRef=$org_label_schema_vcs_ref  \
-	 -X github.com/opencord/ofagent-go/config/version.vcsDirty=$org_opencord_vcs_dirty \
-	 -X github.com/opencord/ofagent-go/config/version.goVersion=$(go version 2>&1 | sed -E  's/.*go([0-9]+\.[0-9]+\.[0-9]+).*/\1/g') \
-	 -X github.com/opencord/ofagent-go/config/version.os=$(go env GOHOSTOS) \
-	 -X github.com/opencord/ofagent-go/config/version.arch=$(go env GOHOSTARCH) \
-	 -X github.com/opencord/ofagent-go/config/version.buildTime=$org_label_schema_build_date"
+	"-X github.com/opencord/voltha-lib-go/v2/pkg/version.version=$org_label_schema_version \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.vcsRef=$org_label_schema_vcs_ref  \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.vcsDirty=$org_opencord_vcs_dirty \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.goVersion=$(go version 2>&1 | sed -E  's/.*go([0-9]+\.[0-9]+\.[0-9]+).*/\1/g') \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.os=$(go env GOHOSTOS) \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.arch=$(go env GOHOSTARCH) \
+	 -X github.com/opencord/voltha-lib-go/v2/pkg/version.buildTime=$org_label_schema_build_date" \
+	./cmd/ofagent
 
 # -------------
 # Image creation stage
@@ -67,7 +50,7 @@ FROM alpine:3.9.4
 WORKDIR /app
 
 # Copy required files
-COPY --from=build-env /build/ofagent-go /app/
+COPY --from=build-env /build/ofagent /app/ofagent
 
 # Label image
 ARG org_label_schema_version=unknown
