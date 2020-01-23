@@ -18,7 +18,19 @@ if [ -z output ]
 then
     rm output
 fi
-go build -v  -o build/ofagent-go -mod=vendor
+set GO111MODULE=on
+go build -mod=vendor -o /build/ofagent \
+        -ldflags \
+        "-X github.com/opencord/voltha-lib-go/v2/pkg/version.version=$org_label_schema_version \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.vcsRef=$org_label_schema_vcs_ref  \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.vcsDirty=$org_opencord_vcs_dirty \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.goVersion=$(go version 2>&1 | sed -E  's/.*go([0-9]+\.[0-9]+\.[0-9]+).*/\1/g') \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.os=$(go env GOHOSTOS) \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.arch=$(go env GOHOSTARCH) \
+         -X github.com/opencord/voltha-lib-go/v2/pkg/version.buildTime=$org_label_schema_build_date" \
+        ./cmd/ofagent
+
+#go build ./cmd/ofagent -mod=vendor -o build/ofagent-go
 
 if [  "$1" = "debug" ]
 then

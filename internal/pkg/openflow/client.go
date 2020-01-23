@@ -444,7 +444,7 @@ func (ofc *OFClient) parseHeader(header ofp.IHeader) {
 	case ofp.OFPTRoleRequest:
 		go ofc.handleRoleRequest(header.(*ofp.RoleRequest))
 	case ofp.OFPTMeterMod:
-		go ofc.handleMeterModRequest(header.(*ofp.MeterMod))
+		ofc.handleMeterModRequest(header.(*ofp.MeterMod))
 	}
 }
 
