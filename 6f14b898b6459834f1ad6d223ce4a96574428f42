@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b7b1cb6d_029878e6",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:06:30Z",
+      "side": 1,
+      "message": "define other parts? currently those other parts of the code are other functions in the same package (really the same object).",
+      "parentUuid": "ff2f7e62_bb647938",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b12a2efb_c2981ccd",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "ae7b19e7_35ad0e62",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:06:30Z",
+      "side": 1,
+      "message": "If the system becomes disconnected it attempts to reconnect. The system can receive a disconnect event in several situations including getting an EOF on the channel from the controller and a break in the connection from the controller (i.e. a controller crash). In those cases a reconnect is expected.",
+      "parentUuid": "b12a2efb_c2981ccd",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e2a06be_29ea065b",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2020-01-23T14:55:10Z",
       "side": 1,
       "message": "processOFStream instead of Run",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "202893ee_b03e8855",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:06:30Z",
+      "side": 1,
+      "message": "Run is taken for the state machine or high level process loop already which \"runs\" the OF client. this really just processes the steam from the controller.",
+      "parentUuid": "0e2a06be_29ea065b",
       "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
