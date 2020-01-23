@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff2f7e62_bb647938",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T14:55:10Z",
+      "side": 1,
+      "message": "I presume there are other parts of the code that will push OFC events onto the ofc.events channel, yes?",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b12a2efb_c2981ccd",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T14:55:10Z",
+      "side": 1,
+      "message": "Should this be disconnection?",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e2a06be_29ea065b",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T14:55:10Z",
+      "side": 1,
+      "message": "processOFStream instead of Run",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
