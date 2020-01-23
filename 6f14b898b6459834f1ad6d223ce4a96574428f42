@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "0a040cbb_3214e500",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T15:17:21Z",
+      "side": 1,
+      "message": "While having separate \"functions\" in different files within a package has lot of benefits, one area where it gets tricky is during code review.  Not being able to see full object and its implementation makes it difficult to provide more meaningful code review.   Jut being nit picking :)",
+      "parentUuid": "b7b1cb6d_029878e6",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b12a2efb_c2981ccd",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "b10ccabb_0d1316ea",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T15:17:21Z",
+      "side": 1,
+      "message": "ok, makes sense.  The ofc.events channel wills till remain open in this scenario, right?",
+      "parentUuid": "ae7b19e7_35ad0e62",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e2a06be_29ea065b",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -101,6 +137,24 @@
       "side": 1,
       "message": "Run is taken for the state machine or high level process loop already which \"runs\" the OF client. this really just processes the steam from the controller.",
       "parentUuid": "0e2a06be_29ea065b",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d42a722c_046f7c24",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-23T15:17:21Z",
+      "side": 1,
+      "message": "I mean, go comment would  start with \"processOFStream .....\"",
+      "parentUuid": "202893ee_b03e8855",
       "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
