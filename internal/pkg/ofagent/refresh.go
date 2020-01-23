@@ -67,8 +67,7 @@ func (ofa *OFAgent) refreshDeviceList() {
 	}
 	logger.Debugw("GrpcClient refreshDeviceList", log.Fields{"ToAdd": toAdd, "ToDel": toDel})
 	for i := 0; i < len(toAdd); i++ {
-		var client = ofa.addOFClient(toAdd[i])
-		go client.Run(context.Background())
+		ofa.addOFClient(toAdd[i]) // client is started in addOFClient
 	}
 	for i := 0; i < len(toDel); i++ {
 		ofa.clientMap[toDel[i]].Stop()
@@ -90,7 +89,6 @@ func (ofa *OFAgent) addOFClient(deviceID string) *openflow.OFClient {
 			PacketOutChannel:     ofa.packetOutChannel,
 			ConnectionMaxRetries: ofa.ConnectionMaxRetries,
 			ConnectionRetryDelay: ofa.ConnectionRetryDelay,
-			KeepRunning:          true,
 		})
 		go ofc.Run(context.Background())
 		ofa.clientMap[deviceID] = ofc
