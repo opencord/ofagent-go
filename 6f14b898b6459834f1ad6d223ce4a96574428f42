@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c80d5ce7_2b42d02e",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:35:40Z",
+      "side": 1,
+      "message": "yeah, i understand that nit. right now the object is essentially 2000 lines of code, which is a lot to put in a single file.",
+      "parentUuid": "0a040cbb_3214e500",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b12a2efb_c2981ccd",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -108,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "1b8313cb_f97d55e3",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:35:40Z",
+      "side": 1,
+      "message": "yes, the event channel remains open, the TCP connection OFClient.conn will go up and down.",
+      "parentUuid": "b10ccabb_0d1316ea",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e2a06be_29ea065b",
         "filename": "internal/pkg/openflow/client.go",
         "patchSetId": 1
@@ -155,6 +191,24 @@
       "side": 1,
       "message": "I mean, go comment would  start with \"processOFStream .....\"",
       "parentUuid": "202893ee_b03e8855",
+      "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af101f71_2e745954",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-01-23T15:35:40Z",
+      "side": 1,
+      "message": "ah, got it. will change.",
+      "parentUuid": "d42a722c_046f7c24",
       "revId": "6f14b898b6459834f1ad6d223ce4a96574428f42",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
