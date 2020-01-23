@@ -48,7 +48,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -65,7 +65,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-flow",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -82,7 +82,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-aggregate",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -95,7 +95,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-table",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -114,7 +114,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-port",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -130,7 +130,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-queue",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -146,7 +146,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-group",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -162,7 +162,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-group-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -179,7 +179,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-group-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -195,7 +195,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-meter",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -211,7 +211,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-meter-config",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -227,7 +227,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-meter-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -243,7 +243,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-table-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -259,7 +259,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-port-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -276,7 +276,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request",
+			logger.Debugw("handle-stats-request-experimenter",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -465,9 +465,10 @@ func (ofc *OFClient) handleMeterStatsRequest(request *ofp.MeterStatsRequest) (*o
 	if err != nil {
 		return nil, err
 	}
-	size := uint16(40)
+	size := uint16(5) // size of stats header
 	var meterStats []*ofp.MeterStats
 	for _, item := range resp.Items {
+		entrySize := uint16(40) // size of entry header
 		meterStat := ofp.NewMeterStats()
 		stats := item.Stats
 		meterStat.DurationNsec = stats.DurationNsec
@@ -481,13 +482,15 @@ func (ofc *OFClient) handleMeterStatsRequest(request *ofp.MeterStatsRequest) (*o
 			bandStat.ByteBandCount = bStat.ByteBandCount
 			bandStat.PacketBandCount = bStat.PacketBandCount
 			bandStats = append(bandStats, bandStat)
-			size += 16
+			entrySize += uint16(16) // size of each band stat
 		}
 		meterStat.SetBandStats(bandStats)
-		meterStat.Len = size
+		meterStat.Len = entrySize
 		meterStats = append(meterStats, meterStat)
+		size += entrySize
 	}
 	response.SetEntries(meterStats)
+	response.SetLength(size)
 	return response, nil
 }
 
