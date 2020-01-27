@@ -20,8 +20,8 @@ import (
 	"context"
 	"encoding/json"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v2/pkg/log"
-	"github.com/opencord/voltha-protos/v2/go/common"
+	"github.com/opencord/voltha-lib-go/v3/pkg/log"
+	"github.com/opencord/voltha-protos/v3/go/common"
 )
 
 func (ofc *OFClient) handleFeatureRequest(request *ofp.FeaturesRequest) error {

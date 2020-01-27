@@ -19,7 +19,7 @@ package openflow
 import (
 	"encoding/json"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v2/pkg/log"
+	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
 func (ofc *OFClient) handleGetConfigRequest(request *ofp.GetConfigRequest) {

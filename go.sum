@@ -137,10 +137,10 @@ github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRW
 github.com/olekukonko/tablewriter v0.0.0-20170122224234-a0225b3f23b5/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXWMclvtLoiIKAKIo=
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/gomega v1.4.2/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
-github.com/opencord/voltha-lib-go/v2 v2.2.23 h1:iDB6R0aAPeirqHaNAQDtGHtDyb9V/R73wAp2hrbVViQ=
-github.com/opencord/voltha-lib-go/v2 v2.2.23/go.mod h1:CoY2amUEsbO2grCbJRk7G+Fl1Xb7vQLw3/uGLbTz0Ms=
-github.com/opencord/voltha-protos/v2 v2.1.0 h1:Ppl4/3OBwgGuLk0ob9vIEwMGGRC2sqe7WWoxh0Uq/n0=
-github.com/opencord/voltha-protos/v2 v2.1.0/go.mod h1:6kOcfYi1CadWowFxI2SH5wLfHrsRECZLZlD2MFK6WDI=
+github.com/opencord/voltha-lib-go/v3 v3.0.0 h1:vtVoQXCmwskXyr9N4DqqsVmrQL6qW+okW6fDFMbsKiA=
+github.com/opencord/voltha-lib-go/v3 v3.0.0/go.mod h1:YsfYynNUXHiHR2SlxrlU0J8d6szyd4PB8zMuKeoqagI=
+github.com/opencord/voltha-protos/v3 v3.0.0 h1:Hp6rT/zZq+xq4wtPF8kaMOYj27DKcqT9nNB0F0ZPW3c=
+github.com/opencord/voltha-protos/v3 v3.0.0/go.mod h1:n60tmoNSjgDGxEH7YGqDhIeiCpQETpnF5wOcNepHvWU=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2/go.mod h1:iIss55rKnNBTvrwdmkUpLnDpZoAHvWaiq5+iMmen4AE=

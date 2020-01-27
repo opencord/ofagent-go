@@ -19,7 +19,7 @@ package openflow
 import (
 	"fmt"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-protos/v2/go/openflow_13"
+	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"strings"
 	"sync"
 )
