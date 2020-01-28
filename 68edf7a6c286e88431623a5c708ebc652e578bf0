@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d67825a_e57b64a5",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1000651
+      },
+      "writtenOn": "2020-01-28T22:44:05Z",
+      "side": 1,
+      "message": "client.VolthaClient \u003d nil seems to be missed. Other than that, patch looks good to go",
+      "revId": "68edf7a6c286e88431623a5c708ebc652e578bf0",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
