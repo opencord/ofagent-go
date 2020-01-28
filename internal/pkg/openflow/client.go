@@ -345,8 +345,10 @@ top:
 			}
 
 			// Decode and process the packet
-			decoder := goloxi.NewDecoder(buf[:need])
-			header, err := ofp.DecodeHeader(decoder)
+			msgbuf := make([]byte, need)
+			copy(msgbuf, buf[:need])
+			decoder := goloxi.NewDecoder(msgbuf)
+			msg, err := ofp.DecodeHeader(decoder)
 			if err != nil {
 				js, _ := json.Marshal(decoder)
 				logger.Errorw("failed-to-decode",
@@ -357,13 +359,13 @@ top:
 				break top
 			}
 			if logger.V(log.DebugLevel) {
-				js, _ := json.Marshal(header)
+				js, _ := json.Marshal(msg)
 				logger.Debugw("packet-header",
 					log.Fields{
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			ofc.parseHeader(header)
+			ofc.parseHeader(msg)
 		}
 	}
 	logger.Debugw("end-of-stream",
