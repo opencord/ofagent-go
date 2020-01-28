@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea812438_70bc47d8",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-01-28T19:26:23Z",
+      "side": 1,
+      "message": "messageBuf is always greater than or equal to 8, right?",
+      "revId": "e6d95f6b86aeae424c2698b4cb73b5efe28cdbbf",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
