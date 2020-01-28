@@ -24,8 +24,15 @@ import (
 )
 
 func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
-	if logger.V(log.DebugLevel) {
-		logger.Debug("GrpcClient streamPacketOut called")
+	logger.Debug("packet-out-started")
+	// If we exit, assume disconnected
+	defer func() {
+		ofa.events <- ofaEventVolthaDisconnected
+		logger.Debug("packet-out-finished")
+	}()
+	if ofa.volthaClient == nil {
+		logger.Error("no-voltha-connection")
+		return
 	}
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
@@ -33,18 +40,24 @@ func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
 	defer streamDone()
 	if err != nil {
 		logger.Errorw("streamPacketOut Error creating packetout stream ", log.Fields{"error": err})
-		ofa.events <- ofaEventVolthaDisconnected
+		return
 	}
+top:
 	for {
 		select {
 		case <-ctx.Done():
-			return
+			break top
 		case ofPacketOut := <-ofa.packetOutChannel:
 			if logger.V(log.DebugLevel) {
 				js, _ := json.Marshal(ofPacketOut)
 				logger.Debugw("streamPacketOut Receive PacketOut from Channel", log.Fields{"PacketOut": js})
 			}
-			outClient.Send(ofPacketOut)
+			if err := outClient.Send(ofPacketOut); err != nil {
+				logger.Errorw("packet-out-send-error",
+					log.Fields{"error": err.Error()})
+				break top
+			}
+			logger.Debug("packet-out-send")
 		}
 	}
 }

@@ -32,6 +32,7 @@ import (
 )
 
 var logger, _ = log.AddPackage(log.JSON, log.DebugLevel, nil)
+var NoVolthaConnectionError = errors.New("no-voltha-connection")
 
 type ofcEvent byte
 type ofcState byte
@@ -492,15 +493,27 @@ top:
 			if err := ofc.doSend(msg); err != nil {
 				ofc.lastUnsentMessage = msg
 				ofc.events <- ofcEventDisconnect
-				return
+				logger.Debugw("message-sender-error",
+					log.Fields{
+						"device-id": ofc.DeviceID,
+						"error":     err.Error()})
+				break top
 			}
+			logger.Debugw("message-sender-send",
+				log.Fields{
+					"device-id": ofc.DeviceID})
 			ofc.lastUnsentMessage = nil
 		}
 	}
+
+	logger.Debugw("message-sender-finished",
+		log.Fields{
+			"device-id": ofc.DeviceID})
 }
 
 // SendMessage queues a message to be sent to the openflow controller
 func (ofc *OFClient) SendMessage(message Message) error {
+	logger.Debug("queuing-message")
 	ofc.sendChannel <- message
 	return nil
 }

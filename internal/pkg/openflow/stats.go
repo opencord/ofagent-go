@@ -288,6 +288,9 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 }
 
 func (ofc *OFClient) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp.DescStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewDescStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
@@ -309,6 +312,9 @@ func (ofc *OFClient) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp
 }
 
 func (ofc *OFClient) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (*ofp.FlowStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewFlowStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(4)
@@ -382,6 +388,9 @@ func (ofc *OFClient) handleAggregateStatsRequest(request *ofp.AggregateStatsRequ
 }
 
 func (ofc *OFClient) handleGroupStatsRequest(request *ofp.GroupStatsRequest) (*ofp.GroupStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewGroupStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -417,6 +426,9 @@ func (ofc *OFClient) handleGroupStatsRequest(request *ofp.GroupStatsRequest) (*o
 }
 
 func (ofc *OFClient) handleGroupStatsDescRequest(request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewGroupDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -456,6 +468,9 @@ func (ofc *OFClient) handleGroupFeatureStatsRequest(request *ofp.GroupFeaturesSt
 }
 
 func (ofc *OFClient) handleMeterStatsRequest(request *ofp.MeterStatsRequest) (*ofp.MeterStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewMeterStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -531,6 +546,9 @@ func (ofc *OFClient) handleQueueStatsRequest(request *ofp.QueueStatsRequest) (*o
 }
 
 func (ofc *OFClient) handlePortStatsRequest(request *ofp.PortStatsRequest) (*ofp.PortStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewPortStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
@@ -557,6 +575,9 @@ func (ofc *OFClient) handlePortStatsRequest(request *ofp.PortStatsRequest) (*ofp
 }
 
 func (ofc *OFClient) handlePortDescStatsRequest(request *ofp.PortDescStatsRequest) (*ofp.PortDescStatsReply, error) {
+	if ofc.VolthaClient == nil {
+		return nil, NoVolthaConnectionError
+	}
 	response := ofp.NewPortDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())

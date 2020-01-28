@@ -18,6 +18,7 @@ package ofagent
 
 import (
 	"context"
+	"fmt"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
@@ -39,6 +40,7 @@ const (
 	ofaEventError
 
 	ofaStateConnected = ofaState(iota)
+	ofaStateConnecting
 	ofaStateDisconnected
 )
 
@@ -147,6 +149,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 
 				// Kick off process to attempt to establish
 				// connection to voltha
+				state = ofaStateConnecting
 				go ofa.establishConnectionToVoltha(p)
 
 			case ofaEventVolthaConnected:
@@ -156,6 +159,16 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				if state != ofaStateConnected {
 					state = ofaStateConnected
 					volthaCtx, volthaDone = context.WithCancel(context.Background())
+					// Reconnect clients
+					for _, client := range ofa.clientMap {
+						if logger.V(log.DebugLevel) {
+							logger.Debugw("reset-client-voltha-connection",
+								log.Fields{
+									"from": fmt.Sprintf("0x%p", &client.VolthaClient),
+									"to":   fmt.Sprintf("0x%p", &ofa.volthaClient)})
+						}
+						client.VolthaClient = ofa.volthaClient
+					}
 					go ofa.receiveChangeEvents(volthaCtx)
 					go ofa.receivePacketsIn(volthaCtx)
 					go ofa.streamPacketOut(volthaCtx)
@@ -163,13 +176,31 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				}
 
 			case ofaEventVolthaDisconnected:
+				if p != nil {
+					p.UpdateStatus("voltha", probe.ServiceStatusNotReady)
+				}
 				logger.Debug("ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
+					ofa.volthaClient = nil
+					for _, client := range ofa.clientMap {
+						client.VolthaClient = nil
+						if logger.V(log.DebugLevel) {
+							logger.Debugw("reset-client-voltha-connection",
+								log.Fields{
+									"from": fmt.Sprintf("0x%p", &client.VolthaClient),
+									"to":   "nil"})
+						}
+					}
 					volthaDone()
 					volthaDone = nil
 					volthaCtx = nil
 				}
+				if state != ofaStateConnecting {
+					state = ofaStateConnecting
+					go ofa.establishConnectionToVoltha(p)
+				}
+
 			case ofaEventError:
 				logger.Debug("ofagent-error-event")
 			default:

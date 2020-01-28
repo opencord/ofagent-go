@@ -32,6 +32,12 @@ func (ofc *OFClient) handleMeterModRequest(request *ofp.MeterMod) {
 				"request":   js})
 	}
 
+	if ofc.VolthaClient == nil {
+		logger.Errorw("no-voltha-connection",
+			log.Fields{"device-id": ofc.DeviceID})
+		return
+	}
+
 	meterModUpdate := openflow_13.MeterModUpdate{Id: ofc.DeviceID}
 	meterMod := openflow_13.OfpMeterMod{
 		MeterId: request.MeterId,
