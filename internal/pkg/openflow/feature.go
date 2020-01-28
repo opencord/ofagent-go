@@ -32,6 +32,9 @@ func (ofc *OFClient) handleFeatureRequest(request *ofp.FeaturesRequest) error {
 				"device-id": ofc.DeviceID,
 				"request":   js})
 	}
+	if ofc.VolthaClient == nil {
+		return NoVolthaConnectionError
+	}
 	var id = common.ID{Id: ofc.DeviceID}
 	logicalDevice, err := ofc.VolthaClient.GetLogicalDevice(context.Background(), &id)
 	reply := ofp.NewFeaturesReply()

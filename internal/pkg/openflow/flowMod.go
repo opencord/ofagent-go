@@ -77,6 +77,12 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 				"params":    js})
 	}
 
+	if ofc.VolthaClient == nil {
+		logger.Errorw("no-voltha-connection",
+			log.Fields{"device-id": ofc.DeviceID})
+		return
+	}
+
 	// Construct the match
 	var oxmList []*voltha.OfpOxmField
 	for _, oxmField := range flowAdd.Match.GetOxmList() {
@@ -255,6 +261,12 @@ func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStri
 			log.Fields{
 				"device-id":          ofc.DeviceID,
 				"flow-delete-strict": js})
+	}
+
+	if ofc.VolthaClient == nil {
+		logger.Errorw("no-voltha-connection",
+			log.Fields{"device-id": ofc.DeviceID})
+		return
 	}
 
 	// Construct match

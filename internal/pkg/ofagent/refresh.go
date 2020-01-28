@@ -42,10 +42,17 @@ loop:
 }
 
 func (ofa *OFAgent) refreshDeviceList() {
+	// If we exit, assume disconnected
+	if ofa.volthaClient == nil {
+		logger.Error("no-voltha-connection")
+		ofa.events <- ofaEventVolthaDisconnected
+		return
+	}
 	deviceList, err := ofa.volthaClient.ListLogicalDevices(context.Background(), &empty.Empty{})
 	if err != nil {
 		logger.Errorw("ofagent failed to query device list from voltha",
 			log.Fields{"error": err})
+		ofa.events <- ofaEventVolthaDisconnected
 		return
 	}
 	devices := deviceList.GetItems()
