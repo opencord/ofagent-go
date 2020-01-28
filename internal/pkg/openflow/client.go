@@ -297,7 +297,7 @@ func (ofc *OFClient) processOFStream(ctx context.Context) {
 	 * We have a read buffer of a max size of 4096, so if we ever have
 	 * a message larger than this then we will have issues
 	 */
-	buf := make([]byte, 4096)
+	headerBuf := make([]byte, 8)
 
 top:
 	// Continue until we are told to stop
@@ -308,7 +308,7 @@ top:
 			break top
 		default:
 			// Read 8 bytes, the standard OF header
-			read, err := io.ReadFull(fromController, buf[:8])
+			read, err := io.ReadFull(fromController, headerBuf)
 			if err != nil {
 				logger.Errorw("bad-of-header",
 					log.Fields{
@@ -319,7 +319,7 @@ top:
 			}
 
 			// Decode the header
-			peek, err := ofc.peekAtOFHeader(buf[:8])
+			peek, err := ofc.peekAtOFHeader(headerBuf)
 			if err != nil {
 				/*
 				 * Header is bad, assume stream is corrupted
@@ -334,7 +334,9 @@ top:
 
 			// Calculate the size of the rest of the packet and read it
 			need := int(peek.GetLength())
-			read, err = io.ReadFull(fromController, buf[8:need])
+			messageBuf := make([]byte, need)
+			copy(messageBuf, headerBuf)
+			read, err = io.ReadFull(fromController, messageBuf[8:])
 			if err != nil {
 				logger.Errorw("bad-of-packet",
 					log.Fields{
@@ -345,9 +347,7 @@ top:
 			}
 
 			// Decode and process the packet
-			msgbuf := make([]byte, need)
-			copy(msgbuf, buf[:need])
-			decoder := goloxi.NewDecoder(msgbuf)
+			decoder := goloxi.NewDecoder(messageBuf)
 			msg, err := ofp.DecodeHeader(decoder)
 			if err != nil {
 				js, _ := json.Marshal(decoder)
