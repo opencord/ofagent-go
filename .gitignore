@@ -3,3 +3,7 @@ ofagent-go
 output
 
 *.swp
+
+# test output
+tests/results
+sca-report
