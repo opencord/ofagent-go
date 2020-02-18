@@ -2,48 +2,48 @@
 github.com/donNewtonAlpha/goloxi
 github.com/donNewtonAlpha/goloxi/of13
 # github.com/golang/protobuf v1.3.2
+github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/proto
+github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/ptypes
-github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
-github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/opencord/voltha-lib-go/v3 v3.0.0
 github.com/opencord/voltha-lib-go/v3/pkg/log
 github.com/opencord/voltha-lib-go/v3/pkg/probe
 github.com/opencord/voltha-lib-go/v3/pkg/version
 # github.com/opencord/voltha-protos/v3 v3.0.0
-github.com/opencord/voltha-protos/v3/go/common
-github.com/opencord/voltha-protos/v3/go/omci
 github.com/opencord/voltha-protos/v3/go/openflow_13
 github.com/opencord/voltha-protos/v3/go/voltha
+github.com/opencord/voltha-protos/v3/go/common
+github.com/opencord/voltha-protos/v3/go/omci
 # go.uber.org/atomic v1.4.0
 go.uber.org/atomic
 # go.uber.org/multierr v1.2.0
 go.uber.org/multierr
 # go.uber.org/zap v1.10.0
 go.uber.org/zap
-go.uber.org/zap/buffer
+go.uber.org/zap/zapcore
 go.uber.org/zap/internal/bufferpool
+go.uber.org/zap/buffer
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
-go.uber.org/zap/zapcore
 # golang.org/x/net v0.0.0-20191112182307-2180aed22343
 golang.org/x/net/context
-golang.org/x/net/http/httpguts
+golang.org/x/net/trace
+golang.org/x/net/internal/timeseries
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
+golang.org/x/net/http/httpguts
 golang.org/x/net/idna
-golang.org/x/net/internal/timeseries
-golang.org/x/net/trace
 # golang.org/x/sys v0.0.0-20191001151750-bb3f8db39f24
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/secure/bidirule
-golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
+golang.org/x/text/transform
 # google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/rpc/status
@@ -53,11 +53,9 @@ google.golang.org/grpc/backoff
 google.golang.org/grpc/balancer
 google.golang.org/grpc/balancer/base
 google.golang.org/grpc/balancer/roundrobin
-google.golang.org/grpc/binarylog/grpc_binarylog_v1
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
 google.golang.org/grpc/credentials
-google.golang.org/grpc/credentials/internal
 google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/proto
 google.golang.org/grpc/grpclog
@@ -72,7 +70,6 @@ google.golang.org/grpc/internal/grpcrand
 google.golang.org/grpc/internal/grpcsync
 google.golang.org/grpc/internal/resolver/dns
 google.golang.org/grpc/internal/resolver/passthrough
-google.golang.org/grpc/internal/syscall
 google.golang.org/grpc/internal/transport
 google.golang.org/grpc/keepalive
 google.golang.org/grpc/metadata
@@ -83,3 +80,6 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
+google.golang.org/grpc/credentials/internal
+google.golang.org/grpc/binarylog/grpc_binarylog_v1
+google.golang.org/grpc/internal/syscall
