@@ -42,6 +42,13 @@ func printVersion() {
 	fmt.Println(version.VersionInfo.String("  "))
 }
 
+func init() {
+	_, err := log.AddPackage(log.JSON, log.DebugLevel, nil)
+	if err != nil {
+		log.Errorw("unable-to-register-package-to-the-log-map", log.Fields{"error": err})
+	}
+}
+
 func main() {
 
 	config, _ := parseCommandLineArguments()
