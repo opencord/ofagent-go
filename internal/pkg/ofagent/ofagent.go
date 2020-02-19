@@ -130,11 +130,9 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 		case <-ctx.Done():
 			if volthaDone != nil {
 				volthaDone()
-				volthaDone = nil
 			}
 			if hdlDone != nil {
 				hdlDone()
-				hdlDone = nil
 			}
 			return
 		case event := <-ofa.events:
@@ -150,7 +148,12 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				// Kick off process to attempt to establish
 				// connection to voltha
 				state = ofaStateConnecting
-				go ofa.establishConnectionToVoltha(p)
+				go func() {
+					if err := ofa.establishConnectionToVoltha(p); err != nil {
+						logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
+						panic(err)
+					}
+				}()
 
 			case ofaEventVolthaConnected:
 				logger.Debug("ofagent-voltha-connect-event")
@@ -194,11 +197,15 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 					}
 					volthaDone()
 					volthaDone = nil
-					volthaCtx = nil
 				}
 				if state != ofaStateConnecting {
 					state = ofaStateConnecting
-					go ofa.establishConnectionToVoltha(p)
+					go func() {
+						if err := ofa.establishConnectionToVoltha(p); err != nil {
+							log.Errorw("voltha-connection-failed", log.Fields{"error": err})
+							panic(err)
+						}
+					}()
 				}
 
 			case ofaEventError:

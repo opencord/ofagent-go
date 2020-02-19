@@ -152,7 +152,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		ofc.SendMessage(response)
+		return ofc.SendMessage(response)
 	case ofp.OFPSTGroupDesc:
 		statsReq := request.(*ofp.GroupDescStatsRequest)
 		response, err := ofc.handleGroupStatsDescRequest(statsReq)
@@ -370,7 +370,6 @@ func (ofc *OFClient) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (*ofp
 		}
 		entry.Instructions = instructions
 		entry.Length = entrySize
-		entrySize = 0
 		flow = append(flow, entry)
 	}
 	response.SetEntries(flow)

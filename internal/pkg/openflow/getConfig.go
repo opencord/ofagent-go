@@ -41,5 +41,7 @@ func (ofc *OFClient) handleGetConfigRequest(request *ofp.GetConfigRequest) {
 				"device-id": ofc.DeviceID,
 				"reply":     js})
 	}
-	ofc.SendMessage(reply)
+	if err := ofc.SendMessage(reply); err != nil {
+		log.Errorw("handle-get-config-request-send-message", log.Fields{"error": err})
+	}
 }

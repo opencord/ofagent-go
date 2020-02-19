@@ -35,5 +35,9 @@ func (ofc *OFClient) handleRoleRequest(request *ofp.RoleRequest) {
 	reply.SetVersion(request.GetVersion())
 	reply.SetRole(request.GetRole())
 	reply.SetGenerationId(request.GetGenerationId())
-	ofc.SendMessage(reply)
+	if err := ofc.SendMessage(reply); err != nil {
+		logger.Errorw("handle-role-request-send-message", log.Fields{
+			"device-id": ofc.DeviceID,
+			"error":     err})
+	}
 }

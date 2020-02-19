@@ -34,5 +34,7 @@ func (ofc *OFClient) handleBarrierRequest(request *ofp.BarrierRequest) {
 	reply := ofp.NewBarrierReply()
 	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())
-	ofc.SendMessage(reply)
+	if err := ofc.SendMessage(reply); err != nil {
+		log.Errorw("barrier-request-send-message", log.Fields{"error": err})
+	}
 }

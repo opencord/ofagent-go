@@ -205,7 +205,12 @@ top:
 				if state == ofcStateCreated {
 					state = ofcStateStarted
 					logger.Debug("STARTED MORE THAN ONCE")
-					go ofc.establishConnectionToController()
+					go func() {
+						if err := ofc.establishConnectionToController(); err != nil {
+							logger.Errorw("controller-connection-failed", log.Fields{"error": err})
+							panic(err)
+						}
+					}()
 				} else {
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
@@ -239,7 +244,12 @@ top:
 						ofDone()
 						ofDone = nil
 					}
-					go ofc.establishConnectionToController()
+					go func() {
+						if err := ofc.establishConnectionToController(); err != nil {
+							log.Errorw("controller-connection-failed", log.Fields{"error": err})
+							panic(err)
+						}
+					}()
 				} else {
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
@@ -275,7 +285,6 @@ top:
 		log.Debugw("closing-child-processes",
 			log.Fields{"device-id": ofc.DeviceID})
 		ofDone()
-		ofDone = nil
 	}
 
 	// If the connection is open, then close it
@@ -351,6 +360,7 @@ top:
 			decoder := goloxi.NewDecoder(messageBuf)
 			msg, err := ofp.DecodeHeader(decoder)
 			if err != nil {
+				// nolint: staticcheck
 				js, _ := json.Marshal(decoder)
 				logger.Errorw("failed-to-decode",
 					log.Fields{
@@ -408,7 +418,11 @@ func (ofc *OFClient) parseHeader(header ofp.IHeader) {
 	case ofp.OFPTEchoReply:
 	case ofp.OFPTExperimenter:
 	case ofp.OFPTFeaturesRequest:
-		go ofc.handleFeatureRequest(header.(*ofp.FeaturesRequest))
+		go func() {
+			if err := ofc.handleFeatureRequest(header.(*ofp.FeaturesRequest)); err != nil {
+				logger.Errorw("handle-feature-request", log.Fields{"error": err})
+			}
+		}()
 	case ofp.OFPTFeaturesReply:
 	case ofp.OFPTGetConfigRequest:
 		go ofc.handleGetConfigRequest(header.(*ofp.GetConfigRequest))
@@ -440,7 +454,11 @@ func (ofc *OFClient) parseHeader(header ofp.IHeader) {
 			ofc.handleFlowDeleteStrict(header.(*ofp.FlowDeleteStrict))
 		}
 	case ofp.OFPTStatsRequest:
-		go ofc.handleStatsRequest(header, header.(ofp.IStatsRequest).GetStatsType())
+		go func() {
+			if err := ofc.handleStatsRequest(header, header.(ofp.IStatsRequest).GetStatsType()); err != nil {
+				logger.Errorw("ofpt-stats-request", log.Fields{"error": err})
+			}
+		}()
 	case ofp.OFPTBarrierRequest:
 		/* See note above at case ofp.OFPTFlowMod:*/
 		ofc.handleBarrierRequest(header.(*ofp.BarrierRequest))
@@ -462,7 +480,10 @@ func (ofc *OFClient) doSend(msg Message) error {
 		return errors.New("no-connection")
 	}
 	enc := goloxi.NewEncoder()
-	msg.Serialize(enc)
+	if err := msg.Serialize(enc); err != nil {
+		return err
+	}
+
 	bytes := enc.Bytes()
 	if _, err := ofc.conn.Write(bytes); err != nil {
 		logger.Errorw("unable-to-send-message-to-controller",

@@ -117,7 +117,9 @@ top:
 			ofDesc.SetState(ofp.PortState(desc.GetState()))
 			ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
 			ofPortStatus.SetDesc(*ofDesc)
-			ofa.getOFClient(deviceID).SendMessage(ofPortStatus)
+			if err := ofa.getOFClient(deviceID).SendMessage(ofPortStatus); err != nil {
+				log.Errorw("handle-change-events-send-message", log.Fields{"error": err})
+			}
 		}
 	}
 

@@ -166,7 +166,11 @@ top:
 			ofPacketIn.SetTableId(uint8(packetIn.GetTableId()))
 			ofPacketIn.SetTotalLen(uint16(len(ofPacketIn.GetData())))
 			ofc := ofa.getOFClient(deviceID)
-			ofc.SendMessage(ofPacketIn)
+			if err := ofc.SendMessage(ofPacketIn); err != nil {
+				logger.Errorw("send-message-failed", log.Fields{
+					"device-id": deviceID,
+					"error":     err})
+			}
 
 		}
 	}

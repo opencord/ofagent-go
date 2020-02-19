@@ -56,13 +56,19 @@ func main() {
 		printBanner()
 	}
 
-	log.SetLogLevel(log.DebugLevel)
-	log.SetDefaultLogger(log.JSON, log.DebugLevel,
-		log.Fields{
-			"component": "ofagent",
-		})
+	if err := log.SetLogLevel(log.DebugLevel); err != nil {
+		log.Errorw("set-log-level", log.Fields{
+			"level": log.DebugLevel,
+			"error": err})
+	}
+	if _, err := log.SetDefaultLogger(log.JSON, log.DebugLevel, log.Fields{"component": "ofagent"}); err != nil {
+		log.Errorw("set-default-log-level", log.Fields{
+			"level": log.DebugLevel,
+			"error": err})
 
-	logLevel := log.WarnLevel
+	}
+
+	var logLevel int
 	switch strings.ToLower(config.LogLevel) {
 	case "fatal":
 		logLevel = log.FatalLevel
@@ -82,12 +88,14 @@ func main() {
 				"value":     config.LogLevel,
 			})
 		config.LogLevel = "WARN"
-		logLevel = log.FatalLevel
+		logLevel = log.WarnLevel
 	}
-	log.SetDefaultLogger(log.JSON, logLevel,
-		log.Fields{
-			"component": "ofagent",
-		})
+	if _, err := log.SetDefaultLogger(log.JSON, logLevel, log.Fields{"component": "ofagent"}); err != nil {
+		log.Errorw("set-default-log-level", log.Fields{
+			"level": logLevel,
+			"error": err})
+
+	}
 	log.SetAllLogLevel(logLevel)
 
 	log.Infow("ofagent-startup-configuration",

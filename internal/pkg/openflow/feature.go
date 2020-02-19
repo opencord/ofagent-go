@@ -37,6 +37,9 @@ func (ofc *OFClient) handleFeatureRequest(request *ofp.FeaturesRequest) error {
 	}
 	var id = common.ID{Id: ofc.DeviceID}
 	logicalDevice, err := ofc.VolthaClient.GetLogicalDevice(context.Background(), &id)
+	if err != nil {
+		return err
+	}
 	reply := ofp.NewFeaturesReply()
 	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())
