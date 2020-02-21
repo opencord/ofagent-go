@@ -26,46 +26,47 @@ import (
 )
 
 var oxmMap = map[string]int32{
-	"in_port":        0,
-	"in_phy_port":    1,
-	"metadata":       2,
-	"eth_dst":        3,
-	"eth_src":        4,
-	"eth_type":       5,
-	"vlan_vid":       6,
-	"vlan_pcp":       7,
-	"ip_dscp":        8,
-	"ip_ecn":         9,
-	"ip_proto":       10,
-	"ipv4_src":       11,
-	"ipv4_dst":       12,
-	"tcp_src":        13,
-	"tcp_dst":        14,
-	"udp_src":        15,
-	"udp_dst":        16,
-	"sctp_src":       17,
-	"sctp_dst":       18,
-	"icmpv4_type":    19,
-	"icmpv4_code":    20,
-	"arp_op":         21,
-	"arp_spa":        22,
-	"arp_tpa":        23,
-	"arp_sha":        24,
-	"arp_tha":        25,
-	"ipv6_src":       26,
-	"ipv6_dst":       27,
-	"ipv6_flabel":    28,
-	"icmpv6_type":    29,
-	"icmpv6_code":    30,
-	"ipv6_nd_target": 31,
-	"ipv6_nd_sll":    32,
-	"ipv6_nd_tll":    33,
-	"mpls_label":     34,
-	"mpls_tc":        35,
-	"mpls_bos":       36,
-	"pbb_isid":       37,
-	"tunnel_id":      38,
-	"ipv6_exthdr":    39,
+	"in_port":         0,
+	"in_phy_port":     1,
+	"metadata":        2,
+	"eth_dst":         3,
+	"eth_src":         4,
+	"eth_type":        5,
+	"vlan_vid":        6,
+	"vlan_pcp":        7,
+	"ip_dscp":         8,
+	"ip_ecn":          9,
+	"ip_proto":        10,
+	"ipv4_src":        11,
+	"ipv4_dst":        12,
+	"tcp_src":         13,
+	"tcp_dst":         14,
+	"udp_src":         15,
+	"udp_dst":         16,
+	"sctp_src":        17,
+	"sctp_dst":        18,
+	"icmpv4_type":     19,
+	"icmpv4_code":     20,
+	"arp_op":          21,
+	"arp_spa":         22,
+	"arp_tpa":         23,
+	"arp_sha":         24,
+	"arp_tha":         25,
+	"ipv6_src":        26,
+	"ipv6_dst":        27,
+	"ipv6_flabel":     28,
+	"icmpv6_type":     29,
+	"icmpv6_code":     30,
+	"ipv6_nd_target":  31,
+	"ipv6_nd_sll":     32,
+	"ipv6_nd_tll":     33,
+	"mpls_label":      34,
+	"mpls_tc":         35,
+	"mpls_bos":        36,
+	"pbb_isid":        37,
+	"tunnel_id":       38,
+	"ipv6_exthdr":     39,
+	"vlan_vid_masked": 200, //made up
 }
 
 func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
@@ -125,6 +126,20 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 			field.Value = &voltha.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32((val.(uint16) & 0xfff) | 0x1000),
+			}
+		case 200: // voltha-protos doesn't actually have a type for vlan_mask
+			field = voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
+			field.HasMask = true
+			ofpOxmField = voltha.OfpOxmField{
+				OxmClass: ofp.OFPXMCOpenflowBasic,
+				Field:    &openflow_13.OfpOxmField_OfbField{OfbField: &field},
+			}
+			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+				VlanVid: uint32(val.(uint16)),
+			}
+			vidMask := val.(uint16)
+			field.Mask = &voltha.OfpOxmOfbField_VlanVidMask{
+				VlanVidMask: uint32(vidMask),
 			}
 		}
 		oxmList = append(oxmList, &ofpOxmField)
@@ -207,6 +222,7 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		logger.Debugf("FlowUpdate being sent to Voltha",
 			log.Fields{
 				"device-id":        ofc.DeviceID,
+				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
 	if _, err := ofc.VolthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
@@ -316,7 +332,22 @@ func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStri
 			field.Value = &voltha.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32(val.(uint16)),
 			}
+		case 200: // voltha-protos doesn't actually have a type for vlan_mask
+			field = voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
+			field.HasMask = true
+			ofpOxmField = voltha.OfpOxmField{
+				OxmClass: ofp.OFPXMCOpenflowBasic,
+				Field:    &openflow_13.OfpOxmField_OfbField{OfbField: &field},
+			}
+			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+				VlanVid: uint32(val.(uint16)),
+			}
+			vidMask := val.(uint16)
+			field.Mask = &voltha.OfpOxmOfbField_VlanVidMask{
+				VlanVidMask: uint32(vidMask),
+			}
 		}
+
 		oxmList = append(oxmList, &ofpOxmField)
 	}
 
