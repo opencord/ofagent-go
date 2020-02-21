@@ -69,6 +69,7 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
+					"response-object": response,
 					"response":  resJs})
 		}
 		return ofc.SendMessage(response)
