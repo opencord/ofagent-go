@@ -67,12 +67,26 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField, DeviceID string) (goloxi.IOx
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 		ofpVlanVid := ofp.NewOxmVlanVid()
 		val := ofbField.GetValue()
-		if val != nil {
-			vlanId := val.(*openflow_13.OfpOxmOfbField_VlanVid)
-			ofpVlanVid.Value = uint16(vlanId.VlanVid) | 0x1000
-		} else {
+		if val == nil {
 			ofpVlanVid.Value = uint16(0)
+			return ofpVlanVid, 2
 		}
+		vlanId := val.(*openflow_13.OfpOxmOfbField_VlanVid)
+		if ofbField.HasMask {
+			ofpVlanVidMasked := ofp.NewOxmVlanVidMasked()
+			valMask := ofbField.GetMask()
+			vlanMask := valMask.(*openflow_13.OfpOxmOfbField_VlanVidMask)
+			if vlanId.VlanVid == 4096 && vlanMask.VlanVidMask == 4096 {
+				ofpVlanVidMasked.Value = uint16(vlanId.VlanVid)
+				ofpVlanVidMasked.ValueMask = uint16(vlanMask.VlanVidMask)
+			} else {
+				ofpVlanVidMasked.Value = uint16(vlanId.VlanVid) | 0x1000
+				ofpVlanVidMasked.ValueMask = uint16(vlanMask.VlanVidMask)
+
+			}
+			return ofpVlanVidMasked, 4
+		}
+		ofpVlanVid.Value = uint16(vlanId.VlanVid) | 0x1000
 		return ofpVlanVid, 2
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
 		ofpMetadata := ofp.NewOxmMetadata()
