@@ -390,7 +390,7 @@ func (ofc *OFClient) sayHello() {
 	elem := ofp.NewHelloElemVersionbitmap()
 	elem.SetType(ofp.OFPHETVersionbitmap)
 	elem.SetLength(8)
-	elem.SetBitmaps([]*ofp.Uint32{&ofp.Uint32{Value: 16}})
+	elem.SetBitmaps([]*ofp.Uint32{{Value: 16}})
 	hello.SetElements([]ofp.IHelloElem{elem})
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(hello)
