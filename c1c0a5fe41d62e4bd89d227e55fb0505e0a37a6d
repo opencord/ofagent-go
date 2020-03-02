@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eff10e62_74c95948",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-02T09:46:36Z",
+      "side": 1,
+      "message": "I\u0027m actually using the vlan_vid message in my patch \nhttps://gerrit.opencord.org/#/c/17722/3/ofagent/converter.py \nand internally use the values for the mask, then the lower levels check for the 4096 in value and mask (which is how ONOS sends it)",
+      "range": {
+        "startLine": 130,
+        "startChar": 12,
+        "endLine": 130,
+        "endChar": 71
+      },
+      "revId": "c1c0a5fe41d62e4bd89d227e55fb0505e0a37a6d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
