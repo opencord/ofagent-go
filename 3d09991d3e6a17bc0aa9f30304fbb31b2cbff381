@@ -22,6 +22,30 @@
       "revId": "3d09991d3e6a17bc0aa9f30304fbb31b2cbff381",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff5652cd_38bef9c6",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-05T17:00:20Z",
+      "side": 1,
+      "message": "I do not believe this to be an expensive operation. I can remove the wrap.",
+      "parentUuid": "1a5bc6fc_72deae27",
+      "range": {
+        "startLine": 411,
+        "startChar": 0,
+        "endLine": 415,
+        "endChar": 2
+      },
+      "revId": "3d09991d3e6a17bc0aa9f30304fbb31b2cbff381",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
