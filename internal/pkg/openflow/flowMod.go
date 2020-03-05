@@ -18,11 +18,13 @@ package openflow
 
 import (
 	"context"
+	"encoding/binary"
 	"encoding/json"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
+	"unsafe"
 )
 
 var oxmMap = map[string]int32{
@@ -230,6 +232,36 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
+		// Report failure to controller
+		message := ofp.NewFlowModFailedErrorMsg()
+		message.SetXid(flowAdd.Xid)
+		message.SetCode(ofp.OFPFMFCBadCommand)
+		//OF 1.3
+		message.SetVersion(4)
+		bs := make([]byte, 2)
+		//OF 1.3
+		bs[0] = byte(4)
+		//Flow Mod
+		bs[1] = byte(14)
+		//Length of the message
+		length := make([]byte, 2)
+		binary.BigEndian.PutUint16(length, 56)
+		bs = append(bs, length...)
+		empty := []byte{0, 0, 0, 0}
+		bs = append(bs, empty...)
+		//Cookie of the Flow
+		cookie := make([]byte, 52)
+		binary.BigEndian.PutUint64(cookie, flowAdd.Cookie)
+		bs = append(bs, cookie...)
+		message.SetData(bs)
+		message.Length = uint16(unsafe.Sizeof(*message))
+		err := ofc.SendMessage(message)
+		if err != nil {
+			logger.Errorw("Error reporting failure of FlowUpdate to controller",
+				log.Fields{
+					"device-id": ofc.DeviceID,
+					"error":     err})
+		}
 	}
 }
 
