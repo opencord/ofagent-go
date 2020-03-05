@@ -408,7 +408,11 @@ func (ofc *OFClient) sayHello() {
 }
 
 func (ofc *OFClient) parseHeader(header ofp.IHeader) {
-	switch header.GetType() {
+	headerType := header.GetType()
+	logger.Debugw("packet-header-type",
+		log.Fields{
+			"header-type": ofp.Type(headerType).String()})
+	switch headerType {
 	case ofp.OFPTHello:
 		//x := header.(*ofp.Hello)
 	case ofp.OFPTError:
