@@ -22,6 +22,30 @@
       "revId": "1c8dc38d8306ae169ab7c2f059419538c8b5604a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f58ddb91_8dabd93e",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-05T19:19:10Z",
+      "side": 1,
+      "message": "yes we should, I was keeping it to a separate patch.",
+      "parentUuid": "d351fc32_48047799",
+      "range": {
+        "startLine": 130,
+        "startChar": 15,
+        "endLine": 130,
+        "endChar": 71
+      },
+      "revId": "1c8dc38d8306ae169ab7c2f059419538c8b5604a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
