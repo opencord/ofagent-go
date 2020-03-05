@@ -219,14 +219,14 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	}
 	if logger.V(log.DebugLevel) {
 		flowUpdateJs, _ := json.Marshal(flowUpdate)
-		logger.Debugf("FlowUpdate being sent to Voltha",
+		logger.Debugf("FlowAdd being sent to Voltha",
 			log.Fields{
 				"device-id":        ofc.DeviceID,
 				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
 	if _, err := ofc.VolthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
-		logger.Errorw("Error calling FlowUpdate ",
+		logger.Errorw("Error calling FlowAdd ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
@@ -236,7 +236,7 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 func (ofc *OFClient) handleFlowMod(flowMod *ofp.FlowMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowMod)
-		logger.Debugw("handleMod called",
+		logger.Debugw("handleFlowMod called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"flow-mod":  js})
@@ -273,7 +273,7 @@ func (ofc *OFClient) handleFlowDelete(flowDelete *ofp.FlowDelete) {
 func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
-		logger.Debugw("handleFlowAdd called",
+		logger.Debugw("handleFlowDeleteStrict called",
 			log.Fields{
 				"device-id":          ofc.DeviceID,
 				"flow-delete-strict": js})
@@ -375,13 +375,13 @@ func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStri
 
 	if logger.V(log.DebugLevel) {
 		flowUpdateJs, _ := json.Marshal(flowUpdate)
-		logger.Debugf("FlowUpdate being sent to Voltha",
+		logger.Debugf("FlowDeleteStrict being sent to Voltha",
 			log.Fields{
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
 	if _, err := ofc.VolthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
-		logger.Errorw("Error calling FlowUpdate ",
+		logger.Errorw("Error calling FlowDelete ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
