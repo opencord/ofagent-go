@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a5bc6fc_72deae27",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-03-05T16:57:01Z",
+      "side": 1,
+      "message": "Just a nit. Does this really need to be protected by the level check? Is the operation to convert the header type to a string so expensive as to be avoided even when not in debug mode?",
+      "range": {
+        "startLine": 411,
+        "startChar": 0,
+        "endLine": 415,
+        "endChar": 2
+      },
+      "revId": "3d09991d3e6a17bc0aa9f30304fbb31b2cbff381",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
