@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d351fc32_48047799",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-03-05T19:08:27Z",
+      "side": 1,
+      "message": "Should one not be added?",
+      "range": {
+        "startLine": 130,
+        "startChar": 15,
+        "endLine": 130,
+        "endChar": 71
+      },
+      "revId": "1c8dc38d8306ae169ab7c2f059419538c8b5604a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
