@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8e30a1a_9eff211f",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-03-05T17:14:43Z",
+      "side": 1,
+      "message": "wouldn\u0027t it be a little better to only call GetType() once?\nlike hType\u003dheader.GetType()\n\nthen in the log change to ofp.Type(hType.String())\n\nand change the switch to \nswitch hType{",
+      "revId": "89a9779d3eeed8d53c3cb50dca215d9f6f6ea7e8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
