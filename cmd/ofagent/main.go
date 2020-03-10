@@ -20,12 +20,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
+	"os"
+	"strings"
+
 	"github.com/opencord/ofagent-go/internal/pkg/ofagent"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-lib-go/v3/pkg/version"
-	"os"
-	"strings"
+
+	"github.com/opentracing/opentracing-go"
+	"github.com/uber/jaeger-client-go"
+	jc "github.com/uber/jaeger-client-go/config"
 )
 
 func printBanner() {
@@ -49,7 +55,33 @@ func init() {
 	}
 }
 
+func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+	cfg, err := jc.FromEnv()
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	log.Infof("jaeger-env,  ServiceName: %s\n", cfg.ServiceName)
+	log.Infof("jaeger-env,  Disabled %d\n", cfg.Disabled)
+	log.Infof("jaeger-env,  RPCMetrics %d\n", cfg.RPCMetrics)
+	log.Infof("jaeger-env,  Tags %+v\n", cfg.Tags)
+	log.Infof("jaeger-env,  Sampler %+v\n", cfg.Sampler)
+	log.Infof("jaeger-env,  Reporters %+v\n", cfg.Reporter)
+	log.Infof("jaeger-env,  Headers %+v\n", cfg.Headers)
+	log.Infof("jaeger-env,  Throttler %+v\n", cfg.Throttler)
+	log.Infof("jaeger-env,  BaggageRestrictions %+v\n", cfg.BaggageRestrictions)
+	tracer, closer, err := cfg.New(service, jc.Logger(jaeger.StdLogger))
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	return tracer, closer
+}
+
 func main() {
+	t, closer := initJaeger("openolt-adapter")
+	opentracing.SetGlobalTracer(t)
+	span := t.StartSpan("Start openolt-adapter")
+	defer span.Finish()
+	defer closer.Close()
 
 	config, _ := parseCommandLineArguments()
 	flag.Parse()

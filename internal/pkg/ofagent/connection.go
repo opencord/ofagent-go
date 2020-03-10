@@ -18,12 +18,17 @@ package ofagent
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"google.golang.org/grpc"
-	"time"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
+	"github.com/opentracing/opentracing-go"
 )
 
 func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
@@ -39,7 +44,16 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 	ofa.volthaClient = nil
 	try := 1
 	for ofa.ConnectionMaxRetries == 0 || try < ofa.ConnectionMaxRetries {
-		conn, err := grpc.Dial(ofa.VolthaApiEndPoint, grpc.WithInsecure())
+		conn, err := grpc.Dial(ofa.VolthaApiEndPoint,
+
+			grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
+				grpc_opentracing.StreamClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+			)),
+			grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
+				grpc_opentracing.UnaryClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+			)),
+			grpc.WithInsecure())
+
 		if err == nil {
 			svc := voltha.NewVolthaServiceClient(conn)
 			if svc != nil {
