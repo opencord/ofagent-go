@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa0a6b24_4b1c98f7",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-03-10T18:25:31Z",
+      "side": 1,
+      "message": "do we need to match this version to what we get from the controller or negotiated at hello v. hard code to 1.3?",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 243,
+        "endChar": 17
+      },
+      "revId": "17f6aba7da63c20a85d2551af9fb7b9d7bd21a38",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c332692_e6940725",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-03-10T18:25:31Z",
+      "side": 1,
+      "message": "why not bs :\u003d []byte {0,0,0,0}?",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 27
+      },
+      "revId": "17f6aba7da63c20a85d2551af9fb7b9d7bd21a38",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
