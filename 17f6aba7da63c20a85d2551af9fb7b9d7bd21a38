@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fc86786b_aa5a1ab3",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-10T20:30:33Z",
+      "side": 1,
+      "message": "this is hardcoded elsewhere in the code, see line 321 of flowMod.go",
+      "parentUuid": "aa0a6b24_4b1c98f7",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 243,
+        "endChar": 17
+      },
+      "revId": "17f6aba7da63c20a85d2551af9fb7b9d7bd21a38",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c332692_e6940725",
         "filename": "internal/pkg/openflow/flowMod.go",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2020-03-10T18:25:31Z",
       "side": 1,
       "message": "why not bs :\u003d []byte {0,0,0,0}?",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 27
+      },
+      "revId": "17f6aba7da63c20a85d2551af9fb7b9d7bd21a38",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc6c1923_c947df3a",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-10T20:30:33Z",
+      "side": 1,
+      "message": "this was to append at the end of the byte array to pad it. done",
+      "parentUuid": "8c332692_e6940725",
       "range": {
         "startLine": 250,
         "startChar": 0,
