@@ -21,11 +21,13 @@ import (
 	"flag"
 	"fmt"
 	"github.com/opencord/ofagent-go/internal/pkg/ofagent"
+	conf "github.com/opencord/voltha-lib-go/v3/pkg/config"
+	"github.com/opencord/voltha-lib-go/v3/pkg/db/kvstore"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-lib-go/v3/pkg/version"
 	"os"
-	"strings"
+	"strconv"
 )
 
 func printBanner() {
@@ -49,6 +51,31 @@ func init() {
 	}
 }
 
+func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort, kvStoreTimeout int) (kvstore.Client, error) {
+	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout)
+	if err != nil {
+		return nil, err
+	}
+
+	cm := conf.NewConfigManager(client, kvStoreType, kvStoreHost, kvStorePort, kvStoreTimeout)
+	go conf.ProcessLogConfigChange(cm, ctx)
+	return client, nil
+}
+
+func stop(ctx context.Context, kvClient kvstore.Client) {
+
+	// Cleanup - applies only if we had a kvClient
+	if kvClient != nil {
+		// Release all reservations
+		if err := kvClient.ReleaseAllReservations(ctx); err != nil {
+			log.Infow("fail-to-release-all-reservations", log.Fields{"error": err})
+		}
+		// Close the DB connection
+		kvClient.Close()
+	}
+
+}
+
 func main() {
 
 	config, _ := parseCommandLineArguments()
@@ -63,57 +90,31 @@ func main() {
 		printBanner()
 	}
 
-	if err := log.SetLogLevel(log.DebugLevel); err != nil {
-		log.Errorw("set-log-level", log.Fields{
-			"level": log.DebugLevel,
-			"error": err})
-	}
-	if _, err := log.SetDefaultLogger(log.JSON, log.DebugLevel, log.Fields{"component": "ofagent"}); err != nil {
-		log.Errorw("set-default-log-level", log.Fields{
-			"level": log.DebugLevel,
-			"error": err})
+	// Setup logging
 
+	logLevel, err := log.StringToLogLevel(config.LogLevel)
+	if err != nil {
+		log.Fatalf("Cannot setup logging, %s", err)
 	}
 
-	var logLevel int
-	switch strings.ToLower(config.LogLevel) {
-	case "fatal":
-		logLevel = log.FatalLevel
-	case "error":
-		logLevel = log.ErrorLevel
-	case "warn":
-		logLevel = log.WarnLevel
-	case "info":
-		logLevel = log.InfoLevel
-	case "debug":
-		logLevel = log.DebugLevel
-	default:
-		log.Warn("unrecognized-log-level",
-			log.Fields{
-				"msg":       "Unrecognized log level setting defaulting to 'WARN'",
-				"component": "ofagent",
-				"value":     config.LogLevel,
-			})
-		config.LogLevel = "WARN"
-		logLevel = log.WarnLevel
+	// Setup default logger - applies for packages that do not have specific logger set
+	if _, err := log.SetDefaultLogger(log.JSON, logLevel, log.Fields{"instanceId": config.InstanceID}); err != nil {
+		log.With(log.Fields{"error": err}).Fatal("Cannot setup logging")
 	}
-	if _, err := log.SetDefaultLogger(log.JSON, logLevel, log.Fields{"component": "ofagent"}); err != nil {
-		log.Errorw("set-default-log-level", log.Fields{
-			"level": logLevel,
-			"error": err})
 
+	// Update all loggers (provisionned via init) with a common field
+	if err := log.UpdateAllLoggers(log.Fields{"instanceId": config.InstanceID}); err != nil {
+		log.With(log.Fields{"error": err}).Fatal("Cannot setup logging")
 	}
+
 	log.SetAllLogLevel(logLevel)
 
-	log.Infow("ofagent-startup-configuration",
-		log.Fields{
-			"configuration": fmt.Sprintf("%+v", *config),
-		})
-
-	_, err := log.AddPackage(log.JSON, logLevel, nil)
-	if err != nil {
-		log.Errorw("unable-to-register-package-to-the-log-map", log.Fields{"error": err})
-	}
+	defer func() {
+		err := log.CleanUp()
+		if err != nil {
+			log.Errorw("unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
+		}
+	}()
 
 	/*
 	 * Create and start the liveness and readiness container management probes. This
@@ -129,6 +130,11 @@ func main() {
 	 */
 	ctx := context.WithValue(context.Background(), probe.ProbeContextKey, p)
 
+	client, err := setLogConfig(ctx, config.KVStoreHost, config.KVStoreType, config.KVStorePort, config.KVStoreTimeout)
+	if err != nil {
+		log.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
+	}
+
 	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
 		OFControllerEndPoint:      config.OFControllerEndPoint,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
@@ -142,4 +148,5 @@ func main() {
 				"error": err})
 	}
 	ofa.Run(ctx)
+	stop(ctx, client)
 }

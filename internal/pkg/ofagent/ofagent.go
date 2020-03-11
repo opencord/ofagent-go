@@ -108,6 +108,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 	if p != nil {
 		p.RegisterService("voltha")
 	}
+
 	ofa.events <- ofaEventStart
 
 	/*

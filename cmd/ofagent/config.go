@@ -17,6 +17,7 @@ package main
 
 import (
 	"flag"
+	"os"
 	"time"
 )
 
@@ -32,6 +33,11 @@ type Config struct {
 	DeviceListRefreshInterval time.Duration
 	ConnectionRetryDelay      time.Duration
 	ConnectionMaxRetries      int
+	KVStoreType               string
+	KVStoreTimeout            int // in seconds
+	KVStoreHost               string
+	KVStorePort               int
+	InstanceID                string
 }
 
 func parseCommandLineArguments() (*Config, error) {
@@ -69,14 +75,6 @@ func parseCommandLineArguments() (*Config, error) {
 		"P",
 		":8080",
 		"(short) address and port on which to listen for k8s live and ready probe requests")
-	flag.StringVar(&(config.LogLevel),
-		"loglevel",
-		"WARN",
-		"initial log level setting, overriden by any value set in configuration store")
-	flag.StringVar(&(config.LogLevel),
-		"L",
-		"WARN",
-		"(short) initial log level setting, overriden by any value set in configuration store")
 	flag.StringVar(&(config.CpuProfile),
 		"cpuprofile",
 		"",
@@ -109,6 +107,26 @@ func parseCommandLineArguments() (*Config, error) {
 		"device-refresh-interval",
 		1*time.Minute,
 		"interval between attempts to synchronize devices from voltha to ofagent")
+	flag.StringVar(&(config.KVStoreType), "kv_store_type", "etcd", "KV store type")
+
+	flag.IntVar(&(config.KVStoreTimeout), "kv_store_request_timeout", 5, "The default timeout when making a kv store request")
+
+	flag.StringVar(&(config.KVStoreHost), "kv_store_host", "voltha-etcd-cluster-client.voltha.svc.cluster.local", "KV store host")
+
+	flag.IntVar(&(config.KVStorePort), "kv_store_port", 2379, "KV store port")
+
+	flag.StringVar(&(config.LogLevel), "log_level", "DEBUG", "Log level")
+
+	containerName := getContainerInfo()
+	if len(containerName) > 0 {
+		config.InstanceID = containerName
+	} else {
+		config.InstanceID = "openFlowAgent001"
+	}
 
 	return &config, nil
+}
+
+func getContainerInfo() string {
+	return os.Getenv("HOSTNAME")
 }
