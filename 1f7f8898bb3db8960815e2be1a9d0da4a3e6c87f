@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f09999ec_b1f3e245",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2020-03-11T16:38:41Z",
+      "side": 1,
+      "message": "Can we get some context behind the reason for enabling the explicit package-level logger? I think putting the package logger into a variable was done for performance reasons, to eliminate the need for the log library to do a stack trace to determine the package name on every log call.Was that approach incompatible with dynamic loglevels?",
+      "range": {
+        "startLine": 32,
+        "startChar": 1,
+        "endLine": 32,
+        "endChar": 56
+      },
+      "revId": "1f7f8898bb3db8960815e2be1a9d0da4a3e6c87f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
