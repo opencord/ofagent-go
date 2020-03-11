@@ -28,7 +28,12 @@ import (
 	"time"
 )
 
-var logger, _ = log.AddPackage(log.JSON, log.DebugLevel, nil)
+func init() {
+	_, err := log.AddPackage(log.JSON, log.DebugLevel, nil)
+	if err != nil {
+		log.Errorw("unable-to-register-package-to-the-log-map", log.Fields{"error": err})
+	}
+}
 
 type ofaEvent byte
 type ofaState byte
@@ -77,7 +82,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 	}
 
 	if ofa.DeviceListRefreshInterval <= 0 {
-		logger.Warnw("device list refresh internal not valid, setting to default",
+		log.Warnw("device list refresh internal not valid, setting to default",
 			log.Fields{
 				"value":   ofa.DeviceListRefreshInterval.String(),
 				"default": (1 * time.Minute).String()})
@@ -85,7 +90,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 	}
 
 	if ofa.ConnectionRetryDelay <= 0 {
-		logger.Warnw("connection retry delay not value, setting to default",
+		log.Warnw("connection retry delay not value, setting to default",
 			log.Fields{
 				"value":   ofa.ConnectionRetryDelay.String(),
 				"default": (3 * time.Second).String()})
@@ -98,7 +103,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 // Run - make the inital connection to voltha and kicks off io streams
 func (ofa *OFAgent) Run(ctx context.Context) {
 
-	logger.Debugw("Starting GRPC - VOLTHA client",
+	log.Debugw("Starting GRPC - VOLTHA client",
 		log.Fields{
 			"voltha-endpoint":     ofa.VolthaApiEndPoint,
 			"controller-endpoint": ofa.OFControllerEndPoint})
@@ -108,6 +113,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 	if p != nil {
 		p.RegisterService("voltha")
 	}
+
 	ofa.events <- ofaEventStart
 
 	/*
@@ -138,7 +144,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 		case event := <-ofa.events:
 			switch event {
 			case ofaEventStart:
-				logger.Debug("ofagent-voltha-start-event")
+				log.Debug("ofagent-voltha-start-event")
 
 				// Start the loops that process messages
 				hdlCtx, hdlDone = context.WithCancel(context.Background())
@@ -150,13 +156,13 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				state = ofaStateConnecting
 				go func() {
 					if err := ofa.establishConnectionToVoltha(p); err != nil {
-						logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
+						log.Errorw("voltha-connection-failed", log.Fields{"error": err})
 						panic(err)
 					}
 				}()
 
 			case ofaEventVolthaConnected:
-				logger.Debug("ofagent-voltha-connect-event")
+				log.Debug("ofagent-voltha-connect-event")
 
 				// Start the loops that poll from voltha
 				if state != ofaStateConnected {
@@ -164,8 +170,8 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 					volthaCtx, volthaDone = context.WithCancel(context.Background())
 					// Reconnect clients
 					for _, client := range ofa.clientMap {
-						if logger.V(log.DebugLevel) {
-							logger.Debugw("reset-client-voltha-connection",
+						if log.V(log.DebugLevel) {
+							log.Debugw("reset-client-voltha-connection",
 								log.Fields{
 									"from": fmt.Sprintf("0x%p", &client.VolthaClient),
 									"to":   fmt.Sprintf("0x%p", &ofa.volthaClient)})
@@ -182,14 +188,14 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				if p != nil {
 					p.UpdateStatus("voltha", probe.ServiceStatusNotReady)
 				}
-				logger.Debug("ofagent-voltha-disconnect-event")
+				log.Debug("ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
 					ofa.volthaClient = nil
 					for _, client := range ofa.clientMap {
 						client.VolthaClient = nil
-						if logger.V(log.DebugLevel) {
-							logger.Debugw("reset-client-voltha-connection",
+						if log.V(log.DebugLevel) {
+							log.Debugw("reset-client-voltha-connection",
 								log.Fields{
 									"from": fmt.Sprintf("0x%p", &client.VolthaClient),
 									"to":   "nil"})
@@ -209,9 +215,9 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				}
 
 			case ofaEventError:
-				logger.Debug("ofagent-error-event")
+				log.Debug("ofagent-error-event")
 			default:
-				logger.Fatalw("ofagent-unknown-event",
+				log.Fatalw("ofagent-unknown-event",
 					log.Fields{"event": event})
 			}
 		}

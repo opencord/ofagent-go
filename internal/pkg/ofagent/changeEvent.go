@@ -28,14 +28,14 @@ import (
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
-	logger.Debug("receive-change-events-started")
+	log.Debug("receive-change-events-started")
 	// If we exit, assume disconnected
 	defer func() {
 		ofa.events <- ofaEventVolthaDisconnected
-		logger.Debug("receive-change-events-finished")
+		log.Debug("receive-change-events-finished")
 	}()
 	if ofa.volthaClient == nil {
-		logger.Error("no-voltha-connection")
+		log.Error("no-voltha-connection")
 		return
 	}
 	opt := grpc.EmptyCallOption{}
@@ -43,7 +43,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 	defer streamDone()
 	stream, err := ofa.volthaClient.ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
-		logger.Errorw("Unable to establish Receive Change Event Stream",
+		log.Errorw("Unable to establish Receive Change Event Stream",
 			log.Fields{"error": err})
 		return
 	}
@@ -56,18 +56,18 @@ top:
 		default:
 			ce, err := stream.Recv()
 			if err != nil {
-				logger.Errorw("error receiving change event",
+				log.Errorw("error receiving change event",
 					log.Fields{"error": err})
 				break top
 			}
 			ofa.changeEventChannel <- ce
-			logger.Debug("receive-change-event-queued")
+			log.Debug("receive-change-event-queued")
 		}
 	}
 }
 
 func (ofa *OFAgent) handleChangeEvents(ctx context.Context) {
-	logger.Debug("handle-change-event-started")
+	log.Debug("handle-change-event-started")
 
 top:
 	for {
@@ -77,15 +77,15 @@ top:
 		case changeEvent := <-ofa.changeEventChannel:
 			deviceID := changeEvent.GetId()
 			portStatus := changeEvent.GetPortStatus()
-			logger.Debugw("received-change-event",
+			log.Debugw("received-change-event",
 				log.Fields{
 					"device-id":   deviceID,
 					"port-status": portStatus})
 
 			if portStatus == nil {
-				if logger.V(log.WarnLevel) {
+				if log.V(log.WarnLevel) {
 					js, _ := json.Marshal(changeEvent.GetEvent())
-					logger.Warnw("Received change event that was not port status",
+					log.Warnw("Received change event that was not port status",
 						log.Fields{"ChangeEvent": js})
 				}
 				break
@@ -123,5 +123,5 @@ top:
 		}
 	}
 
-	logger.Debug("handle-change-event-finsihed")
+	log.Debug("handle-change-event-finsihed")
 }
