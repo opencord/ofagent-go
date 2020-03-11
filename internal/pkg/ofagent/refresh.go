@@ -44,13 +44,13 @@ loop:
 func (ofa *OFAgent) refreshDeviceList() {
 	// If we exit, assume disconnected
 	if ofa.volthaClient == nil {
-		logger.Error("no-voltha-connection")
+		log.Error("no-voltha-connection")
 		ofa.events <- ofaEventVolthaDisconnected
 		return
 	}
 	deviceList, err := ofa.volthaClient.ListLogicalDevices(context.Background(), &empty.Empty{})
 	if err != nil {
-		logger.Errorw("ofagent failed to query device list from voltha",
+		log.Errorw("ofagent failed to query device list from voltha",
 			log.Fields{"error": err})
 		ofa.events <- ofaEventVolthaDisconnected
 		return
@@ -72,7 +72,7 @@ func (ofa *OFAgent) refreshDeviceList() {
 			toDel = append(toDel, key)
 		}
 	}
-	logger.Debugw("GrpcClient refreshDeviceList", log.Fields{"ToAdd": toAdd, "ToDel": toDel})
+	log.Debugw("GrpcClient refreshDeviceList", log.Fields{"ToAdd": toAdd, "ToDel": toDel})
 	for i := 0; i < len(toAdd); i++ {
 		ofa.addOFClient(toAdd[i]) // client is started in addOFClient
 	}
@@ -85,7 +85,7 @@ func (ofa *OFAgent) refreshDeviceList() {
 }
 
 func (ofa *OFAgent) addOFClient(deviceID string) *openflow.OFClient {
-	logger.Debugw("GrpcClient addClient called ", log.Fields{"device-id": deviceID})
+	log.Debugw("GrpcClient addClient called ", log.Fields{"device-id": deviceID})
 	ofa.mapLock.Lock()
 	ofc := ofa.clientMap[deviceID]
 	if ofc == nil {
@@ -101,7 +101,7 @@ func (ofa *OFAgent) addOFClient(deviceID string) *openflow.OFClient {
 		ofa.clientMap[deviceID] = ofc
 	}
 	ofa.mapLock.Unlock()
-	logger.Debugw("Finished with addClient", log.Fields{"deviceID": deviceID})
+	log.Debugw("Finished with addClient", log.Fields{"deviceID": deviceID})
 	return ofc
 }
 
