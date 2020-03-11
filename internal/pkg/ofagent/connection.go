@@ -44,7 +44,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 			svc := voltha.NewVolthaServiceClient(conn)
 			if svc != nil {
 				if _, err = svc.GetVoltha(context.Background(), &empty.Empty{}); err == nil {
-					logger.Debugw("Established connection to Voltha",
+					log.Debugw("Established connection to Voltha",
 						log.Fields{
 							"VolthaApiEndPoint": ofa.VolthaApiEndPoint,
 						})
@@ -58,7 +58,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 				}
 			}
 		}
-		logger.Warnw("Failed to connect to voltha",
+		log.Warnw("Failed to connect to voltha",
 			log.Fields{
 				"VolthaApiEndPoint": ofa.VolthaApiEndPoint,
 				"error":             err.Error(),

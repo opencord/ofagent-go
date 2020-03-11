@@ -24,14 +24,14 @@ import (
 )
 
 func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
-	logger.Debug("packet-out-started")
+	log.Debug("packet-out-started")
 	// If we exit, assume disconnected
 	defer func() {
 		ofa.events <- ofaEventVolthaDisconnected
-		logger.Debug("packet-out-finished")
+		log.Debug("packet-out-finished")
 	}()
 	if ofa.volthaClient == nil {
-		logger.Error("no-voltha-connection")
+		log.Error("no-voltha-connection")
 		return
 	}
 	opt := grpc.EmptyCallOption{}
@@ -39,7 +39,7 @@ func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
 	outClient, err := ofa.volthaClient.StreamPacketsOut(streamCtx, opt)
 	defer streamDone()
 	if err != nil {
-		logger.Errorw("streamPacketOut Error creating packetout stream ", log.Fields{"error": err})
+		log.Errorw("streamPacketOut Error creating packetout stream ", log.Fields{"error": err})
 		return
 	}
 top:
@@ -48,16 +48,16 @@ top:
 		case <-ctx.Done():
 			break top
 		case ofPacketOut := <-ofa.packetOutChannel:
-			if logger.V(log.DebugLevel) {
+			if log.V(log.DebugLevel) {
 				js, _ := json.Marshal(ofPacketOut)
-				logger.Debugw("streamPacketOut Receive PacketOut from Channel", log.Fields{"PacketOut": js})
+				log.Debugw("streamPacketOut Receive PacketOut from Channel", log.Fields{"PacketOut": js})
 			}
 			if err := outClient.Send(ofPacketOut); err != nil {
-				logger.Errorw("packet-out-send-error",
+				log.Errorw("packet-out-send-error",
 					log.Fields{"error": err.Error()})
 				break top
 			}
-			logger.Debug("packet-out-send")
+			log.Debug("packet-out-send")
 		}
 	}
 }
