@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9654eb8e_1e097fa7",
+        "filename": "internal/pkg/ofagent/packetOut.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000526
+      },
+      "writtenOn": "2020-03-12T02:56:26Z",
+      "side": 0,
+      "message": "We need to use package logger; thorough out voltha",
+      "revId": "3034262e765f6dcd57311cb93d71880cde4613e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
