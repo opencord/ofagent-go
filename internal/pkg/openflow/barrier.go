@@ -22,7 +22,7 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFClient) handleBarrierRequest(request *ofp.BarrierRequest) {
+func (ofc *OFConnection) handleBarrierRequest(request *ofp.BarrierRequest) {
 
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
