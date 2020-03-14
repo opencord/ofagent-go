@@ -71,7 +71,7 @@ var oxmMap = map[string]int32{
 	"vlan_vid_masked": 200, //made up
 }
 
-func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
+func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowAdd)
 		logger.Debugw("handleFlowAdd called",
@@ -265,7 +265,7 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	}
 }
 
-func (ofc *OFClient) handleFlowMod(flowMod *ofp.FlowMod) {
+func (ofc *OFConnection) handleFlowMod(flowMod *ofp.FlowMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowMod)
 		logger.Debugw("handleFlowMod called",
@@ -277,7 +277,7 @@ func (ofc *OFClient) handleFlowMod(flowMod *ofp.FlowMod) {
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFClient) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict) {
+func (ofc *OFConnection) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowModStrict)
 		logger.Debugw("handleFlowModStrict called",
@@ -289,7 +289,7 @@ func (ofc *OFClient) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict) {
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFClient) handleFlowDelete(flowDelete *ofp.FlowDelete) {
+func (ofc *OFConnection) handleFlowDelete(flowDelete *ofp.FlowDelete) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDelete)
 		logger.Debugw("handleFlowDelete called",
@@ -302,7 +302,7 @@ func (ofc *OFClient) handleFlowDelete(flowDelete *ofp.FlowDelete) {
 
 }
 
-func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict) {
+func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
 		logger.Debugw("handleFlowDeleteStrict called",
