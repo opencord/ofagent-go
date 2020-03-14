@@ -44,7 +44,7 @@ const (
 
 type OFAgent struct {
 	VolthaApiEndPoint         string
-	OFControllerEndPoint      string
+	OFControllerEndPoints     []string
 	DeviceListRefreshInterval time.Duration
 	ConnectionMaxRetries      int
 	ConnectionRetryDelay      time.Duration
@@ -63,7 +63,7 @@ type OFAgent struct {
 func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 	ofa := OFAgent{
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
-		OFControllerEndPoint:      config.OFControllerEndPoint,
+		OFControllerEndPoints:     config.OFControllerEndPoints,
 		DeviceListRefreshInterval: config.DeviceListRefreshInterval,
 		ConnectionMaxRetries:      config.ConnectionMaxRetries,
 		ConnectionRetryDelay:      config.ConnectionRetryDelay,
@@ -99,7 +99,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 	logger.Debugw("Starting GRPC - VOLTHA client",
 		log.Fields{
 			"voltha-endpoint":     ofa.VolthaApiEndPoint,
-			"controller-endpoint": ofa.OFControllerEndPoint})
+			"controller-endpoint": ofa.OFControllerEndPoints})
 
 	// If the context contains a k8s probe then register services
 	p := probe.GetProbeFromContext(ctx)

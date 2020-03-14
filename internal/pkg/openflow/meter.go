@@ -23,7 +23,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func (ofc *OFClient) handleMeterModRequest(request *ofp.MeterMod) {
+func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleMeterModRequest called",

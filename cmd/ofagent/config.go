@@ -18,11 +18,12 @@ package main
 import (
 	"flag"
 	"os"
+	"strings"
 	"time"
 )
 
 type Config struct {
-	OFControllerEndPoint      string
+	OFControllerEndPoints     multiFlag
 	VolthaApiEndPoint         string
 	LogLevel                  string
 	Banner                    bool
@@ -40,6 +41,17 @@ type Config struct {
 	InstanceID                string
 }
 
+type multiFlag []string
+
+func (m *multiFlag) String() string {
+	return "[" + strings.Join(*m, ", ") + "]"
+}
+
+func (m *multiFlag) Set(value string) error {
+	*m = append(*m, value)
+	return nil
+}
+
 func parseCommandLineArguments() (*Config, error) {
 	config := Config{}
 
@@ -51,13 +63,11 @@ func parseCommandLineArguments() (*Config, error) {
 		"version",
 		false,
 		"display application version and exit")
-	flag.StringVar(&(config.OFControllerEndPoint),
+	flag.Var(&config.OFControllerEndPoints,
 		"controller",
-		"onos-openflow:6653",
 		"connection to the OF controller specified as host:port")
-	flag.StringVar(&(config.OFControllerEndPoint),
+	flag.Var(&config.OFControllerEndPoints,
 		"O",
-		"onos-openflow:6653",
 		"(short) connection to the OF controller specified as host:port")
 	flag.StringVar(&(config.VolthaApiEndPoint),
 		"voltha",

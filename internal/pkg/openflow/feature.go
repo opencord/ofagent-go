@@ -24,7 +24,7 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/common"
 )
 
-func (ofc *OFClient) handleFeatureRequest(request *ofp.FeaturesRequest) error {
+func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) error {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleFeatureRequest called",
