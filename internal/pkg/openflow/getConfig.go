@@ -22,7 +22,7 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFClient) handleGetConfigRequest(request *ofp.GetConfigRequest) {
+func (ofc *OFConnection) handleGetConfigRequest(request *ofp.GetConfigRequest) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleGetConfigRequest called",

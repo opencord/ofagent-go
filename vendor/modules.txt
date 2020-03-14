@@ -4,6 +4,8 @@ github.com/armon/go-metrics
 github.com/coreos/go-systemd/journal
 # github.com/coreos/pkg v0.0.0-20180108230652-97fdf19511ea
 github.com/coreos/pkg/capnslog
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/donNewtonAlpha/goloxi v1.0.0
 github.com/donNewtonAlpha/goloxi
 github.com/donNewtonAlpha/goloxi/of13
@@ -49,6 +51,10 @@ github.com/opencord/voltha-protos/v3/go/common
 github.com/opencord/voltha-protos/v3/go/omci
 github.com/opencord/voltha-protos/v3/go/openflow_13
 github.com/opencord/voltha-protos/v3/go/voltha
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/testify v1.4.0
+github.com/stretchr/testify/assert
 # go.etcd.io/etcd v0.0.0-20190930204107-236ac2a90522
 go.etcd.io/etcd/auth/authpb
 go.etcd.io/etcd/clientv3
@@ -136,3 +142,5 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
+# gopkg.in/yaml.v2 v2.2.3
+gopkg.in/yaml.v2

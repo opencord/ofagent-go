@@ -129,7 +129,7 @@ func main() {
 	}
 
 	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
-		OFControllerEndPoint:      config.OFControllerEndPoint,
+		OFControllerEndPoints:     config.OFControllerEndPoints,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
 		DeviceListRefreshInterval: config.DeviceListRefreshInterval,
 		ConnectionMaxRetries:      config.ConnectionMaxRetries,

@@ -90,14 +90,14 @@ func (ofa *OFAgent) addOFClient(deviceID string) *openflow.OFClient {
 	ofc := ofa.clientMap[deviceID]
 	if ofc == nil {
 		ofc = openflow.NewOFClient(&openflow.OFClient{
-			DeviceID:             deviceID,
-			OFControllerEndPoint: ofa.OFControllerEndPoint,
-			VolthaClient:         ofa.volthaClient,
-			PacketOutChannel:     ofa.packetOutChannel,
-			ConnectionMaxRetries: ofa.ConnectionMaxRetries,
-			ConnectionRetryDelay: ofa.ConnectionRetryDelay,
+			DeviceID:              deviceID,
+			OFControllerEndPoints: ofa.OFControllerEndPoints,
+			VolthaClient:          ofa.volthaClient,
+			PacketOutChannel:      ofa.packetOutChannel,
+			ConnectionMaxRetries:  ofa.ConnectionMaxRetries,
+			ConnectionRetryDelay:  ofa.ConnectionRetryDelay,
 		})
-		go ofc.Run(context.Background())
+		ofc.Run(context.Background())
 		ofa.clientMap[deviceID] = ofc
 	}
 	ofa.mapLock.Unlock()

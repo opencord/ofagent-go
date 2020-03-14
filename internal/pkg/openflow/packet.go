@@ -23,7 +23,7 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func (ofc *OFClient) handlePacketOut(packetOut *ofp.PacketOut) {
+func (ofc *OFConnection) handlePacketOut(packetOut *ofp.PacketOut) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(packetOut)
 		logger.Debugw("handlePacketOut called",
