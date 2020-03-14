@@ -18,11 +18,12 @@ package openflow
 
 import (
 	"encoding/json"
+	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFClient) handleRoleRequest(request *ofp.RoleRequest) {
+func (ofc *OFConnection) handleRoleRequest(request *ofp.RoleRequest) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleRoleRequest called",
@@ -30,13 +31,67 @@ func (ofc *OFClient) handleRoleRequest(request *ofp.RoleRequest) {
 				"device-id": ofc.DeviceID,
 				"request":   js})
 	}
-	reply := ofp.NewRoleReply()
+
+	if request.Role == ofp.OFPCRRoleNochange {
+		reply := ofp.NewRoleReply()
+		reply.SetXid(request.GetXid())
+		reply.SetVersion(request.GetVersion())
+		reply.SetRole(ofp.ControllerRole(ofc.role))
+		reply.SetGenerationId(request.GetGenerationId())
+		if err := ofc.SendMessage(reply); err != nil {
+			logger.Errorw("handle-role-request-send-message", log.Fields{
+				"device-id": ofc.DeviceID,
+				"error":     err})
+		}
+	}
+
+	ok := ofc.roleManager.UpdateRoles(ofc.OFControllerEndPoint, request)
+
+	if ok {
+		reply := ofp.NewRoleReply()
+		reply.SetXid(request.GetXid())
+		reply.SetVersion(request.GetVersion())
+		reply.SetRole(request.GetRole())
+		reply.SetGenerationId(request.GetGenerationId())
+		if err := ofc.SendMessage(reply); err != nil {
+			logger.Errorw("handle-role-request-send-message", log.Fields{
+				"device-id": ofc.DeviceID,
+				"error":     err})
+		}
+	} else {
+		reply := ofp.NewRoleRequestFailedErrorMsg()
+		reply.SetXid(request.GetXid())
+		reply.SetVersion(request.GetVersion())
+		reply.Code = ofp.OFPRRFCStale
+
+		enc := goloxi.NewEncoder()
+		err := request.Serialize(enc)
+		if err == nil {
+			reply.Data = enc.Bytes()
+		}
+
+		if err := ofc.SendMessage(reply); err != nil {
+			logger.Errorw("handle-role-request-send-message", log.Fields{
+				"device-id": ofc.DeviceID,
+				"error":     err})
+		}
+	}
+}
+
+func (ofc *OFConnection) sendRoleSlaveError(request ofp.IHeader) {
+	reply := ofp.NewBadRequestErrorMsg()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())
-	reply.SetRole(request.GetRole())
-	reply.SetGenerationId(request.GetGenerationId())
+	reply.Code = ofp.OFPCRRoleSlave
+
+	enc := goloxi.NewEncoder()
+	err := request.Serialize(enc)
+	if err == nil {
+		reply.Data = enc.Bytes()
+	}
+
 	if err := ofc.SendMessage(reply); err != nil {
-		logger.Errorw("handle-role-request-send-message", log.Fields{
+		logger.Errorw("send-role-slave-error", log.Fields{
 			"device-id": ofc.DeviceID,
 			"error":     err})
 	}
