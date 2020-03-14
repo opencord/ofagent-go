@@ -22,7 +22,7 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFClient) handleErrMsg(message ofp.IErrorMsg) {
+func (ofc *OFConnection) handleErrMsg(message ofp.IErrorMsg) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(message)
 		logger.Debugw("handleErrMsg called",
