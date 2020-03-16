@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "acaf4faa_7a18c1a9",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2020-03-16T17:21:26Z",
+      "side": 1,
+      "message": "I checked, and I think it is consistent with other components. I agree with defaulting to WARN, and doing it all at once in a separate ticket.",
+      "parentUuid": "2c9029d0_d663fb75",
+      "range": {
+        "startLine": 118,
+        "startChar": 50,
+        "endLine": 118,
+        "endChar": 55
+      },
+      "revId": "81bb7bac59f13ac332021aa7cb424f7580eeaf4a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e286866_f3217efa",
         "filename": "cmd/ofagent/main.go",
         "patchSetId": 5
