@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e286866_f3217efa",
+        "filename": "cmd/ofagent/main.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2020-03-16T16:07:21Z",
+      "side": 1,
+      "message": "\"unable-to-setup-log-config\" might be more appropriate",
+      "range": {
+        "startLine": 135,
+        "startChar": 13,
+        "endLine": 135,
+        "endChar": 44
+      },
+      "revId": "81bb7bac59f13ac332021aa7cb424f7580eeaf4a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
