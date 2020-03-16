@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2c9029d0_d663fb75",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-03-16T17:18:25Z",
+      "side": 1,
+      "message": "i would default this to WARN, as default to DEBUG seems a bit dev focused as opposed to operational focus. Will make a separate ticket.",
+      "range": {
+        "startLine": 118,
+        "startChar": 50,
+        "endLine": 118,
+        "endChar": 55
+      },
+      "revId": "81bb7bac59f13ac332021aa7cb424f7580eeaf4a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e286866_f3217efa",
         "filename": "cmd/ofagent/main.go",
         "patchSetId": 5
