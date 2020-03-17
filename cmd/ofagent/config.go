@@ -115,7 +115,7 @@ func parseCommandLineArguments() (*Config, error) {
 
 	flag.IntVar(&(config.KVStorePort), "kv_store_port", 2379, "KV store port")
 
-	flag.StringVar(&(config.LogLevel), "log_level", "DEBUG", "Log level")
+	flag.StringVar(&(config.LogLevel), "log_level", "WARN", "Log level")
 
 	containerName := getContainerInfo()
 	if len(containerName) > 0 {
