@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7a7cc2b_716d9d3a",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "you might want to return error",
+      "range": {
+        "startLine": 26,
+        "startChar": 69,
+        "endLine": 26,
+        "endChar": 70
+      },
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65619efb_e4bb699c",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "return error, possibly Bad Request (0x0001) ?",
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "196229a1_409287f1",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "same",
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79064260_340739ff",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "if the error is not nil this will generate an empty reply.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 3
+      },
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d249b6_5f63a064",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "same",
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f5c2539_4a0f7261",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "return error",
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "222a8d90_ade5e55e",
+        "filename": "internal/pkg/openflow/role_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 1,
+      "message": "possibly add test for bad role request and consequent error return",
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}

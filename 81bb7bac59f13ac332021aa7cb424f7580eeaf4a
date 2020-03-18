@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fbca5b83_15dfe1d5",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 0,
+      "message": "can we maybe leave this as default in place ?",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 22
+      },
+      "revId": "81bb7bac59f13ac332021aa7cb424f7580eeaf4a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4f3a6d0_7a995527",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-18T12:22:28Z",
+      "side": 0,
+      "message": "same",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 22
+      },
+      "revId": "81bb7bac59f13ac332021aa7cb424f7580eeaf4a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
