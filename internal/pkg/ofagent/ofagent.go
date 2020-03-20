@@ -28,8 +28,6 @@ import (
 	"time"
 )
 
-var logger, _ = log.AddPackage(log.JSON, log.DebugLevel, nil)
-
 type ofaEvent byte
 type ofaState byte
 
@@ -203,7 +201,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 					state = ofaStateConnecting
 					go func() {
 						if err := ofa.establishConnectionToVoltha(p); err != nil {
-							log.Errorw("voltha-connection-failed", log.Fields{"error": err})
+							logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
 					}()

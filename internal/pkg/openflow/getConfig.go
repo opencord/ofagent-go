@@ -42,6 +42,6 @@ func (ofc *OFClient) handleGetConfigRequest(request *ofp.GetConfigRequest) {
 				"reply":     js})
 	}
 	if err := ofc.SendMessage(reply); err != nil {
-		log.Errorw("handle-get-config-request-send-message", log.Fields{"error": err})
+		logger.Errorw("handle-get-config-request-send-message", log.Fields{"error": err})
 	}
 }

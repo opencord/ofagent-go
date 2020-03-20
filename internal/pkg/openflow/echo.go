@@ -34,6 +34,6 @@ func (ofc *OFClient) handleEchoRequest(request *ofp.EchoRequest) {
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())
 	if err := ofc.SendMessage(reply); err != nil {
-		log.Errorw("handle-echo-request-send-message", log.Fields{"error": err})
+		logger.Errorw("handle-echo-request-send-message", log.Fields{"error": err})
 	}
 }
