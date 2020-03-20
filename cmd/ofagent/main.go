@@ -44,13 +44,6 @@ func printVersion() {
 	fmt.Println(version.VersionInfo.String("  "))
 }
 
-func init() {
-	_, err := log.AddPackage(log.JSON, log.DebugLevel, nil)
-	if err != nil {
-		log.Errorw("unable-to-register-package-to-the-log-map", log.Fields{"error": err})
-	}
-}
-
 func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort, kvStoreTimeout int) (kvstore.Client, error) {
 	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout)
 	if err != nil {
@@ -68,7 +61,7 @@ func stop(ctx context.Context, kvClient kvstore.Client) {
 	if kvClient != nil {
 		// Release all reservations
 		if err := kvClient.ReleaseAllReservations(ctx); err != nil {
-			log.Infow("fail-to-release-all-reservations", log.Fields{"error": err})
+			logger.Infow("fail-to-release-all-reservations", log.Fields{"error": err})
 		}
 		// Close the DB connection
 		kvClient.Close()
@@ -94,7 +87,7 @@ func main() {
 
 	logLevel, err := log.StringToLogLevel(config.LogLevel)
 	if err != nil {
-		log.Fatalf("Cannot setup logging, %s", err)
+		logger.Fatalf("Cannot setup logging, %s", err)
 	}
 
 	// Setup default logger - applies for packages that do not have specific logger set
@@ -112,7 +105,7 @@ func main() {
 	defer func() {
 		err := log.CleanUp()
 		if err != nil {
-			log.Errorw("unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
+			logger.Errorw("unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
 		}
 	}()
 
@@ -132,7 +125,7 @@ func main() {
 
 	client, err := setLogConfig(ctx, config.KVStoreHost, config.KVStoreType, config.KVStorePort, config.KVStoreTimeout)
 	if err != nil {
-		log.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
+		logger.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
 	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
@@ -143,7 +136,7 @@ func main() {
 		ConnectionRetryDelay:      config.ConnectionRetryDelay,
 	})
 	if err != nil {
-		log.Fatalw("failed-to-create-ofagent",
+		logger.Fatalw("failed-to-create-ofagent",
 			log.Fields{
 				"error": err})
 	}

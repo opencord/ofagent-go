@@ -123,5 +123,5 @@ top:
 		}
 	}
 
-	log.Debug("handle-change-event-finsihed")
+	logger.Debug("handle-change-event-finsihed")
 }
