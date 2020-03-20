@@ -148,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "482977d5_fa244e53",
+        "filename": "internal/pkg/openflow/role.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-03-20T09:55:26Z",
+      "side": 1,
+      "message": "sounds good",
+      "parentUuid": "19ee9fe6_29462ca8",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 3
+      },
+      "revId": "dbc93dd6e59790dd91cc33f70511744986aac25c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6d249b6_5f63a064",
         "filename": "internal/pkg/openflow/role.go",
         "patchSetId": 2
