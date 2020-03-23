@@ -29,7 +29,7 @@ DOCKER_EXTRA_ARGS          ?=
 DOCKER_REGISTRY            ?=
 DOCKER_REPOSITORY          ?=
 DOCKER_TAG                 ?= ${VERSION}$(shell [[ ${DOCKER_LABEL_VCS_DIRTY} == "true" ]] && echo "-dirty" || true)
-ADAPTER_IMAGENAME          := ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}ofagent-go
+ADAPTER_IMAGENAME          := ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}voltha-ofagent-go
 
 ## Docker labels. Only set ref and commit date if committed
 DOCKER_LABEL_VCS_URL       ?= $(shell git remote get-url $(shell git remote))
