@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b86a9b62_60939c62",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-03-23T17:25:09Z",
+      "side": 1,
+      "message": "My preference is for locks to be explicitly released not deferred.  In this case probably not a big deal because role updates shouldn\u0027t happen often.",
+      "revId": "0ebdce88f4ffb2d655209815c689bbeed0400705",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
