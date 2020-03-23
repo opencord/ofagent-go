@@ -16,6 +16,24 @@
       "revId": "0ebdce88f4ffb2d655209815c689bbeed0400705",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cca44630_763e1418",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-03-23T20:42:12Z",
+      "side": 1,
+      "message": "Why the preference for explicit unlock - are you worried about the performance of defer? In this case I agree that the impact is negligable because this isn\u0027t a hot code path.\n\nBut it does seem to be idomatic and widely accepted to use defer to release locks. There is a readability/maintainability advantage where you don\u0027t have to release the lock explicitly wherever you return and if anything panics during function execution then the lock is still released. I would usually prioritize these advantages over performance unless performance becomes and issue and needs to be optimized.",
+      "parentUuid": "b86a9b62_60939c62",
+      "revId": "0ebdce88f4ffb2d655209815c689bbeed0400705",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
