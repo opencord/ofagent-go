@@ -58,13 +58,14 @@ GOCOVER_COBERTURA = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app
 GOLANGCI_LINT     = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app $(shell test -t 0 && echo "-it") -v gocache:/.cache -v gocache-${VOLTHA_TOOLS_VERSION}:/go/pkg voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}-golangci-lint golangci-lint
 HADOLINT          = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app $(shell test -t 0 && echo "-it") voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}-hadolint hadolint
 
-.PHONY: docker-build local-protos local-voltha
+.PHONY: local-protos local-voltha
 
 # This should to be the first and default target in this Makefile
 help:
 	@echo "Usage: make [<target>]"
 	@echo "where available targets are:"
 	@echo
+	@echo "build             : Build ofagent-go docker image"
 	@echo "docker-build      : Build ofagent-go docker image"
 	@echo "help              : Print this help"
 	@echo "docker-push       : Push the docker images to an external repository"
@@ -82,6 +83,14 @@ ifdef LOCAL_PROTOS
 	cp -r ${GOPATH}/src/github.com/opencord/voltha-protos/go/* vendor/github.com/opencord/voltha-protos/go
 endif
 
+## Local Development Helpers
+local-lib-go:
+ifdef LOCAL_LIB_GO
+	mkdir -p vendor/github.com/opencord/voltha-lib-go/v3/pkg
+	cp -r ${LOCAL_LIB_GO}/pkg/* vendor/github.com/opencord/voltha-lib-go/v3/pkg/
+endif
+
+
 local-voltha:
 ifdef LOCAL_VOLTHA
 	mkdir -p vendor/github.com/opencord/voltha-go/
@@ -89,10 +98,12 @@ ifdef LOCAL_VOLTHA
 	rm -rf vendor/github.com/opencord/voltha-go/vendor
 endif
 
+## Docker targets
+build: docker-build
 
 ## Docker targets
 
-docker-build: local-protos local-voltha
+docker-build: local-protos local-voltha local-lib-go
 	docker build $(DOCKER_BUILD_ARGS) -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -t ${ADAPTER_IMAGENAME}:latest -f docker/Dockerfile.ofagent-go .
 
 docker-push:
@@ -121,7 +132,7 @@ lint-mod:
 
 lint: lint-mod lint-dockerfile
 
-test:
+test: local-lib-go
 	@mkdir -p ./tests/results
 	@${GO} test -mod=vendor -v -coverprofile ./tests/results/go-test-coverage.out -covermode count ./... 2>&1 | tee ./tests/results/go-test-results.out ;\
 	RETURN=$$? ;\
