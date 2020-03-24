@@ -22,6 +22,30 @@
       "revId": "3220da7c4ab51e76d196226ce162c98569f06d76",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9550fae0_da56f652",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2020-03-24T21:52:59Z",
+      "side": 1,
+      "message": "I think \"build\" as a synonym for \"docker-build\" exists for other repos, including voltha-go and voltha-openolt-adapter. I\u0027d suggest we keep it for consistency sake (ticket removing \"build\" from all of them if we feels it\u0027s entirely redundant and unnecessary)",
+      "parentUuid": "3da425e6_1652d65f",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 58
+      },
+      "revId": "3220da7c4ab51e76d196226ce162c98569f06d76",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
