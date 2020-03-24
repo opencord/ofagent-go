@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3da425e6_1652d65f",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2020-03-24T20:51:24Z",
+      "side": 1,
+      "message": "Automation uses the docker-build and docker-push commands, so please don\u0027t create new targets that are aliases to existing ones.\n\nSee also: https://guide.opencord.org/developer/test_release_software.html#publish-docker-container-images-to-public-dockerhub-job-docker-publish",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 58
+      },
+      "revId": "3220da7c4ab51e76d196226ce162c98569f06d76",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
