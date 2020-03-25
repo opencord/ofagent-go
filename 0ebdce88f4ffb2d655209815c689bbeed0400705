@@ -34,6 +34,24 @@
       "revId": "0ebdce88f4ffb2d655209815c689bbeed0400705",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "314acdb3_f1367750",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2020-03-25T14:19:26Z",
+      "side": 1,
+      "message": "This function is relatively atomic so it really would behave the same either way.  \nWhere we have seen it misused is when the lock is used to protect the integrity of a map but is ultimately held for quite a bit on processing where it wasn\u0027t necessary, ultimately blocking other messages from being processed needlessly.  \nFrom my personal experience, as you are working towards performance there will inevitably be a lock rationalization / tightening phase.",
+      "parentUuid": "cca44630_763e1418",
+      "revId": "0ebdce88f4ffb2d655209815c689bbeed0400705",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
