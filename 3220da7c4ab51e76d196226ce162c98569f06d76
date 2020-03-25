@@ -46,6 +46,30 @@
       "revId": "3220da7c4ab51e76d196226ce162c98569f06d76",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1a5b775_6e222fd4",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2020-03-25T16:26:25Z",
+      "side": 1,
+      "message": "Aliases seem fine, but should the help documentation mention one target but not the other?",
+      "parentUuid": "9550fae0_da56f652",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 58
+      },
+      "revId": "3220da7c4ab51e76d196226ce162c98569f06d76",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
