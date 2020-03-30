@@ -154,7 +154,7 @@ func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
 	return false
 }
 
-// NewClient returns an initialized OFClient instance based on the configuration
+// NewOFClient returns an initialized OFClient instance based on the configuration
 // specified
 func NewOFClient(config *OFClient) *OFClient {
 

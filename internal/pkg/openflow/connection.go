@@ -294,7 +294,7 @@ top:
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			ofc.parseHeader(msg)
+			ofc.parseHeader(msg, &messageBuf)
 		}
 	}
 	logger.Debugw("end-of-stream",
@@ -325,7 +325,7 @@ func (ofc *OFConnection) sayHello() {
 	}
 }
 
-func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
+func (ofc *OFConnection) parseHeader(header ofp.IHeader, msgbuf *[]byte) {
 	headerType := header.GetType()
 	logger.Debugw("packet-header-type",
 		log.Fields{
@@ -405,7 +405,7 @@ func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
 			ofc.sendRoleSlaveError(header)
 			return
 		}
-		// TODO handle group mods
+		ofc.handleGroupMod(header.(*ofp.GroupMod), msgbuf)
 	}
 }
 
