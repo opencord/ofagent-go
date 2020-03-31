@@ -16,6 +16,8 @@
 package openflow
 
 import (
+	"bytes"
+	"encoding/binary"
 	"encoding/json"
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
@@ -24,13 +26,11 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func parseOxm(ofbField *openflow_13.OfpOxmOfbField, DeviceID string) (goloxi.IOxm, uint16) {
+func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofbField)
 		logger.Debugw("parseOxm called",
-			log.Fields{
-				"device-id": DeviceID,
-				"ofbField":  js})
+			log.Fields{"ofbField": js})
 	}
 
 	switch ofbField.Type {
@@ -54,6 +54,17 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField, DeviceID string) (goloxi.IOx
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
 		ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
 		return ofpIpProto, 1
+	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+		ofpIpv4Dst := ofp.NewOxmIpv4Dst()
+		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Ipv4Dst)
+		buf := new(bytes.Buffer)
+		err := binary.Write(buf, binary.BigEndian, val.Ipv4Dst)
+		if err != nil {
+			logger.Errorw("error writing ipv4 address %v",
+				log.Fields{"error": err})
+		}
+		ofpIpv4Dst.Value = buf.Bytes()
+		return ofpIpv4Dst, 4
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 		ofpUdpSrc := ofp.NewOxmUdpSrc()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
@@ -97,21 +108,17 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField, DeviceID string) (goloxi.IOx
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofbField)
 			logger.Warnw("ParseOXM Unhandled OxmField",
-				log.Fields{
-					"device-id": DeviceID,
-					"OfbField":  js})
+				log.Fields{"OfbField": js})
 		}
 	}
 	return nil, 0
 }
 
-func parseInstructions(ofpInstruction *openflow_13.OfpInstruction, DeviceID string) (ofp.IInstruction, uint16) {
+func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) (ofp.IInstruction, uint16) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpInstruction)
 		logger.Debugw("parseInstructions called",
-			log.Fields{
-				"device-id":   DeviceID,
-				"Instruction": js})
+			log.Fields{"Instruction": js})
 	}
 	instType := ofpInstruction.Type
 	data := ofpInstruction.GetData()
@@ -141,7 +148,7 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction, DeviceID stri
 		//ofpActions := ofpInstruction.GetActions().Actions
 		var actions []goloxi.IAction
 		for _, ofpAction := range ofpInstruction.GetActions().Actions {
-			action, actionSize := parseAction(ofpAction, DeviceID)
+			action, actionSize := parseAction(ofpAction)
 			actions = append(actions, action)
 			instructionSize += actionSize
 
@@ -152,7 +159,6 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction, DeviceID stri
 			js, _ := json.Marshal(instruction)
 			logger.Debugw("parseInstructions returning",
 				log.Fields{
-					"device-id":          DeviceID,
 					"size":               instructionSize,
 					"parsed-instruction": js})
 		}
@@ -162,13 +168,11 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction, DeviceID stri
 	return nil, 0
 }
 
-func parseAction(ofpAction *openflow_13.OfpAction, DeviceID string) (goloxi.IAction, uint16) {
+func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpAction)
 		logger.Debugw("parseAction called",
-			log.Fields{
-				"device-id": DeviceID,
-				"action":    js})
+			log.Fields{"action": js})
 	}
 	switch ofpAction.Type {
 	case openflow_13.OfpActionType_OFPAT_OUTPUT:
@@ -191,17 +195,21 @@ func parseAction(ofpAction *openflow_13.OfpAction, DeviceID string) (goloxi.IAct
 		ofpActionSetField := ofpAction.GetSetField()
 		setFieldAction := ofp.NewActionSetField()
 
-		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField(), DeviceID)
+		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField())
 		setFieldAction.Field = iOxm
 		setFieldAction.Len = 16
 		return setFieldAction, 16
+	case openflow_13.OfpActionType_OFPAT_GROUP:
+		ofpGroupAction := ofpAction.GetGroup()
+		groupAction := ofp.NewActionGroup()
+		groupAction.GroupId = ofpGroupAction.GroupId
+		groupAction.Len = 8
+		return groupAction, 8
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofpAction)
 			logger.Warnw("parseAction unknow action",
-				log.Fields{
-					"device-id": DeviceID,
-					"action":    js})
+				log.Fields{"action": js})
 		}
 	}
 	return nil, 0

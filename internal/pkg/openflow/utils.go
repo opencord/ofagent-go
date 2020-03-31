@@ -77,6 +77,13 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 	case ofp.OFPATPopMpls: //PopMpls
 	case ofp.OFPATSetQueue: //SetQueue
 	case ofp.OFPATGroup: //ActionGroup
+		ofpAction.Type = openflow_13.OfpActionType_OFPAT_GROUP
+		group := action.(*ofp.ActionGroup)
+		ofpAction.Action = &openflow_13.OfpAction_Group{
+			Group: &openflow_13.OfpActionGroup{
+				GroupId: group.GroupId,
+			},
+		}
 	case ofp.OFPATSetNwTtl: //SetNwTtl
 	case ofp.OFPATDecNwTtl: //DecNwTtl
 	case ofp.OFPATSetField: //SetField
