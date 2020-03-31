@@ -26,6 +26,7 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
+	"net"
 )
 
 var oxmMap = map[string]int32{
@@ -118,6 +119,10 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 			field.Value = &voltha.OfpOxmOfbField_IpProto{
 				IpProto: uint32(val.(ofp.IpPrototype)),
+			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+			field.Value = &voltha.OfpOxmOfbField_Ipv4Dst{
+				Ipv4Dst: binary.BigEndian.Uint32(val.(net.IP)),
 			}
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 			field.Value = &voltha.OfpOxmOfbField_UdpSrc{
@@ -354,6 +359,10 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 			field.Value = &voltha.OfpOxmOfbField_IpProto{
 				IpProto: uint32(val.(ofp.IpPrototype)),
+			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+			field.Value = &voltha.OfpOxmOfbField_Ipv4Dst{
+				Ipv4Dst: binary.BigEndian.Uint32(val.(net.IP)),
 			}
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 			field.Value = &voltha.OfpOxmOfbField_UdpSrc{

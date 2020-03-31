@@ -407,7 +407,7 @@ func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
 			ofc.sendRoleSlaveError(header)
 			return
 		}
-		// TODO handle group mods
+		ofc.handleGroupMod(header.(ofp.IGroupMod))
 	}
 }
 

@@ -350,7 +350,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		for _, oxmField := range pbMatch.GetOxmFields() {
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm, oxmSize := parseOxm(ofbField, ofc.DeviceID)
+			iOxm, oxmSize := parseOxm(ofbField)
 			fields = append(fields, iOxm)
 			if oxmSize > 0 {
 				size += 4 //header for oxm
@@ -368,7 +368,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
-			instruction, size := parseInstructions(ofpInstruction, ofc.DeviceID)
+			instruction, size := parseInstructions(ofpInstruction)
 			instructions = append(instructions, instruction)
 			entrySize += size
 		}
@@ -416,13 +416,20 @@ func (ofc *OFConnection) handleGroupStatsRequest(request *ofp.GroupStatsRequest)
 		entry.SetRefCount(stats.GetRefCount())
 		entry.SetGroupId(stats.GetGroupId())
 		var bucketStatsList []*ofp.BucketCounter
-		for _, bucketStat := range stats.GetBucketStats() {
+		// TODO fix this when API handler is fixed in the core
+		// Core doesn't return any buckets in the Stats object, so just
+		// fill out an empty BucketCounter for each bucket in the group Desc for now.
+		for range item.GetDesc().GetBuckets() {
 			bucketCounter := ofp.BucketCounter{}
-			bucketCounter.SetPacketCount(bucketStat.GetPacketCount())
-			bucketCounter.SetByteCount(bucketStat.GetByteCount())
+			bucketCounter.SetPacketCount(0)
+			bucketCounter.SetByteCount(0)
 			bucketStatsList = append(bucketStatsList, &bucketCounter)
 		}
 		entry.SetBucketStats(bucketStatsList)
+		// TODO loxi should set lengths automatically
+		// last 2 + 4 are padding
+		length := 2 + 4 + 4 + 8 + 8 + 4 + 4 + len(bucketStatsList)*16 + 2 + 4
+		entry.SetLength(uint16(length))
 		groupStatsEntries = append(groupStatsEntries, &entry)
 	}
 	response.SetEntries(groupStatsEntries)
@@ -445,19 +452,23 @@ func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStats
 	}
 	var groupDescStatsEntries []*ofp.GroupDescStatsEntry
 	for _, item := range reply.GetItems() {
-		stats := item.GetStats()
-		var groupDesc ofp.GroupDescStatsEntry
-		groupDesc.SetGroupId(stats.GetGroupId())
-		/*
-			buckets := item.g
-			var bucketList []*ofp.Bucket
-			for j:=0;j<len(buckets);j++{
+		desc := item.GetDesc()
 
-			}
+		buckets := volthaBucketsToOpenflow(desc.Buckets)
+		var bucketsLength uint16
+		for _, b := range buckets {
+			bucketsLength += b.Len
+		}
 
-			groupDesc.SetBuckets(bucketList)
-		*/
-		groupDescStatsEntries = append(groupDescStatsEntries, &groupDesc)
+		groupDesc := &ofp.GroupDescStatsEntry{
+			// TODO loxi should set lengths automatically
+			// last 1 is padding
+			Length:    2 + 1 + 4 + bucketsLength + 1, // length field + groupType + groupId + buckets
+			GroupType: volthaGroupTypeToOpenflow(desc.Type),
+			GroupId:   desc.GroupId,
+			Buckets:   buckets,
+		}
+		groupDescStatsEntries = append(groupDescStatsEntries, groupDesc)
 	}
 	response.SetEntries(groupDescStatsEntries)
 	return response, nil
