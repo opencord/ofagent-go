@@ -28,6 +28,7 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/version"
 	"os"
 	"strconv"
+	"time"
 )
 
 func printBanner() {
@@ -44,8 +45,9 @@ func printVersion() {
 	fmt.Println(version.VersionInfo.String("  "))
 }
 
-func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort, kvStoreTimeout int) (kvstore.Client, error) {
+func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort int, kvStoreTimeout time.Duration) (kvstore.Client, error) {
 	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout, log.WarnLevel)
+
 	if err != nil {
 		return nil, err
 	}
