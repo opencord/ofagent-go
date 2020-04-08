@@ -104,6 +104,24 @@
       "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fe042d0_d2233997",
+        "filename": "internal/pkg/openflow/meter.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-04-08T21:15:48Z",
+      "side": 1,
+      "message": "Trying to ask whether isSet()\u003d\u003dtrue followed by isSet()\u003d\u003dfalse is possible.  If so there appear to be unprotected Get()s which could return nil and thus cause panics.",
+      "parentUuid": "23e81582_05d4ede9",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
