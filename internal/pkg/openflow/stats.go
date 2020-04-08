@@ -19,13 +19,14 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+	"net"
+	"unsafe"
+
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/common"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
-	"net"
-	"unsafe"
 )
 
 func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) error {
@@ -289,7 +290,8 @@ func (ofc *OFClient) handleStatsRequest(request ofp.IHeader, statType uint16) er
 }
 
 func (ofc *OFClient) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp.DescStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewDescStatsReply()
@@ -297,7 +299,7 @@ func (ofc *OFClient) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp
 	response.SetVersion(request.GetVersion())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 
-	resp, err := ofc.VolthaClient.GetLogicalDevice(context.Background(),
+	resp, err := volthaClient.GetLogicalDevice(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -313,14 +315,15 @@ func (ofc *OFClient) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp
 }
 
 func (ofc *OFClient) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (*ofp.FlowStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewFlowStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(4)
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	resp, err := ofc.VolthaClient.ListLogicalDeviceFlows(context.Background(),
+	resp, err := volthaClient.ListLogicalDeviceFlows(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -388,14 +391,15 @@ func (ofc *OFClient) handleAggregateStatsRequest(request *ofp.AggregateStatsRequ
 }
 
 func (ofc *OFClient) handleGroupStatsRequest(request *ofp.GroupStatsRequest) (*ofp.GroupStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewGroupStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	reply, err := ofc.VolthaClient.ListLogicalDeviceFlowGroups(context.Background(),
+	reply, err := volthaClient.ListLogicalDeviceFlowGroups(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -426,14 +430,15 @@ func (ofc *OFClient) handleGroupStatsRequest(request *ofp.GroupStatsRequest) (*o
 }
 
 func (ofc *OFClient) handleGroupStatsDescRequest(request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewGroupDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	reply, err := ofc.VolthaClient.ListLogicalDeviceFlowGroups(context.Background(),
+	reply, err := volthaClient.ListLogicalDeviceFlowGroups(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -468,14 +473,15 @@ func (ofc *OFClient) handleGroupFeatureStatsRequest(request *ofp.GroupFeaturesSt
 }
 
 func (ofc *OFClient) handleMeterStatsRequest(request *ofp.MeterStatsRequest) (*ofp.MeterStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewMeterStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	resp, err := ofc.VolthaClient.ListLogicalDeviceMeters(context.Background(),
+	resp, err := volthaClient.ListLogicalDeviceMeters(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -546,14 +552,15 @@ func (ofc *OFClient) handleQueueStatsRequest(request *ofp.QueueStatsRequest) (*o
 }
 
 func (ofc *OFClient) handlePortStatsRequest(request *ofp.PortStatsRequest) (*ofp.PortStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewPortStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	reply, err := ofc.VolthaClient.ListLogicalDevicePorts(context.Background(),
+	reply, err := volthaClient.ListLogicalDevicePorts(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
@@ -575,14 +582,15 @@ func (ofc *OFClient) handlePortStatsRequest(request *ofp.PortStatsRequest) (*ofp
 }
 
 func (ofc *OFClient) handlePortDescStatsRequest(request *ofp.PortDescStatsRequest) (*ofp.PortDescStatsReply, error) {
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
 	response := ofp.NewPortDescStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-	logicalDevice, err := ofc.VolthaClient.GetLogicalDevice(context.Background(),
+	logicalDevice, err := volthaClient.GetLogicalDevice(context.Background(),
 		&common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err

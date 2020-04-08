@@ -19,12 +19,13 @@ package ofagent
 import (
 	"context"
 	"encoding/json"
+	"net"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"google.golang.org/grpc"
-	"net"
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
@@ -41,7 +42,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
 	defer streamDone()
-	stream, err := ofa.volthaClient.ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
+	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw("Unable to establish Receive Change Event Stream",
 			log.Fields{"error": err})

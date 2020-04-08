@@ -17,6 +17,7 @@ package openflow
 
 import (
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
@@ -32,7 +33,8 @@ func (ofc *OFClient) handleMeterModRequest(request *ofp.MeterMod) {
 				"request":   js})
 	}
 
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
@@ -91,7 +93,7 @@ func (ofc *OFClient) handleMeterModRequest(request *ofp.MeterMod) {
 				"device-id":         ofc.DeviceID,
 				"meter-mod-request": meterModJS})
 	}
-	if _, err := ofc.VolthaClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate); err != nil {
 		logger.Errorw("Error calling UpdateLogicalDeviceMeterTable",
 			log.Fields{
 				"device-id": ofc.DeviceID,
