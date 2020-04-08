@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb3a38b4_17e707d9",
+        "filename": "internal/pkg/holder/holder.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2020-04-08T22:35:39Z",
+      "side": 1,
+      "message": "voluntary?",
+      "range": {
+        "startLine": 25,
+        "startChar": 52,
+        "endLine": 25,
+        "endChar": 61
+      },
+      "revId": "fc67b175540482e9f499ed73ecfeb8dc865a74f4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
