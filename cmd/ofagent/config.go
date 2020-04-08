@@ -35,7 +35,7 @@ type Config struct {
 	ConnectionRetryDelay      time.Duration
 	ConnectionMaxRetries      int
 	KVStoreType               string
-	KVStoreTimeout            int // in seconds
+	KVStoreTimeout            time.Duration
 	KVStoreHost               string
 	KVStorePort               int
 	InstanceID                string
@@ -119,7 +119,7 @@ func parseCommandLineArguments() (*Config, error) {
 		"interval between attempts to synchronize devices from voltha to ofagent")
 	flag.StringVar(&(config.KVStoreType), "kv_store_type", "etcd", "KV store type")
 
-	flag.IntVar(&(config.KVStoreTimeout), "kv_store_request_timeout", 5, "The default timeout when making a kv store request")
+	flag.DurationVar(&(config.KVStoreTimeout), "kv_store_request_timeout", 5*time.Second, "The default timeout when making a kv store request")
 
 	flag.StringVar(&(config.KVStoreHost), "kv_store_host", "voltha-etcd-cluster-client.voltha.svc.cluster.local", "KV store host")
 
