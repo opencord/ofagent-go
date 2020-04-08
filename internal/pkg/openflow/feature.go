@@ -19,6 +19,7 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/common"
@@ -32,11 +33,12 @@ func (ofc *OFClient) handleFeatureRequest(request *ofp.FeaturesRequest) error {
 				"device-id": ofc.DeviceID,
 				"request":   js})
 	}
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		return NoVolthaConnectionError
 	}
 	var id = common.ID{Id: ofc.DeviceID}
-	logicalDevice, err := ofc.VolthaClient.GetLogicalDevice(context.Background(), &id)
+	logicalDevice, err := volthaClient.GetLogicalDevice(context.Background(), &id)
 	if err != nil {
 		return err
 	}

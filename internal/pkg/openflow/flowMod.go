@@ -20,11 +20,12 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/json"
+	"unsafe"
+
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
-	"unsafe"
 )
 
 var oxmMap = map[string]int32{
@@ -80,7 +81,8 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 				"params":    js})
 	}
 
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
@@ -227,7 +229,7 @@ func (ofc *OFClient) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
-	if _, err := ofc.VolthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
 		logger.Errorw("Error calling FlowAdd ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
@@ -311,7 +313,8 @@ func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStri
 				"flow-delete-strict": js})
 	}
 
-	if ofc.VolthaClient == nil {
+	volthaClient := ofc.VolthaClient.Get()
+	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
@@ -412,7 +415,7 @@ func (ofc *OFClient) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStri
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
-	if _, err := ofc.VolthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
 		logger.Errorw("Error calling FlowDelete ",
 			log.Fields{
 				"device-id": ofc.DeviceID,

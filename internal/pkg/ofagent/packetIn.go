@@ -19,6 +19,7 @@ package ofagent
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/donNewtonAlpha/goloxi"
 	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
@@ -43,7 +44,7 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
 	defer streamDone()
-	stream, err := ofa.volthaClient.ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
+	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw("Unable to establish Receive PacketIn Stream",
 			log.Fields{"error": err})
