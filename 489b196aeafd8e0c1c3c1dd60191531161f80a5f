@@ -16,6 +16,24 @@
       "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b88fbc3f_5ac388be",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-08T20:59:54Z",
+      "side": 1,
+      "message": "A disconnect is triggered by the first RPC connection error. at that point the holder\u0027s value is cleared (set to nil). so if any function is called (primarily from the openflow package) a check is done to see if the value is nil and then it just returns an error. so the old connection is not used.\n\nat this point, this loop is entered and a connection is attempted to be reestablished.\n\nonce the connection is established the reference is set to the new value and that will be used.",
+      "parentUuid": "38f6debc_8e808fa1",
+      "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
