@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "159587d8_1cf60c5d",
+        "filename": "internal/pkg/holder/holder.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-08T20:19:12Z",
+      "side": 1,
+      "message": "i was looking for a good term other than holder, but couldn\u0027t find one. it is not really a proxy as you don\u0027t use it the same way. it really is a holder.",
+      "parentUuid": "3f01c5e7_83a7e323",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "063681f9_6f69aaed",
         "filename": "internal/pkg/ofagent/connection.go",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6c25c240_03e36ab1",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-08T20:19:12Z",
+      "side": 1,
+      "message": "the holder is create when the OFAgent is created and can\u0027t be set to nil. That being said, to be consistent likely should be using Clear here (which is just a shortcut to set the held value to nil.",
+      "parentUuid": "063681f9_6f69aaed",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b1d5c69_b5131d3a",
         "filename": "internal/pkg/openflow/meter.go",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2020-04-08T20:08:07Z",
       "side": 1,
       "message": "I assume that the client can never be unset?  i.e. will never become nil again?",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23e81582_05d4ede9",
+        "filename": "internal/pkg/openflow/meter.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-08T20:19:12Z",
+      "side": 1,
+      "message": "yes, the client is set when ofagent create the client and the client sets the connections, so it will never be nil.",
+      "parentUuid": "7b1d5c69_b5131d3a",
       "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
