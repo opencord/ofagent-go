@@ -18,10 +18,11 @@ package ofagent
 
 import (
 	"context"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
-	"time"
 )
 
 func (ofa *OFAgent) synchronizeDeviceList(ctx context.Context) {
@@ -48,7 +49,7 @@ func (ofa *OFAgent) refreshDeviceList() {
 		ofa.events <- ofaEventVolthaDisconnected
 		return
 	}
-	deviceList, err := ofa.volthaClient.ListLogicalDevices(context.Background(), &empty.Empty{})
+	deviceList, err := ofa.volthaClient.Get().ListLogicalDevices(context.Background(), &empty.Empty{})
 	if err != nil {
 		logger.Errorw("ofagent failed to query device list from voltha",
 			log.Fields{"error": err})

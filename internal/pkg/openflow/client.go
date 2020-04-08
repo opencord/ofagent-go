@@ -19,11 +19,13 @@ package openflow
 import (
 	"context"
 	"errors"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
-	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"sync"
 	"time"
+
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/ofagent-go/internal/pkg/holder"
+	"github.com/opencord/voltha-lib-go/v3/pkg/log"
+	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
 var NoVolthaConnectionError = errors.New("no-voltha-connection")
@@ -87,7 +89,7 @@ func (s ofcState) String() string {
 type OFClient struct {
 	OFControllerEndPoints []string
 	DeviceID              string
-	VolthaClient          voltha.VolthaServiceClient
+	VolthaClient          *holder.VolthaServiceClientHolder
 	PacketOutChannel      chan *voltha.PacketOut
 	ConnectionMaxRetries  int
 	ConnectionRetryDelay  time.Duration
