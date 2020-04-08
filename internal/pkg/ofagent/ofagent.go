@@ -19,13 +19,15 @@ package ofagent
 import (
 	"context"
 	"fmt"
+	"sync"
+	"time"
+
+	"github.com/opencord/ofagent-go/internal/pkg/holder"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"google.golang.org/grpc"
-	"sync"
-	"time"
 )
 
 type ofaEvent byte
@@ -50,7 +52,7 @@ type OFAgent struct {
 	ConnectionRetryDelay      time.Duration
 
 	volthaConnection *grpc.ClientConn
-	volthaClient     voltha.VolthaServiceClient
+	volthaClient     *holder.VolthaServiceClientHolder
 	mapLock          sync.Mutex
 	clientMap        map[string]*openflow.OFClient
 	events           chan ofaEvent
@@ -67,6 +69,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 		DeviceListRefreshInterval: config.DeviceListRefreshInterval,
 		ConnectionMaxRetries:      config.ConnectionMaxRetries,
 		ConnectionRetryDelay:      config.ConnectionRetryDelay,
+		volthaClient:              &holder.VolthaServiceClientHolder{},
 		packetInChannel:           make(chan *voltha.PacketIn),
 		packetOutChannel:          make(chan *voltha.PacketOut),
 		changeEventChannel:        make(chan *voltha.ChangeEvent),
@@ -161,16 +164,6 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				if state != ofaStateConnected {
 					state = ofaStateConnected
 					volthaCtx, volthaDone = context.WithCancel(context.Background())
-					// Reconnect clients
-					for _, client := range ofa.clientMap {
-						if logger.V(log.DebugLevel) {
-							logger.Debugw("reset-client-voltha-connection",
-								log.Fields{
-									"from": fmt.Sprintf("0x%p", &client.VolthaClient),
-									"to":   fmt.Sprintf("0x%p", &ofa.volthaClient)})
-						}
-						client.VolthaClient = ofa.volthaClient
-					}
 					go ofa.receiveChangeEvents(volthaCtx)
 					go ofa.receivePacketsIn(volthaCtx)
 					go ofa.streamPacketOut(volthaCtx)
@@ -184,9 +177,9 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				logger.Debug("ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
-					ofa.volthaClient = nil
+					ofa.volthaClient.Set(nil)
 					for _, client := range ofa.clientMap {
-						client.VolthaClient = nil
+						client.VolthaClient.Clear()
 						if logger.V(log.DebugLevel) {
 							logger.Debugw("reset-client-voltha-connection",
 								log.Fields{
