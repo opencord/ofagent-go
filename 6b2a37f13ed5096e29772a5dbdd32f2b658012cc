@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f01c5e7_83a7e323",
+        "filename": "internal/pkg/holder/holder.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-04-08T20:08:07Z",
+      "side": 1,
+      "message": "I know we used it during discussion, but \"holder\" is a confusing word.  Consider \"proxy\" or similar?\n\nAlso, shouldn\u0027t include the package name in the struct name.\nUsage will be holder.xxx, so holder.xxxHandler is redundant.",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "063681f9_6f69aaed",
         "filename": "internal/pkg/ofagent/connection.go",
         "patchSetId": 2
@@ -13,6 +30,23 @@
       "writtenOn": "2020-04-08T20:08:07Z",
       "side": 1,
       "message": "Is there a possibility where the client is Nil while another routine is trying to do a Get() (nil pointer exception)?",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b1d5c69_b5131d3a",
+        "filename": "internal/pkg/openflow/meter.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-04-08T20:08:07Z",
+      "side": 1,
+      "message": "I assume that the client can never be unset?  i.e. will never become nil again?",
       "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
