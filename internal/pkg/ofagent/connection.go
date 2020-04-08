@@ -18,12 +18,13 @@ package ofagent
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"google.golang.org/grpc"
-	"time"
 )
 
 func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
@@ -36,7 +37,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 	}
 
 	ofa.volthaConnection = nil
-	ofa.volthaClient = nil
+	ofa.volthaClient.Clear()
 	try := 1
 	for ofa.ConnectionMaxRetries == 0 || try < ofa.ConnectionMaxRetries {
 		conn, err := grpc.Dial(ofa.VolthaApiEndPoint, grpc.WithInsecure())
@@ -49,7 +50,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 							"VolthaApiEndPoint": ofa.VolthaApiEndPoint,
 						})
 					ofa.volthaConnection = conn
-					ofa.volthaClient = svc
+					ofa.volthaClient.Set(svc)
 					if p != nil {
 						p.UpdateStatus("voltha", probe.ServiceStatusRunning)
 					}

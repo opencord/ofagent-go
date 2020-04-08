@@ -21,19 +21,21 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
-	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"io"
 	"net"
 	"time"
+
+	"github.com/donNewtonAlpha/goloxi"
+	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/ofagent-go/internal/pkg/holder"
+	"github.com/opencord/voltha-lib-go/v3/pkg/log"
+	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
 type OFConnection struct {
 	OFControllerEndPoint string
 	DeviceID             string
-	VolthaClient         voltha.VolthaServiceClient
+	VolthaClient         *holder.VolthaServiceClientHolder
 	PacketOutChannel     chan *voltha.PacketOut
 	ConnectionMaxRetries int
 	ConnectionRetryDelay time.Duration
