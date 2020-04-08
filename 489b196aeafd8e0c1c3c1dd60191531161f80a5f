@@ -34,6 +34,24 @@
       "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e909d3a2_6716532e",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-04-08T21:08:32Z",
+      "side": 1,
+      "message": "In that case, is there a risk between the time the client is check and the time it is used (Get) that the latter is set to nil?",
+      "parentUuid": "b88fbc3f_5ac388be",
+      "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
