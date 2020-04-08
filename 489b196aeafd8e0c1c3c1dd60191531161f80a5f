@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38f6debc_8e808fa1",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-04-08T20:26:47Z",
+      "side": 1,
+      "message": "If I read this correctly, on a rw-core disconnect, any request to rw-core will still use the previous connection and times out until connection to the rw-core is re-stablished, thereby any new request will use the new connection.  Is my understanding correct?",
+      "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
