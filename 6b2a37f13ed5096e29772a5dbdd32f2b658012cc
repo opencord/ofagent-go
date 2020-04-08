@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "063681f9_6f69aaed",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-04-08T20:08:07Z",
+      "side": 1,
+      "message": "Is there a possibility where the client is Nil while another routine is trying to do a Get() (nil pointer exception)?",
+      "revId": "6b2a37f13ed5096e29772a5dbdd32f2b658012cc",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
