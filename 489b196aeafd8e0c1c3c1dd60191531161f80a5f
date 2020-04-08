@@ -52,6 +52,24 @@
       "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a0fffe1_6850e25b",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-08T21:20:18Z",
+      "side": 1,
+      "message": "The chance is no greater than it was before. ;)\n\ni can grab a local copy of the value at the nil check and then the worst would be an RPC error. probably safer.",
+      "parentUuid": "e909d3a2_6716532e",
+      "revId": "489b196aeafd8e0c1c3c1dd60191531161f80a5f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
