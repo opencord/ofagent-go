@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8a101a7_3fef8d3e",
+        "filename": "internal/pkg/holder/doc.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-09T14:23:52Z",
+      "side": 1,
+      "message": "this project has this for the copyright in many files. Would it be ok to address this in a separate JIRA/patchset across all the files?",
+      "parentUuid": "3c201bbb_ecafd931",
+      "range": {
+        "startLine": 2,
+        "startChar": 20,
+        "endLine": 2,
+        "endChar": 51
+      },
+      "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cb6d7ad_fa57cd4a",
         "filename": "internal/pkg/holder/holder.go",
         "patchSetId": 5

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa74e2ca_ef466f0b",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-09T14:23:52Z",
+      "side": 0,
+      "message": "the OPFAgent creates a connection to voltha, then propagates this change to every OFClient it creates, which is in turn propagated to every OFConnection that the OFClient creates. This original code (here and below) was attempting to propagate that change when the connection to voltha was changed (reestablished after failure). \n\nThe problem was that it only propagated it one level (to OFClient and not to all the OFConnections the OFClient created) and thus on the connection to voltha failed it was never re-established correctly.\n\nThis patchset resolves the issue by removing the need to directly propagate the change because instead of propagating the GRPC interface it now propagates a \"reference\" to the interface via the \"holder\" object. the reference to the \"holder\" never changes, but the value in the holder does change. thus when the value in the holder changes everyone gets the change without having to loop through 3 levels of propagation.",
+      "parentUuid": "01e25e6a_04e59954",
+      "range": {
+        "startLine": 165,
+        "startChar": 5,
+        "endLine": 173,
+        "endChar": 6
+      },
+      "revId": "273c252713895113b522f31d8664eae7348c400a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c38c26f_118cce99",
         "filename": "internal/pkg/ofagent/ofagent.go",
         "patchSetId": 5
