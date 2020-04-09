@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "844961da_0ce85c1f",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-04-09T16:27:17Z",
+      "side": 1,
+      "message": "Check nil?\n\nMore like this?  Doesn\u0027t seem to be checked in all places?",
+      "revId": "f8ce7d2ceaf5c37cc992448e7c6b6331a234168b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
