@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01e25e6a_04e59954",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-04-09T13:30:42Z",
+      "side": 0,
+      "message": "why was this taken out ?",
+      "range": {
+        "startLine": 165,
+        "startChar": 5,
+        "endLine": 173,
+        "endChar": 6
+      },
+      "revId": "273c252713895113b522f31d8664eae7348c400a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c38c26f_118cce99",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-04-09T13:30:42Z",
+      "side": 0,
+      "message": "same",
+      "range": {
+        "startLine": 187,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 6
+      },
+      "revId": "273c252713895113b522f31d8664eae7348c400a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}

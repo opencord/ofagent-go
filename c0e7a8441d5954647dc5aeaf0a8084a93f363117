@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c201bbb_ecafd931",
+        "filename": "internal/pkg/holder/doc.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-04-09T13:30:42Z",
+      "side": 1,
+      "message": "Open Networking Foundation",
+      "range": {
+        "startLine": 2,
+        "startChar": 20,
+        "endLine": 2,
+        "endChar": 51
+      },
+      "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8cb6d7ad_fa57cd4a",
+        "filename": "internal/pkg/holder/holder.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-04-09T13:30:42Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 2,
+        "startChar": 20,
+        "endLine": 2,
+        "endChar": 50
+      },
+      "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b69d41fd_82f2c962",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-04-09T13:30:42Z",
+      "side": 1,
+      "message": "why not clear ?",
+      "range": {
+        "startLine": 179,
+        "startChar": 22,
+        "endLine": 179,
+        "endChar": 25
+      },
+      "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
