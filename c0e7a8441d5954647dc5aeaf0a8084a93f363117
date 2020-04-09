@@ -92,6 +92,30 @@
       "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25724884_fb6ff7e7",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-04-09T14:33:50Z",
+      "side": 1,
+      "message": "fair point, clear could be used (clear is really a short cut to set(nil) i went back and forth about even defining clear.",
+      "parentUuid": "b69d41fd_82f2c962",
+      "range": {
+        "startLine": 179,
+        "startChar": 22,
+        "endLine": 179,
+        "endChar": 25
+      },
+      "revId": "c0e7a8441d5954647dc5aeaf0a8084a93f363117",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
