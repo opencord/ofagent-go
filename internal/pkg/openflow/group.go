@@ -18,8 +18,8 @@ package openflow
 
 import (
 	"context"
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
@@ -125,11 +125,8 @@ func volthaBucketsToOpenflow(buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
 	outBuckets := make([]*ofp.Bucket, len(buckets))
 
 	for i, bucket := range buckets {
-		actions, length := volthaActionsToOpenflow(bucket.Actions)
+		actions := volthaActionsToOpenflow(bucket.Actions)
 		b := &ofp.Bucket{
-			// TODO loxi should set lengths automatically
-			// last 4 is padding
-			Len:        2 + 2 + 4 + 4 + length + 4, // length field  + weight + watchPort + watchGroup + actions
 			Weight:     uint16(bucket.Weight),
 			WatchPort:  ofp.Port(bucket.WatchPort),
 			WatchGroup: bucket.WatchGroup,
@@ -141,16 +138,12 @@ func volthaBucketsToOpenflow(buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
 	return outBuckets
 }
 
-func volthaActionsToOpenflow(actions []*openflow_13.OfpAction) ([]goloxi.IAction, uint16) {
+func volthaActionsToOpenflow(actions []*openflow_13.OfpAction) []goloxi.IAction {
 	outActions := make([]goloxi.IAction, len(actions))
 
-	var length uint16
-
 	for i, action := range actions {
-		a, l := parseAction(action)
-		length += l
-		outActions[i] = a
+		outActions[i] = parseAction(action)
 	}
 
-	return outActions, length
+	return outActions
 }

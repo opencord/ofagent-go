@@ -17,7 +17,7 @@
 package openflow
 
 import (
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

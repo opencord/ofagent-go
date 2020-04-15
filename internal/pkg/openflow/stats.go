@@ -19,14 +19,12 @@ package openflow
 import (
 	"context"
 	"encoding/json"
-	"net"
-	"unsafe"
-
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/common"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
+	"net"
 )
 
 func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16) error {
@@ -62,7 +60,6 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if err != nil {
 			return err
 		}
-		response.Length = uint16(unsafe.Sizeof(*response))
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
@@ -341,39 +338,25 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		entry.SetCookie(item.GetCookie())
 		entry.SetPacketCount(item.GetPacketCount())
 		entry.SetByteCount(item.GetByteCount())
-		entrySize := uint16(48)
 		match := ofp.NewMatchV3()
 		pbMatch := item.GetMatch()
 		match.SetType(uint16(pbMatch.GetType()))
-		size := uint16(4)
 		var fields []goloxi.IOxm
 		for _, oxmField := range pbMatch.GetOxmFields() {
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm, oxmSize := parseOxm(ofbField)
+			iOxm := parseOxm(ofbField)
 			fields = append(fields, iOxm)
-			if oxmSize > 0 {
-				size += 4 //header for oxm
-			}
-			size += oxmSize
 		}
 
 		match.OxmList = fields
-		match.Length = uint16(size)
-		//account for 8 byte alignment
-		if size%8 != 0 {
-			size = ((size / 8) + 1) * 8
-		}
-		entrySize += size
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
-			instruction, size := parseInstructions(ofpInstruction)
+			instruction := parseInstructions(ofpInstruction)
 			instructions = append(instructions, instruction)
-			entrySize += size
 		}
 		entry.Instructions = instructions
-		entry.Length = entrySize
 		flow = append(flow, entry)
 	}
 	response.SetEntries(flow)
@@ -426,10 +409,6 @@ func (ofc *OFConnection) handleGroupStatsRequest(request *ofp.GroupStatsRequest)
 			bucketStatsList = append(bucketStatsList, &bucketCounter)
 		}
 		entry.SetBucketStats(bucketStatsList)
-		// TODO loxi should set lengths automatically
-		// last 2 + 4 are padding
-		length := 2 + 4 + 4 + 8 + 8 + 4 + 4 + len(bucketStatsList)*16 + 2 + 4
-		entry.SetLength(uint16(length))
 		groupStatsEntries = append(groupStatsEntries, &entry)
 	}
 	response.SetEntries(groupStatsEntries)
@@ -455,15 +434,8 @@ func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStats
 		desc := item.GetDesc()
 
 		buckets := volthaBucketsToOpenflow(desc.Buckets)
-		var bucketsLength uint16
-		for _, b := range buckets {
-			bucketsLength += b.Len
-		}
 
 		groupDesc := &ofp.GroupDescStatsEntry{
-			// TODO loxi should set lengths automatically
-			// last 1 is padding
-			Length:    2 + 1 + 4 + bucketsLength + 1, // length field + groupType + groupId + buckets
 			GroupType: volthaGroupTypeToOpenflow(desc.Type),
 			GroupId:   desc.GroupId,
 			Buckets:   buckets,
@@ -497,10 +469,8 @@ func (ofc *OFConnection) handleMeterStatsRequest(request *ofp.MeterStatsRequest)
 	if err != nil {
 		return nil, err
 	}
-	size := uint16(5) // size of stats header
 	var meterStats []*ofp.MeterStats
 	for _, item := range resp.Items {
-		entrySize := uint16(40) // size of entry header
 		meterStat := ofp.NewMeterStats()
 		stats := item.Stats
 		meterStat.DurationNsec = stats.DurationNsec
@@ -514,15 +484,11 @@ func (ofc *OFConnection) handleMeterStatsRequest(request *ofp.MeterStatsRequest)
 			bandStat.ByteBandCount = bStat.ByteBandCount
 			bandStat.PacketBandCount = bStat.PacketBandCount
 			bandStats = append(bandStats, bandStat)
-			entrySize += uint16(16) // size of each band stat
 		}
 		meterStat.SetBandStats(bandStats)
-		meterStat.Len = entrySize
 		meterStats = append(meterStats, meterStat)
-		size += entrySize
 	}
 	response.SetEntries(meterStats)
-	response.SetLength(size)
 	return response, nil
 }
 

@@ -25,8 +25,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/holder"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
@@ -240,11 +240,20 @@ top:
 			// Read 8 bytes, the standard OF header
 			read, err := io.ReadFull(fromController, headerBuf)
 			if err != nil {
-				logger.Errorw("bad-of-header",
-					log.Fields{
-						"byte-count": read,
-						"device-id":  ofc.DeviceID,
-						"error":      err})
+				if err == io.EOF {
+					logger.Infow("controller-disconnected",
+						log.Fields{
+							"device-id":  ofc.DeviceID,
+							"controller": ofc.OFControllerEndPoint,
+						})
+				} else {
+					logger.Errorw("bad-of-header",
+						log.Fields{
+							"byte-count": read,
+							"device-id":  ofc.DeviceID,
+							"controller": ofc.OFControllerEndPoint,
+							"error":      err})
+				}
 				break top
 			}
 

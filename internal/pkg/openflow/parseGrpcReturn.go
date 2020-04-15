@@ -19,14 +19,14 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
+func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofbField)
 		logger.Debugw("parseOxm called",
@@ -38,22 +38,22 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 		ofpInPort := ofp.NewOxmInPort()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Port)
 		ofpInPort.Value = ofp.Port(val.Port)
-		return ofpInPort, 4
+		return ofpInPort
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
 		ofpEthType := ofp.NewOxmEthType()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthType)
 		ofpEthType.Value = ofp.EthernetType(val.EthType)
-		return ofpEthType, 2
+		return ofpEthType
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
 		ofpInPhyPort := ofp.NewOxmInPhyPort()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_PhysicalPort)
 		ofpInPhyPort.Value = ofp.Port(val.PhysicalPort)
-		return ofpInPhyPort, 4
+		return ofpInPhyPort
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 		ofpIpProto := ofp.NewOxmIpProto()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
 		ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
-		return ofpIpProto, 1
+		return ofpIpProto
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
 		ofpIpv4Dst := ofp.NewOxmIpv4Dst()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Ipv4Dst)
@@ -64,23 +64,23 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 				log.Fields{"error": err})
 		}
 		ofpIpv4Dst.Value = buf.Bytes()
-		return ofpIpv4Dst, 4
+		return ofpIpv4Dst
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 		ofpUdpSrc := ofp.NewOxmUdpSrc()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
 		ofpUdpSrc.Value = uint16(val.UdpSrc)
-		return ofpUdpSrc, 2
+		return ofpUdpSrc
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
 		ofpUdpDst := ofp.NewOxmUdpDst()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpDst)
 		ofpUdpDst.Value = uint16(val.UdpDst)
-		return ofpUdpDst, 2
+		return ofpUdpDst
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 		ofpVlanVid := ofp.NewOxmVlanVid()
 		val := ofbField.GetValue()
 		if val == nil {
 			ofpVlanVid.Value = uint16(0)
-			return ofpVlanVid, 2
+			return ofpVlanVid
 		}
 		vlanId := val.(*openflow_13.OfpOxmOfbField_VlanVid)
 		if ofbField.HasMask {
@@ -95,15 +95,15 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 				ofpVlanVidMasked.ValueMask = uint16(vlanMask.VlanVidMask)
 
 			}
-			return ofpVlanVidMasked, 4
+			return ofpVlanVidMasked
 		}
 		ofpVlanVid.Value = uint16(vlanId.VlanVid) | 0x1000
-		return ofpVlanVid, 2
+		return ofpVlanVid
 	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
 		ofpMetadata := ofp.NewOxmMetadata()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_TableMetadata)
 		ofpMetadata.Value = val.TableMetadata
-		return ofpMetadata, 8
+		return ofpMetadata
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofbField)
@@ -111,10 +111,10 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) (goloxi.IOxm, uint16) {
 				log.Fields{"OfbField": js})
 		}
 	}
-	return nil, 0
+	return nil
 }
 
-func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) (ofp.IInstruction, uint16) {
+func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpInstruction)
 		logger.Debugw("parseInstructions called",
@@ -125,50 +125,41 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) (ofp.IInstruc
 	switch instType {
 	case ofp.OFPITWriteMetadata:
 		instruction := ofp.NewInstructionWriteMetadata()
-		instruction.Len = 24
 		metadata := data.(*openflow_13.OfpInstruction_WriteMetadata).WriteMetadata
 		instruction.Metadata = uint64(metadata.Metadata)
-		return instruction, 24
+		return instruction
 	case ofp.OFPITMeter:
 		instruction := ofp.NewInstructionMeter()
-		instruction.Len = 8
 		meter := data.(*openflow_13.OfpInstruction_Meter).Meter
 		instruction.MeterId = meter.MeterId
-		return instruction, 8
+		return instruction
 	case ofp.OFPITGotoTable:
 		instruction := ofp.NewInstructionGotoTable()
-		instruction.Len = 8
 		gotoTable := data.(*openflow_13.OfpInstruction_GotoTable).GotoTable
 		instruction.TableId = uint8(gotoTable.TableId)
-		return instruction, 8
+		return instruction
 	case ofp.OFPITApplyActions:
 		instruction := ofp.NewInstructionApplyActions()
-		var instructionSize uint16
-		instructionSize = 8
-		//ofpActions := ofpInstruction.GetActions().Actions
+
 		var actions []goloxi.IAction
 		for _, ofpAction := range ofpInstruction.GetActions().Actions {
-			action, actionSize := parseAction(ofpAction)
+			action := parseAction(ofpAction)
 			actions = append(actions, action)
-			instructionSize += actionSize
-
 		}
 		instruction.Actions = actions
-		instruction.SetLen(instructionSize)
 		if logger.V(log.DebugLevel) {
 			js, _ := json.Marshal(instruction)
 			logger.Debugw("parseInstructions returning",
 				log.Fields{
-					"size":               instructionSize,
 					"parsed-instruction": js})
 		}
-		return instruction, instructionSize
+		return instruction
 	}
 	//shouldn't have reached here :<
-	return nil, 0
+	return nil
 }
 
-func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
+func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpAction)
 		logger.Debugw("parseAction called",
@@ -180,31 +171,26 @@ func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
 		outputAction := ofp.NewActionOutput()
 		outputAction.Port = ofp.Port(ofpOutputAction.Port)
 		outputAction.MaxLen = uint16(ofpOutputAction.MaxLen)
-		outputAction.Len = 16
-		return outputAction, 16
+		return outputAction
 	case openflow_13.OfpActionType_OFPAT_PUSH_VLAN:
 		ofpPushVlanAction := ofp.NewActionPushVlan()
 		ofpPushVlanAction.Ethertype = uint16(ofpAction.GetPush().Ethertype)
-		ofpPushVlanAction.Len = 8
-		return ofpPushVlanAction, 8
+		return ofpPushVlanAction
 	case openflow_13.OfpActionType_OFPAT_POP_VLAN:
 		ofpPopVlanAction := ofp.NewActionPopVlan()
-		ofpPopVlanAction.Len = 8
-		return ofpPopVlanAction, 8
+		return ofpPopVlanAction
 	case openflow_13.OfpActionType_OFPAT_SET_FIELD:
 		ofpActionSetField := ofpAction.GetSetField()
 		setFieldAction := ofp.NewActionSetField()
 
-		iOxm, _ := parseOxm(ofpActionSetField.GetField().GetOfbField())
+		iOxm := parseOxm(ofpActionSetField.GetField().GetOfbField())
 		setFieldAction.Field = iOxm
-		setFieldAction.Len = 16
-		return setFieldAction, 16
+		return setFieldAction
 	case openflow_13.OfpActionType_OFPAT_GROUP:
 		ofpGroupAction := ofpAction.GetGroup()
 		groupAction := ofp.NewActionGroup()
 		groupAction.GroupId = ofpGroupAction.GroupId
-		groupAction.Len = 8
-		return groupAction, 8
+		return groupAction
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofpAction)
@@ -212,7 +198,7 @@ func parseAction(ofpAction *openflow_13.OfpAction) (goloxi.IAction, uint16) {
 				log.Fields{"action": js})
 		}
 	}
-	return nil, 0
+	return nil
 }
 
 func parsePortStats(port *voltha.LogicalPort) *ofp.PortStatsEntry {

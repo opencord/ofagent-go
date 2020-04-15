@@ -18,8 +18,8 @@ package openflow
 
 import (
 	"encoding/json"
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 

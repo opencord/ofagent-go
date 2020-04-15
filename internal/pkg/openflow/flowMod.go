@@ -20,9 +20,7 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/json"
-	"unsafe"
-
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
@@ -261,7 +259,6 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		binary.BigEndian.PutUint64(cookie, flowAdd.Cookie)
 		bs = append(bs, cookie...)
 		message.SetData(bs)
-		message.Length = uint16(unsafe.Sizeof(*message))
 		err := ofc.SendMessage(message)
 		if err != nil {
 			logger.Errorw("Error reporting failure of FlowUpdate to controller",

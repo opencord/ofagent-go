@@ -20,9 +20,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/donNewtonAlpha/goloxi"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/opencord/goloxi"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
@@ -81,7 +81,7 @@ top:
 
 			if logger.V(log.DebugLevel) {
 				js, _ := json.Marshal(packetIn)
-				logger.Debugw("packet-in recieved", log.Fields{"packet-in": js})
+				logger.Debugw("packet-in received", log.Fields{"packet-in": js})
 			}
 			deviceID := packet.GetId()
 			ofPacketIn := ofp.NewPacketIn()
@@ -93,53 +93,40 @@ top:
 			match := ofp.NewMatchV3()
 			inMatch := packetIn.GetMatch()
 			match.SetType(uint16(inMatch.GetType()))
-			//oxFields := inMatch.GetOxmFields()
 			var fields []goloxi.IOxm
-			size := uint16(4)
 			for _, oxmField := range inMatch.GetOxmFields() {
-				/*
-					for i := 0; i < len(oxFields); i++ {
-						oxmField := oxFields[i]
-				*/
 				field := oxmField.GetField()
 				ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-				size += 4 //header for oxm
 				switch ofbField.Type {
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
 					ofpInPort := ofp.NewOxmInPort()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Port)
 					ofpInPort.Value = ofp.Port(val.Port)
-					size += 4
 					fields = append(fields, ofpInPort)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
 					ofpEthType := ofp.NewOxmEthType()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthType)
 					ofpEthType.Value = ofp.EthernetType(val.EthType)
-					size += 2
 					fields = append(fields, ofpEthType)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
 					ofpInPhyPort := ofp.NewOxmInPhyPort()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_PhysicalPort)
 					ofpInPhyPort.Value = ofp.Port(val.PhysicalPort)
-					size += 4
 					fields = append(fields, ofpInPhyPort)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 					ofpIpProto := ofp.NewOxmIpProto()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
 					ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
-					size += 1
 					fields = append(fields, ofpIpProto)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 					ofpUdpSrc := ofp.NewOxmUdpSrc()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
 					ofpUdpSrc.Value = uint16(val.UdpSrc)
-					size += 2
 					fields = append(fields, ofpUdpSrc)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
 					ofpUdpDst := ofp.NewOxmUdpDst()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpDst)
 					ofpUdpDst.Value = uint16(val.UdpDst)
-					size += 2
 					fields = append(fields, ofpUdpDst)
 				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 					ofpVlanVid := ofp.NewOxmVlanVid()
@@ -147,7 +134,6 @@ top:
 					if val != nil {
 						vlanId := val.(*openflow_13.OfpOxmOfbField_VlanVid)
 						ofpVlanVid.Value = uint16(vlanId.VlanVid) + 0x1000
-						size += 2
 					} else {
 						ofpVlanVid.Value = uint16(0)
 					}
@@ -158,14 +144,12 @@ top:
 						log.Fields{"field": ofbField.Type})
 				}
 			}
-			match.SetLength(size)
 
 			match.SetOxmList(fields)
 
 			ofPacketIn.SetMatch(*match)
 			ofPacketIn.SetReason(uint8(packetIn.GetReason()))
 			ofPacketIn.SetTableId(uint8(packetIn.GetTableId()))
-			ofPacketIn.SetTotalLen(uint16(len(ofPacketIn.GetData())))
 			ofc := ofa.getOFClient(deviceID)
 			if err := ofc.SendMessage(ofPacketIn); err != nil {
 				logger.Errorw("send-message-failed", log.Fields{
