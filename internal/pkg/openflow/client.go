@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/holder"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/voltha"

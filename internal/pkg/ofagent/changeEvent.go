@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"net"
 
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"

@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/donNewtonAlpha/goloxi"
+	"github.com/opencord/goloxi"
 )
 
 type Oxm struct {

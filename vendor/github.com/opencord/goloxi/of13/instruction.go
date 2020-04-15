@@ -14,7 +14,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/donNewtonAlpha/goloxi"
+	"github.com/opencord/goloxi"
 )
 
 type Instruction struct {
@@ -108,6 +108,7 @@ func (self *InstructionApplyActions) SetActions(v []goloxi.IAction) {
 }
 
 func (self *InstructionApplyActions) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
@@ -118,8 +119,9 @@ func (self *InstructionApplyActions) Serialize(encoder *goloxi.Encoder) error {
 			return err
 		}
 	}
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -293,13 +295,15 @@ type IInstructionBsnArpOffload interface {
 }
 
 func (self *InstructionBsnArpOffload) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -329,13 +333,15 @@ type IInstructionBsnAutoNegotiation interface {
 }
 
 func (self *InstructionBsnAutoNegotiation) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -365,13 +371,15 @@ type IInstructionBsnDeny interface {
 }
 
 func (self *InstructionBsnDeny) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -401,13 +409,15 @@ type IInstructionBsnDhcpOffload interface {
 }
 
 func (self *InstructionBsnDhcpOffload) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -437,13 +447,15 @@ type IInstructionBsnDirectedBroadcast interface {
 }
 
 func (self *InstructionBsnDirectedBroadcast) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -473,13 +485,15 @@ type IInstructionBsnDisableL3 interface {
 }
 
 func (self *InstructionBsnDisableL3) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -509,13 +523,15 @@ type IInstructionBsnDisableSplitHorizonCheck interface {
 }
 
 func (self *InstructionBsnDisableSplitHorizonCheck) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -545,13 +561,15 @@ type IInstructionBsnDisableSrcMacCheck interface {
 }
 
 func (self *InstructionBsnDisableSrcMacCheck) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -581,13 +599,15 @@ type IInstructionBsnDisableVlanCounters interface {
 }
 
 func (self *InstructionBsnDisableVlanCounters) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -627,13 +647,15 @@ func (self *InstructionBsnHashSelect) SetFlags(v BsnHashSelectFlags) {
 }
 
 func (self *InstructionBsnHashSelect) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.PutUint32(uint32(self.Flags))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -673,13 +695,15 @@ func (self *InstructionBsnInternalPriority) SetValue(v uint32) {
 }
 
 func (self *InstructionBsnInternalPriority) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.PutUint32(uint32(self.Value))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -709,13 +733,15 @@ type IInstructionBsnNdpOffload interface {
 }
 
 func (self *InstructionBsnNdpOffload) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -745,13 +771,15 @@ type IInstructionBsnPacketOfDeath interface {
 }
 
 func (self *InstructionBsnPacketOfDeath) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -781,13 +809,15 @@ type IInstructionBsnPermit interface {
 }
 
 func (self *InstructionBsnPermit) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -817,13 +847,15 @@ type IInstructionBsnPrioritizePdus interface {
 }
 
 func (self *InstructionBsnPrioritizePdus) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -853,13 +885,15 @@ type IInstructionBsnRequireVlanXlate interface {
 }
 
 func (self *InstructionBsnRequireVlanXlate) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -889,13 +923,15 @@ type IInstructionBsnSpanDestination interface {
 }
 
 func (self *InstructionBsnSpanDestination) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.InstructionBsn.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -925,13 +961,15 @@ type IInstructionClearActions interface {
 }
 
 func (self *InstructionClearActions) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -971,14 +1009,16 @@ func (self *InstructionGotoTable) SetTableId(v uint8) {
 }
 
 func (self *InstructionGotoTable) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.PutUint8(uint8(self.TableId))
 	encoder.Write(bytes.Repeat([]byte{0}, 3))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -1019,13 +1059,15 @@ func (self *InstructionMeter) SetMeterId(v uint32) {
 }
 
 func (self *InstructionMeter) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
 
 	encoder.PutUint32(uint32(self.MeterId))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -1065,6 +1107,7 @@ func (self *InstructionWriteActions) SetActions(v []goloxi.IAction) {
 }
 
 func (self *InstructionWriteActions) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1075,8 +1118,9 @@ func (self *InstructionWriteActions) Serialize(encoder *goloxi.Encoder) error {
 			return err
 		}
 	}
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }
@@ -1136,6 +1180,7 @@ func (self *InstructionWriteMetadata) SetMetadataMask(v uint64) {
 }
 
 func (self *InstructionWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
+	startIndex := len(encoder.Bytes())
 	if err := self.Instruction.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1143,8 +1188,9 @@ func (self *InstructionWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
 	encoder.Write(bytes.Repeat([]byte{0}, 4))
 	encoder.PutUint64(uint64(self.Metadata))
 	encoder.PutUint64(uint64(self.MetadataMask))
+	length := len(encoder.Bytes()) - startIndex
 
-	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
+	binary.BigEndian.PutUint16(encoder.Bytes()[startIndex+2:startIndex+4], uint16(length))
 
 	return nil
 }

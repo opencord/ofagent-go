@@ -18,7 +18,7 @@ package openflow
 
 import (
 	"fmt"
-	ofp "github.com/donNewtonAlpha/goloxi/of13"
+	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"strings"
 	"sync"

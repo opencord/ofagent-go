@@ -617,6 +617,20 @@ func (self BsnBfdEndpointState) MarshalJSON() ([]byte, error) {
 }
 
 const (
+	// Identifiers from group ofp_bsn_cml
+	BSNCmlNone       = 0 // OFP_BSN_CML_NONE
+	BSNCmlCpuDrop    = 1 // OFP_BSN_CML_CPU_DROP
+	BSNCmlForward    = 2 // OFP_BSN_CML_FORWARD
+	BSNCmlCpuForward = 3 // OFP_BSN_CML_CPU_FORWARD
+)
+
+type BsnCml uint16
+
+func (self BsnCml) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("%d", self)), nil
+}
+
+const (
 	// Identifiers from group ofp_bsn_controller_connection_state
 	BSNControllerConnectionStateDisconnected = 0 // OFP_BSN_CONTROLLER_CONNECTION_STATE_DISCONNECTED
 	BSNControllerConnectionStateConnected    = 1 // OFP_BSN_CONTROLLER_CONNECTION_STATE_CONNECTED
@@ -925,30 +939,31 @@ func (self BsnMulticastPacket) MarshalJSON() ([]byte, error) {
 
 const (
 	// Identifiers from group ofp_bsn_pktin_flag
-	BSNPktinFlagPdu             = 1       // OFP_BSN_PKTIN_FLAG_PDU
-	BSNPktinFlagNewHost         = 2       // OFP_BSN_PKTIN_FLAG_NEW_HOST
-	BSNPktinFlagStationMove     = 4       // OFP_BSN_PKTIN_FLAG_STATION_MOVE
-	BSNPktinFlagARP             = 8       // OFP_BSN_PKTIN_FLAG_ARP
-	BSNPktinFlagDhcp            = 16      // OFP_BSN_PKTIN_FLAG_DHCP
-	BSNPktinFlagL2Cpu           = 32      // OFP_BSN_PKTIN_FLAG_L2_CPU
-	BSNPktinFlagDebug           = 64      // OFP_BSN_PKTIN_FLAG_DEBUG
-	BSNPktinFlagTtlExpired      = 128     // OFP_BSN_PKTIN_FLAG_TTL_EXPIRED
-	BSNPktinFlagL3Miss          = 256     // OFP_BSN_PKTIN_FLAG_L3_MISS
-	BSNPktinFlagL3Cpu           = 512     // OFP_BSN_PKTIN_FLAG_L3_CPU
-	BSNPktinFlagIngressAcl      = 1024    // OFP_BSN_PKTIN_FLAG_INGRESS_ACL
-	BSNPktinFlagSflow           = 2048    // OFP_BSN_PKTIN_FLAG_SFLOW
-	BSNPktinFlagARPCache        = 4096    // OFP_BSN_PKTIN_FLAG_ARP_CACHE
-	BSNPktinFlagARPTarget       = 8192    // OFP_BSN_PKTIN_FLAG_ARP_TARGET
-	BSNPktinFlagIgmp            = 16384   // OFP_BSN_PKTIN_FLAG_IGMP
-	BSNPktinFlagPim             = 32768   // OFP_BSN_PKTIN_FLAG_PIM
-	BSNPktinFlagVxlanSipMiss    = 65536   // OFP_BSN_PKTIN_FLAG_VXLAN_SIP_MISS
-	BSNPktinFlagMcReserved      = 131072  // OFP_BSN_PKTIN_FLAG_MC_RESERVED
-	BSNPktinFlagAnalytics       = 262144  // OFP_BSN_PKTIN_FLAG_ANALYTICS
-	BSNPktinFlagIcmpv6          = 524288  // OFP_BSN_PKTIN_FLAG_ICMPV6
-	BSNPktinFlagIngressAclLocal = 1048576 // OFP_BSN_PKTIN_FLAG_INGRESS_ACL_LOCAL
-	BSNPktinFlagIpmcMiss        = 2097152 // OFP_BSN_PKTIN_FLAG_IPMC_MISS
-	BSNPktinFlagIpmcRpfFailed   = 4194304 // OFP_BSN_PKTIN_FLAG_IPMC_RPF_FAILED
-	BSNPktinFlagBfdSlowpath     = 8388608 // OFP_BSN_PKTIN_FLAG_BFD_SLOWPATH
+	BSNPktinFlagPdu             = 1        // OFP_BSN_PKTIN_FLAG_PDU
+	BSNPktinFlagNewHost         = 2        // OFP_BSN_PKTIN_FLAG_NEW_HOST
+	BSNPktinFlagStationMove     = 4        // OFP_BSN_PKTIN_FLAG_STATION_MOVE
+	BSNPktinFlagARP             = 8        // OFP_BSN_PKTIN_FLAG_ARP
+	BSNPktinFlagDhcp            = 16       // OFP_BSN_PKTIN_FLAG_DHCP
+	BSNPktinFlagL2Cpu           = 32       // OFP_BSN_PKTIN_FLAG_L2_CPU
+	BSNPktinFlagDebug           = 64       // OFP_BSN_PKTIN_FLAG_DEBUG
+	BSNPktinFlagTtlExpired      = 128      // OFP_BSN_PKTIN_FLAG_TTL_EXPIRED
+	BSNPktinFlagL3Miss          = 256      // OFP_BSN_PKTIN_FLAG_L3_MISS
+	BSNPktinFlagL3Cpu           = 512      // OFP_BSN_PKTIN_FLAG_L3_CPU
+	BSNPktinFlagIngressAcl      = 1024     // OFP_BSN_PKTIN_FLAG_INGRESS_ACL
+	BSNPktinFlagSflow           = 2048     // OFP_BSN_PKTIN_FLAG_SFLOW
+	BSNPktinFlagARPCache        = 4096     // OFP_BSN_PKTIN_FLAG_ARP_CACHE
+	BSNPktinFlagARPTarget       = 8192     // OFP_BSN_PKTIN_FLAG_ARP_TARGET
+	BSNPktinFlagIgmp            = 16384    // OFP_BSN_PKTIN_FLAG_IGMP
+	BSNPktinFlagPim             = 32768    // OFP_BSN_PKTIN_FLAG_PIM
+	BSNPktinFlagVxlanSipMiss    = 65536    // OFP_BSN_PKTIN_FLAG_VXLAN_SIP_MISS
+	BSNPktinFlagMcReserved      = 131072   // OFP_BSN_PKTIN_FLAG_MC_RESERVED
+	BSNPktinFlagAnalytics       = 262144   // OFP_BSN_PKTIN_FLAG_ANALYTICS
+	BSNPktinFlagIcmpv6          = 524288   // OFP_BSN_PKTIN_FLAG_ICMPV6
+	BSNPktinFlagIngressAclLocal = 1048576  // OFP_BSN_PKTIN_FLAG_INGRESS_ACL_LOCAL
+	BSNPktinFlagIpmcMiss        = 2097152  // OFP_BSN_PKTIN_FLAG_IPMC_MISS
+	BSNPktinFlagIpmcRpfFailed   = 4194304  // OFP_BSN_PKTIN_FLAG_IPMC_RPF_FAILED
+	BSNPktinFlagBfdSlowpath     = 8388608  // OFP_BSN_PKTIN_FLAG_BFD_SLOWPATH
+	BSNPktinFlagSflowEgress     = 16777216 // OFP_BSN_PKTIN_FLAG_SFLOW_EGRESS
 )
 
 type BsnPktinFlag uint64
@@ -1026,6 +1041,9 @@ func (self BsnPktinFlag) MarshalJSON() ([]byte, error) {
 	}
 	if self&BSNPktinFlagBfdSlowpath == BSNPktinFlagBfdSlowpath {
 		flags = append(flags, "\"BfdSlowpath\": true")
+	}
+	if self&BSNPktinFlagSflowEgress == BSNPktinFlagSflowEgress {
+		flags = append(flags, "\"SflowEgress\": true")
 	}
 	return []byte("{" + strings.Join(flags, ", ") + "}"), nil
 }
@@ -1295,6 +1313,7 @@ func (self BsnTcpFlag) MarshalJSON() ([]byte, error) {
 const (
 	// Identifiers from group ofp_bsn_tunnel_type
 	BSNTunnelL2Gre = 1 // OFP_BSN_TUNNEL_L2GRE
+	BSNTunnelVxlan = 2 // OFP_BSN_TUNNEL_VXLAN
 )
 
 type BsnTunnelType uint64
@@ -1302,7 +1321,10 @@ type BsnTunnelType uint64
 func (self BsnTunnelType) MarshalJSON() ([]byte, error) {
 	var flags []string
 	if self&BSNTunnelL2Gre == BSNTunnelL2Gre {
-		flags = append(flags, "\"BSNTunnelL2Gre\": true")
+		flags = append(flags, "\"L2Gre\": true")
+	}
+	if self&BSNTunnelVxlan == BSNTunnelVxlan {
+		flags = append(flags, "\"Vxlan\": true")
 	}
 	return []byte("{" + strings.Join(flags, ", ") + "}"), nil
 }

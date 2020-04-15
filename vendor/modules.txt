@@ -6,9 +6,6 @@ github.com/coreos/go-systemd/journal
 github.com/coreos/pkg/capnslog
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/donNewtonAlpha/goloxi v1.0.0
-github.com/donNewtonAlpha/goloxi
-github.com/donNewtonAlpha/goloxi/of13
 # github.com/gogo/protobuf v1.3.0
 github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
@@ -39,6 +36,9 @@ github.com/hashicorp/serf/coordinate
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
+# github.com/opencord/goloxi v1.0.1
+github.com/opencord/goloxi
+github.com/opencord/goloxi/of13
 # github.com/opencord/voltha-lib-go/v3 v3.1.5
 github.com/opencord/voltha-lib-go/v3/pkg/config
 github.com/opencord/voltha-lib-go/v3/pkg/db
