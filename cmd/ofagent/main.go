@@ -45,7 +45,7 @@ func printVersion() {
 }
 
 func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort, kvStoreTimeout int) (kvstore.Client, error) {
-	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout)
+	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout, log.WarnLevel)
 	if err != nil {
 		return nil, err
 	}
