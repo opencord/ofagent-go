@@ -39,14 +39,14 @@ github.com/hashicorp/serf/coordinate
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
-# github.com/opencord/voltha-lib-go/v3 v3.0.23
+# github.com/opencord/voltha-lib-go/v3 v3.1.5
 github.com/opencord/voltha-lib-go/v3/pkg/config
 github.com/opencord/voltha-lib-go/v3/pkg/db
 github.com/opencord/voltha-lib-go/v3/pkg/db/kvstore
 github.com/opencord/voltha-lib-go/v3/pkg/log
 github.com/opencord/voltha-lib-go/v3/pkg/probe
 github.com/opencord/voltha-lib-go/v3/pkg/version
-# github.com/opencord/voltha-protos/v3 v3.2.3
+# github.com/opencord/voltha-protos/v3 v3.3.0
 github.com/opencord/voltha-protos/v3/go/common
 github.com/opencord/voltha-protos/v3/go/omci
 github.com/opencord/voltha-protos/v3/go/openflow_13
