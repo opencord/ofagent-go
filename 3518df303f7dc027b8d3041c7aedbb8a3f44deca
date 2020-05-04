@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a70acac2_493c2e81",
+        "filename": "VERSION",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-05-04T20:57:08Z",
+      "side": 1,
+      "message": "Not 1.2.0?",
+      "revId": "3518df303f7dc027b8d3041c7aedbb8a3f44deca",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fee16c4d_89e76b7e",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-05-04T20:57:08Z",
+      "side": 1,
+      "message": "pointless comment?",
+      "range": {
+        "startLine": 38,
+        "startChar": 44,
+        "endLine": 38,
+        "endChar": 54
+      },
+      "revId": "3518df303f7dc027b8d3041c7aedbb8a3f44deca",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
