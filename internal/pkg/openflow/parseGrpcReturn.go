@@ -104,6 +104,17 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_TableMetadata)
 		ofpMetadata.Value = val.TableMetadata
 		return ofpMetadata
+	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
+		ofpVlanPcp := ofp.NewOxmVlanPcp()
+		val := ofbField.GetValue()
+		vlanPcp := val.(*openflow_13.OfpOxmOfbField_VlanPcp)
+		ofpVlanPcp.Value = uint8(vlanPcp.VlanPcp)
+		return ofpVlanPcp
+	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
+		ofpEthDst := ofp.NewOxmEthDst()
+		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthDst)
+		ofpEthDst.Value = val.EthDst
+		return ofpEthDst
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofbField)

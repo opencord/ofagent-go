@@ -103,8 +103,13 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 			var vlanVid openflow_13.OfpOxmOfbField_VlanVid
 			var VlanVid = loxiSetField.Field.GetOXMValue().(uint16)
 			vlanVid.VlanVid = uint32(VlanVid)
-
 			ofpOxmOfbField.Value = &vlanVid
+		case "vlan_pcp":
+			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP
+			var vlanPcp openflow_13.OfpOxmOfbField_VlanPcp
+			var VlanPcp = loxiSetField.Field.GetOXMValue().(uint8)
+			vlanPcp.VlanPcp = uint32(VlanPcp)
+			ofpOxmOfbField.Value = &vlanPcp
 		}
 		ofpOxmField_OfbField.OfbField = &ofpOxmOfbField
 		ofpOxmField.Field = &ofpOxmField_OfbField
