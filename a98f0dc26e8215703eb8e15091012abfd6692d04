@@ -16,6 +16,24 @@
       "revId": "a98f0dc26e8215703eb8e15091012abfd6692d04",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b194cbc0_b2659ef4",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-05-13T18:55:37Z",
+      "side": 1,
+      "message": "i removed it to be consistent, we\u0027re not building latest in any other image. All of our deployment tools require that you set a TAG so I don\u0027t think it makes much of a different specifying \"latest\" or \"master\"\n\nhttps://github.com/opencord/voltha-go/blob/master/Makefile#L106",
+      "parentUuid": "0cccc848_5db4d1ed",
+      "revId": "a98f0dc26e8215703eb8e15091012abfd6692d04",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
