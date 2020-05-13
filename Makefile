@@ -104,10 +104,16 @@ build: docker-build
 ## Docker targets
 
 docker-build: local-protos local-voltha local-lib-go
-	docker build $(DOCKER_BUILD_ARGS) -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -t ${ADAPTER_IMAGENAME}:latest -f docker/Dockerfile.ofagent-go .
+	docker build $(DOCKER_BUILD_ARGS) -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -f docker/Dockerfile.ofagent-go .
+ifdef BUILD_PROFILED
+	docker build $(DOCKER_BUILD_ARGS) --build-arg EXTRA_GO_BUILD_TAGS="-tags profile" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile -f docker/Dockerfile.ofagent-go .
+endif
 
 docker-push:
 	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}
+ifdef BUILD_PROFILED
+	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile
+endif
 
 ## lint and unit tests
 

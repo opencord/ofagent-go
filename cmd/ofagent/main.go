@@ -104,6 +104,9 @@ func main() {
 
 	log.SetAllLogLevel(logLevel)
 
+	// depending on the build tags start the profiler
+	realMain()
+
 	defer func() {
 		err := log.CleanUp()
 		if err != nil {
