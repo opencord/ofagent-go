@@ -36,8 +36,7 @@ type Config struct {
 	ConnectionMaxRetries      int
 	KVStoreType               string
 	KVStoreTimeout            time.Duration
-	KVStoreHost               string
-	KVStorePort               int
+	KVStoreAddress            string
 	InstanceID                string
 }
 
@@ -121,9 +120,7 @@ func parseCommandLineArguments() (*Config, error) {
 
 	flag.DurationVar(&(config.KVStoreTimeout), "kv_store_request_timeout", 5*time.Second, "The default timeout when making a kv store request")
 
-	flag.StringVar(&(config.KVStoreHost), "kv_store_host", "voltha-etcd-cluster-client.voltha.svc.cluster.local", "KV store host")
-
-	flag.IntVar(&(config.KVStorePort), "kv_store_port", 2379, "KV store port")
+	flag.StringVar(&(config.KVStoreAddress), "kv_store_address", "voltha-etcd-cluster-client.voltha.svc.cluster.local:2379", "KV store address")
 
 	flag.StringVar(&(config.LogLevel), "log_level", "WARN", "Log level")
 
