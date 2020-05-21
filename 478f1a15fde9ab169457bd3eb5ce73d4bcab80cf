@@ -16,6 +16,24 @@
       "revId": "478f1a15fde9ab169457bd3eb5ce73d4bcab80cf",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfe2d38a_24f6e8b8",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-05-21T22:07:58Z",
+      "side": 1,
+      "message": "As of now it\u0027s a completely arbitrary number, we got there thinking that everything seems to work with 200 ONUs (1000 ports) and we decided to be super safe to only sending informations for 500 ports at a single time.\n\nThat said this is really to check if splitting the messages helps and if there is something that we need to address related to this, once we know the details we\u0027ll compute the proper limit of the message (64KB once serialized) and we\u0027ll do a proper splitting",
+      "parentUuid": "84b6ad47_d6a5bbfc",
+      "revId": "478f1a15fde9ab169457bd3eb5ce73d4bcab80cf",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
