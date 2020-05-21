@@ -42,7 +42,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
 	defer streamDone()
-	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
+	stream, err := ofa.volthaClient.Get(ctx).ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw("Unable to establish Receive Change Event Stream",
 			log.Fields{"error": err})
@@ -112,13 +112,13 @@ top:
 			addr := net.HardwareAddr(octets)
 			ofDesc.SetHwAddr(addr)
 			ofDesc.SetMaxSpeed(desc.GetMaxSpeed())
-			ofDesc.SetName(openflow.PadString(desc.GetName(), 16))
+			ofDesc.SetName(openflow.PadString(ctx, desc.GetName(), 16))
 			ofDesc.SetPeer(ofp.PortFeatures(desc.GetPeer()))
 			ofDesc.SetPortNo(ofp.Port(desc.GetPortNo()))
 			ofDesc.SetState(ofp.PortState(desc.GetState()))
 			ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
 			ofPortStatus.SetDesc(*ofDesc)
-			if err := ofa.getOFClient(deviceID).SendMessage(ofPortStatus); err != nil {
+			if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofPortStatus); err != nil {
 				logger.Errorw("handle-change-events-send-message", log.Fields{"error": err})
 			}
 		}

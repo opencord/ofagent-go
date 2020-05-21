@@ -71,7 +71,7 @@ var oxmMap = map[string]int32{
 	"vlan_vid_masked": 200, //made up
 }
 
-func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
+func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowAdd)
 		logger.Debugw("handleFlowAdd called",
@@ -80,7 +80,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 				"params":    js})
 	}
 
-	volthaClient := ofc.VolthaClient.Get()
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
@@ -182,7 +182,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		case ofp.OFPITWriteActions:
 			var ofpActions []*openflow_13.OfpAction
 			for _, action := range ofpInstruction.(ofp.IInstructionWriteActions).GetActions() {
-				ofpActions = append(ofpActions, extractAction(action))
+				ofpActions = append(ofpActions, extractAction(ctx, action))
 			}
 			instruction.Data = &openflow_13.OfpInstruction_Actions{
 				Actions: &openflow_13.OfpInstructionActions{
@@ -192,7 +192,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		case ofp.OFPITApplyActions:
 			var ofpActions []*openflow_13.OfpAction
 			for _, action := range ofpInstruction.(ofp.IInstructionApplyActions).GetActions() {
-				ofpActions = append(ofpActions, extractAction(action))
+				ofpActions = append(ofpActions, extractAction(ctx, action))
 			}
 			instruction.Data = &openflow_13.OfpInstruction_Actions{
 				Actions: &openflow_13.OfpInstructionActions{
@@ -267,7 +267,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		binary.BigEndian.PutUint64(cookie, flowAdd.Cookie)
 		bs = append(bs, cookie...)
 		message.SetData(bs)
-		err := ofc.SendMessage(message)
+		err := ofc.SendMessage(ctx, message)
 		if err != nil {
 			logger.Errorw("Error reporting failure of FlowUpdate to controller",
 				log.Fields{
@@ -277,7 +277,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	}
 }
 
-func (ofc *OFConnection) handleFlowMod(flowMod *ofp.FlowMod) {
+func (ofc *OFConnection) handleFlowMod(ctx context.Context, flowMod *ofp.FlowMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowMod)
 		logger.Debugw("handleFlowMod called",
@@ -289,7 +289,7 @@ func (ofc *OFConnection) handleFlowMod(flowMod *ofp.FlowMod) {
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFConnection) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict) {
+func (ofc *OFConnection) handleFlowModStrict(ctx context.Context, flowModStrict *ofp.FlowModifyStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowModStrict)
 		logger.Debugw("handleFlowModStrict called",
@@ -301,7 +301,7 @@ func (ofc *OFConnection) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFConnection) handleFlowDelete(flowDelete *ofp.FlowDelete) {
+func (ofc *OFConnection) handleFlowDelete(ctx context.Context, flowDelete *ofp.FlowDelete) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDelete)
 		logger.Debugw("handleFlowDelete called",
@@ -314,7 +314,7 @@ func (ofc *OFConnection) handleFlowDelete(flowDelete *ofp.FlowDelete) {
 
 }
 
-func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict) {
+func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteStrict *ofp.FlowDeleteStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
 		logger.Debugw("handleFlowDeleteStrict called",
@@ -323,7 +323,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 				"flow-delete-strict": js})
 	}
 
-	volthaClient := ofc.VolthaClient.Get()
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})

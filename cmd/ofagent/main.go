@@ -31,7 +31,7 @@ import (
 	"time"
 )
 
-func printBanner() {
+func printBanner(ctx context.Context) {
 	fmt.Println(`   ___  _____ _                    _   `)
 	fmt.Println(`  / _ \|  ___/ \   __ _  ___ _ __ | |_ `)
 	fmt.Println(` | | | | |_ / _ \ / _' |/ _ \ '_ \| __|`)
@@ -40,20 +40,20 @@ func printBanner() {
 	fmt.Println(`                  |___/                `)
 }
 
-func printVersion() {
+func printVersion(ctx context.Context) {
 	fmt.Println("OFAgent")
 	fmt.Println(version.VersionInfo.String("  "))
 }
 
 func setLogConfig(ctx context.Context, kvStoreHost, kvStoreType string, kvStorePort int, kvStoreTimeout time.Duration) (kvstore.Client, error) {
-	client, err := kvstore.NewEtcdClient(kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout, log.WarnLevel)
+	client, err := kvstore.NewEtcdClient(ctx, kvStoreHost+":"+strconv.Itoa(kvStorePort), kvStoreTimeout, log.WarnLevel)
 
 	if err != nil {
 		return nil, err
 	}
 
-	cm := conf.NewConfigManager(client, kvStoreType, kvStoreHost, kvStorePort, kvStoreTimeout)
-	go conf.StartLogLevelConfigProcessing(cm, ctx)
+	cm := conf.NewConfigManager(ctx, client, kvStoreType, kvStoreHost, kvStorePort, kvStoreTimeout)
+	go conf.StartLogLevelConfigProcessing(ctx, cm)
 	return client, nil
 }
 
@@ -66,7 +66,7 @@ func stop(ctx context.Context, kvClient kvstore.Client) {
 			logger.Infow("fail-to-release-all-reservations", log.Fields{"error": err})
 		}
 		// Close the DB connection
-		kvClient.Close()
+		kvClient.Close(ctx)
 	}
 
 }
@@ -77,12 +77,12 @@ func main() {
 	flag.Parse()
 
 	if config.Version {
-		printVersion()
+		printVersion(context.Background())
 		os.Exit(0)
 	}
 
 	if config.Banner {
-		printBanner()
+		printBanner(context.Background())
 	}
 
 	// Setup logging
@@ -120,7 +120,7 @@ func main() {
 	 * objects there can be a single probe end point for the process.
 	 */
 	p := &probe.Probe{}
-	go p.ListenAndServe(config.ProbeEndPoint)
+	go p.ListenAndServe(context.Background(), config.ProbeEndPoint)
 
 	/*
 	 * Create a context which to start the services used by the applicaiton
@@ -133,7 +133,7 @@ func main() {
 		logger.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
-	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
+	ofa, err := ofagent.NewOFAgent(context.Background(), &ofagent.OFAgent{
 		OFControllerEndPoints:     config.OFControllerEndPoints,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
 		DeviceListRefreshInterval: config.DeviceListRefreshInterval,

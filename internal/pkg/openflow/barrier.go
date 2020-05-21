@@ -17,12 +17,13 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFConnection) handleBarrierRequest(request *ofp.BarrierRequest) {
+func (ofc *OFConnection) handleBarrierRequest(ctx context.Context, request *ofp.BarrierRequest) {
 
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
@@ -34,7 +35,7 @@ func (ofc *OFConnection) handleBarrierRequest(request *ofp.BarrierRequest) {
 	reply := ofp.NewBarrierReply()
 	reply.SetVersion(4)
 	reply.SetXid(request.GetXid())
-	if err := ofc.SendMessage(reply); err != nil {
+	if err := ofc.SendMessage(ctx, reply); err != nil {
 		logger.Errorw("barrier-request-send-message", log.Fields{"error": err})
 	}
 }

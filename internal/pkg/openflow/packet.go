@@ -17,13 +17,14 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func (ofc *OFConnection) handlePacketOut(packetOut *ofp.PacketOut) {
+func (ofc *OFConnection) handlePacketOut(ctx context.Context, packetOut *ofp.PacketOut) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(packetOut)
 		logger.Debugw("handlePacketOut called",
@@ -35,7 +36,7 @@ func (ofc *OFConnection) handlePacketOut(packetOut *ofp.PacketOut) {
 	// Collection actions
 	var actions []*voltha.OfpAction
 	for _, action := range packetOut.GetActions() {
-		actions = append(actions, extractAction(action))
+		actions = append(actions, extractAction(ctx, action))
 	}
 
 	// Build packet out

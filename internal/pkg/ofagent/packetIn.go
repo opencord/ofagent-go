@@ -44,7 +44,7 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
 	defer streamDone()
-	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
+	stream, err := ofa.volthaClient.Get(ctx).ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw("Unable to establish Receive PacketIn Stream",
 			log.Fields{"error": err})
@@ -150,8 +150,8 @@ top:
 			ofPacketIn.SetMatch(*match)
 			ofPacketIn.SetReason(uint8(packetIn.GetReason()))
 			ofPacketIn.SetTableId(uint8(packetIn.GetTableId()))
-			ofc := ofa.getOFClient(deviceID)
-			if err := ofc.SendMessage(ofPacketIn); err != nil {
+			ofc := ofa.getOFClient(ctx, deviceID)
+			if err := ofc.SendMessage(ctx, ofPacketIn); err != nil {
 				logger.Errorw("send-message-failed", log.Fields{
 					"device-id": deviceID,
 					"error":     err})

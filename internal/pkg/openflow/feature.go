@@ -25,7 +25,7 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/common"
 )
 
-func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) error {
+func (ofc *OFConnection) handleFeatureRequest(ctx context.Context, request *ofp.FeaturesRequest) error {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleFeatureRequest called",
@@ -33,7 +33,7 @@ func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) erro
 				"device-id": ofc.DeviceID,
 				"request":   js})
 	}
-	volthaClient := ofc.VolthaClient.Get()
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return NoVolthaConnectionError
 	}
@@ -60,6 +60,6 @@ func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) erro
 				"device-id": ofc.DeviceID,
 				"reply":     js})
 	}
-	err = ofc.SendMessage(reply)
+	err = ofc.SendMessage(ctx, reply)
 	return err
 }

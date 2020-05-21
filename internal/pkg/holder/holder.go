@@ -17,9 +17,9 @@
 package holder
 
 import (
-	"sync"
-
+	"context"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
+	"sync"
 )
 
 // VolthaServiceClientHolder provides a consistent (voluntarily unmutable) reference
@@ -34,21 +34,21 @@ type VolthaServiceClientReference struct {
 }
 
 // Clear sets the held value to nil (not set)
-func (h *VolthaServiceClientHolder) Clear() {
+func (h *VolthaServiceClientHolder) Clear(ctx context.Context) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
 	h.volthaSvcClient = nil
 }
 
 // Set assigns the value being held to the specified value
-func (h *VolthaServiceClientHolder) Set(client voltha.VolthaServiceClient) {
+func (h *VolthaServiceClientHolder) Set(ctx context.Context, client voltha.VolthaServiceClient) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
 	h.volthaSvcClient = client
 }
 
 // Get returns the currently held value
-func (h *VolthaServiceClientHolder) Get() voltha.VolthaServiceClient {
+func (h *VolthaServiceClientHolder) Get(ctx context.Context) voltha.VolthaServiceClient {
 	h.mutex.RLock()
 	defer h.mutex.RUnlock()
 	return h.volthaSvcClient

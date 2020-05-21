@@ -27,7 +27,7 @@ import (
 	"net"
 )
 
-func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16) error {
+func (ofc *OFConnection) handleStatsRequest(ctx context.Context, request ofp.IHeader, statType uint16) error {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleStatsRequest called",
@@ -40,7 +40,7 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 	switch statType {
 	case ofp.OFPSTDesc:
 		statsReq := request.(*ofp.DescStatsRequest)
-		response, err := ofc.handleDescStatsRequest(statsReq)
+		response, err := ofc.handleDescStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -53,10 +53,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTFlow:
 		statsReq := request.(*ofp.FlowStatsRequest)
-		response, err := ofc.handleFlowStatsRequest(statsReq)
+		response, err := ofc.handleFlowStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -70,11 +70,11 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"response-object": response,
 					"response":        resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 
 	case ofp.OFPSTAggregate:
 		statsReq := request.(*ofp.AggregateStatsRequest)
-		response, err := ofc.handleAggregateStatsRequest(statsReq)
+		response, err := ofc.handleAggregateStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -87,10 +87,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTTable:
 		statsReq := request.(*ofp.TableStatsRequest)
-		response, e := ofc.handleTableStatsRequest(statsReq)
+		response, e := ofc.handleTableStatsRequest(ctx, statsReq)
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
@@ -103,10 +103,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if e != nil {
 			return e
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTPort:
 		statsReq := request.(*ofp.PortStatsRequest)
-		response, err := ofc.handlePortStatsRequest(statsReq)
+		response, err := ofc.handlePortStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -119,10 +119,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTQueue:
 		statsReq := request.(*ofp.QueueStatsRequest)
-		response, err := ofc.handleQueueStatsRequest(statsReq)
+		response, err := ofc.handleQueueStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -135,10 +135,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTGroup:
 		statsReq := request.(*ofp.GroupStatsRequest)
-		response, err := ofc.handleGroupStatsRequest(statsReq)
+		response, err := ofc.handleGroupStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -151,10 +151,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTGroupDesc:
 		statsReq := request.(*ofp.GroupDescStatsRequest)
-		response, err := ofc.handleGroupStatsDescRequest(statsReq)
+		response, err := ofc.handleGroupStatsDescRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -167,11 +167,11 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 
 	case ofp.OFPSTGroupFeatures:
 		statsReq := request.(*ofp.GroupFeaturesStatsRequest)
-		response, err := ofc.handleGroupFeatureStatsRequest(statsReq)
+		response, err := ofc.handleGroupFeatureStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -184,10 +184,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeter:
 		statsReq := request.(*ofp.MeterStatsRequest)
-		response, err := ofc.handleMeterStatsRequest(statsReq)
+		response, err := ofc.handleMeterStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -200,10 +200,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeterConfig:
 		statsReq := request.(*ofp.MeterConfigStatsRequest)
-		response, err := ofc.handleMeterConfigStatsRequest(statsReq)
+		response, err := ofc.handleMeterConfigStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -216,10 +216,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeterFeatures:
 		statsReq := request.(*ofp.MeterFeaturesStatsRequest)
-		response, err := ofc.handleMeterFeatureStatsRequest(statsReq)
+		response, err := ofc.handleMeterFeatureStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -232,10 +232,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTTableFeatures:
 		statsReq := request.(*ofp.TableFeaturesStatsRequest)
-		response, err := ofc.handleTableFeaturesStatsRequest(statsReq)
+		response, err := ofc.handleTableFeaturesStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -248,10 +248,10 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTPortDesc:
 		statsReq := request.(*ofp.PortDescStatsRequest)
-		response, err := ofc.handlePortDescStatsRequest(statsReq)
+		response, err := ofc.handlePortDescStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -264,11 +264,11 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 
 	case ofp.OFPSTExperimenter:
 		statsReq := request.(*ofp.ExperimenterStatsRequest)
-		response, err := ofc.handleExperimenterStatsRequest(statsReq)
+		response, err := ofc.handleExperimenterStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
@@ -281,13 +281,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	}
 	return nil
 }
 
-func (ofc *OFConnection) handleDescStatsRequest(request *ofp.DescStatsRequest) (*ofp.DescStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handleDescStatsRequest(ctx context.Context, request *ofp.DescStatsRequest) (*ofp.DescStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -303,16 +303,16 @@ func (ofc *OFConnection) handleDescStatsRequest(request *ofp.DescStatsRequest) (
 	}
 	desc := resp.GetDesc()
 
-	response.SetMfrDesc(PadString(desc.GetMfrDesc(), 256))
-	response.SetHwDesc(PadString(desc.GetHwDesc(), 256))
-	response.SetSwDesc(PadString(desc.GetSwDesc(), 256))
-	response.SetSerialNum(PadString(desc.GetSerialNum(), 32))
-	response.SetDpDesc(PadString(desc.GetDpDesc(), 256))
+	response.SetMfrDesc(PadString(ctx, desc.GetMfrDesc(), 256))
+	response.SetHwDesc(PadString(ctx, desc.GetHwDesc(), 256))
+	response.SetSwDesc(PadString(ctx, desc.GetSwDesc(), 256))
+	response.SetSerialNum(PadString(ctx, desc.GetSerialNum(), 32))
+	response.SetDpDesc(PadString(ctx, desc.GetDpDesc(), 256))
 	return response, nil
 }
 
-func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (*ofp.FlowStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *ofp.FlowStatsRequest) (*ofp.FlowStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -345,7 +345,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		for _, oxmField := range pbMatch.GetOxmFields() {
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm := parseOxm(ofbField)
+			iOxm := parseOxm(ctx, ofbField)
 			fields = append(fields, iOxm)
 		}
 
@@ -353,7 +353,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
-			instruction := parseInstructions(ofpInstruction)
+			instruction := parseInstructions(ctx, ofpInstruction)
 			instructions = append(instructions, instruction)
 		}
 		entry.Instructions = instructions
@@ -363,7 +363,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 	return response, nil
 }
 
-func (ofc *OFConnection) handleAggregateStatsRequest(request *ofp.AggregateStatsRequest) (*ofp.AggregateStatsReply, error) {
+func (ofc *OFConnection) handleAggregateStatsRequest(ctx context.Context, request *ofp.AggregateStatsRequest) (*ofp.AggregateStatsReply, error) {
 	response := ofp.NewAggregateStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -373,8 +373,8 @@ func (ofc *OFConnection) handleAggregateStatsRequest(request *ofp.AggregateStats
 	return response, nil
 }
 
-func (ofc *OFConnection) handleGroupStatsRequest(request *ofp.GroupStatsRequest) (*ofp.GroupStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handleGroupStatsRequest(ctx context.Context, request *ofp.GroupStatsRequest) (*ofp.GroupStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -415,8 +415,8 @@ func (ofc *OFConnection) handleGroupStatsRequest(request *ofp.GroupStatsRequest)
 	return response, nil
 }
 
-func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handleGroupStatsDescRequest(ctx context.Context, request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -433,10 +433,10 @@ func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStats
 	for _, item := range reply.GetItems() {
 		desc := item.GetDesc()
 
-		buckets := volthaBucketsToOpenflow(desc.Buckets)
+		buckets := volthaBucketsToOpenflow(ctx, desc.Buckets)
 
 		groupDesc := &ofp.GroupDescStatsEntry{
-			GroupType: volthaGroupTypeToOpenflow(desc.Type),
+			GroupType: volthaGroupTypeToOpenflow(ctx, desc.Type),
 			GroupId:   desc.GroupId,
 			Buckets:   buckets,
 		}
@@ -446,7 +446,7 @@ func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStats
 	return response, nil
 }
 
-func (ofc *OFConnection) handleGroupFeatureStatsRequest(request *ofp.GroupFeaturesStatsRequest) (*ofp.GroupFeaturesStatsReply, error) {
+func (ofc *OFConnection) handleGroupFeatureStatsRequest(ctx context.Context, request *ofp.GroupFeaturesStatsRequest) (*ofp.GroupFeaturesStatsReply, error) {
 	response := ofp.NewGroupFeaturesStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -455,8 +455,8 @@ func (ofc *OFConnection) handleGroupFeatureStatsRequest(request *ofp.GroupFeatur
 	return response, nil
 }
 
-func (ofc *OFConnection) handleMeterStatsRequest(request *ofp.MeterStatsRequest) (*ofp.MeterStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handleMeterStatsRequest(ctx context.Context, request *ofp.MeterStatsRequest) (*ofp.MeterStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -492,7 +492,7 @@ func (ofc *OFConnection) handleMeterStatsRequest(request *ofp.MeterStatsRequest)
 	return response, nil
 }
 
-func (ofc *OFConnection) handleMeterConfigStatsRequest(request *ofp.MeterConfigStatsRequest) (*ofp.MeterConfigStatsReply, error) {
+func (ofc *OFConnection) handleMeterConfigStatsRequest(ctx context.Context, request *ofp.MeterConfigStatsRequest) (*ofp.MeterConfigStatsReply, error) {
 	response := ofp.NewMeterConfigStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -501,7 +501,7 @@ func (ofc *OFConnection) handleMeterConfigStatsRequest(request *ofp.MeterConfigS
 	return response, nil
 }
 
-func (ofc *OFConnection) handleTableFeaturesStatsRequest(request *ofp.TableFeaturesStatsRequest) (*ofp.TableFeaturesStatsReply, error) {
+func (ofc *OFConnection) handleTableFeaturesStatsRequest(ctx context.Context, request *ofp.TableFeaturesStatsRequest) (*ofp.TableFeaturesStatsReply, error) {
 	response := ofp.NewTableFeaturesStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -510,7 +510,7 @@ func (ofc *OFConnection) handleTableFeaturesStatsRequest(request *ofp.TableFeatu
 	return response, nil
 }
 
-func (ofc *OFConnection) handleTableStatsRequest(request *ofp.TableStatsRequest) (*ofp.TableStatsReply, error) {
+func (ofc *OFConnection) handleTableStatsRequest(ctx context.Context, request *ofp.TableStatsRequest) (*ofp.TableStatsReply, error) {
 	var response = ofp.NewTableStatsReply()
 	response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 	response.SetVersion(request.GetVersion())
@@ -519,7 +519,7 @@ func (ofc *OFConnection) handleTableStatsRequest(request *ofp.TableStatsRequest)
 	return response, nil
 }
 
-func (ofc *OFConnection) handleQueueStatsRequest(request *ofp.QueueStatsRequest) (*ofp.QueueStatsReply, error) {
+func (ofc *OFConnection) handleQueueStatsRequest(ctx context.Context, request *ofp.QueueStatsRequest) (*ofp.QueueStatsReply, error) {
 	response := ofp.NewQueueStatsReply()
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())
@@ -528,8 +528,8 @@ func (ofc *OFConnection) handleQueueStatsRequest(request *ofp.QueueStatsRequest)
 	return response, nil
 }
 
-func (ofc *OFConnection) handlePortStatsRequest(request *ofp.PortStatsRequest) (*ofp.PortStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handlePortStatsRequest(ctx context.Context, request *ofp.PortStatsRequest) (*ofp.PortStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -545,12 +545,12 @@ func (ofc *OFConnection) handlePortStatsRequest(request *ofp.PortStatsRequest) (
 	var entries []*ofp.PortStatsEntry
 	if request.GetPortNo() == 0xffffffff { //all ports
 		for _, port := range reply.GetItems() {
-			entries = append(entries, parsePortStats(port))
+			entries = append(entries, parsePortStats(ctx, port))
 		}
 	} else { //find right port that is requested
 		for _, port := range reply.GetItems() {
 			if port.GetOfpPortStats().GetPortNo() == uint32(request.GetPortNo()) {
-				entries = append(entries, parsePortStats(port))
+				entries = append(entries, parsePortStats(ctx, port))
 			}
 		}
 	}
@@ -558,8 +558,8 @@ func (ofc *OFConnection) handlePortStatsRequest(request *ofp.PortStatsRequest) (
 	return response, nil
 }
 
-func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRequest) (*ofp.PortDescStatsReply, error) {
-	volthaClient := ofc.VolthaClient.Get()
+func (ofc *OFConnection) handlePortDescStatsRequest(ctx context.Context, request *ofp.PortDescStatsRequest) (*ofp.PortDescStatsReply, error) {
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
 	}
@@ -584,7 +584,7 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 		}
 		hwAddr := net.HardwareAddr(octets)
 		entry.SetHwAddr(hwAddr)
-		entry.SetName(PadString(ofpPort.GetName(), 16))
+		entry.SetName(PadString(ctx, ofpPort.GetName(), 16))
 		entry.SetConfig(ofp.PortConfig(ofpPort.GetConfig()))
 		entry.SetState(ofp.PortState(ofpPort.GetState()))
 		entry.SetCurr(ofp.PortFeatures(ofpPort.GetCurr()))
@@ -603,7 +603,7 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 
 }
 
-func (ofc *OFConnection) handleMeterFeatureStatsRequest(request *ofp.MeterFeaturesStatsRequest) (*ofp.MeterFeaturesStatsReply, error) {
+func (ofc *OFConnection) handleMeterFeatureStatsRequest(ctx context.Context, request *ofp.MeterFeaturesStatsRequest) (*ofp.MeterFeaturesStatsReply, error) {
 	response := ofp.NewMeterFeaturesStatsReply()
 	response.SetXid(request.GetXid())
 	response.SetVersion(request.GetVersion())
@@ -618,7 +618,7 @@ func (ofc *OFConnection) handleMeterFeatureStatsRequest(request *ofp.MeterFeatur
 	return response, nil
 }
 
-func (ofc *OFConnection) handleExperimenterStatsRequest(request *ofp.ExperimenterStatsRequest) (*ofp.ExperimenterStatsReply, error) {
+func (ofc *OFConnection) handleExperimenterStatsRequest(ctx context.Context, request *ofp.ExperimenterStatsRequest) (*ofp.ExperimenterStatsReply, error) {
 	response := ofp.NewExperimenterStatsReply(request.GetExperimenter())
 	response.SetVersion(request.GetVersion())
 	response.SetXid(request.GetXid())

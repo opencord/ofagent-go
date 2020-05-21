@@ -24,7 +24,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
+func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp.MeterMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw("handleMeterModRequest called",
@@ -33,7 +33,7 @@ func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
 				"request":   js})
 	}
 
-	volthaClient := ofc.VolthaClient.Get()
+	volthaClient := ofc.VolthaClient.Get(ctx)
 	if volthaClient == nil {
 		logger.Errorw("no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})

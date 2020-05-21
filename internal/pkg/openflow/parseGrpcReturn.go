@@ -17,6 +17,7 @@ package openflow
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"encoding/json"
 	"github.com/opencord/goloxi"
@@ -26,7 +27,7 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
+func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofbField)
 		logger.Debugw("parseOxm called",
@@ -125,7 +126,7 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 	return nil
 }
 
-func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruction {
+func parseInstructions(ctx context.Context, ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpInstruction)
 		logger.Debugw("parseInstructions called",
@@ -154,7 +155,7 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruct
 
 		var actions []goloxi.IAction
 		for _, ofpAction := range ofpInstruction.GetActions().Actions {
-			action := parseAction(ofpAction)
+			action := parseAction(ctx, ofpAction)
 			actions = append(actions, action)
 		}
 		instruction.Actions = actions
@@ -170,7 +171,7 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruct
 	return nil
 }
 
-func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
+func parseAction(ctx context.Context, ofpAction *openflow_13.OfpAction) goloxi.IAction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpAction)
 		logger.Debugw("parseAction called",
@@ -194,7 +195,7 @@ func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
 		ofpActionSetField := ofpAction.GetSetField()
 		setFieldAction := ofp.NewActionSetField()
 
-		iOxm := parseOxm(ofpActionSetField.GetField().GetOfbField())
+		iOxm := parseOxm(ctx, ofpActionSetField.GetField().GetOfbField())
 		setFieldAction.Field = iOxm
 		return setFieldAction
 	case openflow_13.OfpActionType_OFPAT_GROUP:
@@ -212,7 +213,7 @@ func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
 	return nil
 }
 
-func parsePortStats(port *voltha.LogicalPort) *ofp.PortStatsEntry {
+func parsePortStats(ctx context.Context, port *voltha.LogicalPort) *ofp.PortStatsEntry {
 	stats := port.OfpPortStats
 	port.OfpPort.GetPortNo()
 	var entry ofp.PortStatsEntry

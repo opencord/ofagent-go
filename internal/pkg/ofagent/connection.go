@@ -27,9 +27,9 @@ import (
 	"google.golang.org/grpc"
 )
 
-func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
+func (ofa *OFAgent) establishConnectionToVoltha(ctx context.Context, p *probe.Probe) error {
 	if p != nil {
-		p.UpdateStatus("voltha", probe.ServiceStatusPreparing)
+		p.UpdateStatus(ctx, "voltha", probe.ServiceStatusPreparing)
 	}
 
 	if ofa.volthaConnection != nil {
@@ -37,7 +37,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 	}
 
 	ofa.volthaConnection = nil
-	ofa.volthaClient.Clear()
+	ofa.volthaClient.Clear(ctx)
 	try := 1
 	for ofa.ConnectionMaxRetries == 0 || try < ofa.ConnectionMaxRetries {
 		conn, err := grpc.Dial(ofa.VolthaApiEndPoint, grpc.WithInsecure())
@@ -50,9 +50,9 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 							"VolthaApiEndPoint": ofa.VolthaApiEndPoint,
 						})
 					ofa.volthaConnection = conn
-					ofa.volthaClient.Set(svc)
+					ofa.volthaClient.Set(ctx, svc)
 					if p != nil {
-						p.UpdateStatus("voltha", probe.ServiceStatusRunning)
+						p.UpdateStatus(ctx, "voltha", probe.ServiceStatusRunning)
 					}
 					ofa.events <- ofaEventVolthaConnected
 					return nil
@@ -72,7 +72,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(p *probe.Probe) error {
 		}
 	}
 	if p != nil {
-		p.UpdateStatus("voltha", probe.ServiceStatusFailed)
+		p.UpdateStatus(ctx, "voltha", probe.ServiceStatusFailed)
 	}
 	return errors.New("failed-to-connect-to-voltha")
 }

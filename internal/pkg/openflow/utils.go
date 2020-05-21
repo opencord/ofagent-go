@@ -17,6 +17,7 @@
 package openflow
 
 import (
+	"context"
 	"fmt"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
@@ -33,7 +34,7 @@ func GetXid() uint32 {
 	xid++
 	return xid
 }
-func PadString(value string, padSize int) string {
+func PadString(ctx context.Context, value string, padSize int) string {
 	size := len(value)
 	nullsNeeded := padSize - size
 	null := fmt.Sprintf("%c", '\000')
@@ -41,7 +42,7 @@ func PadString(value string, padSize int) string {
 	return fmt.Sprintf("%s%s", value, padded)
 }
 
-func extractAction(action ofp.IAction) *openflow_13.OfpAction {
+func extractAction(ctx context.Context, action ofp.IAction) *openflow_13.OfpAction {
 	var ofpAction openflow_13.OfpAction
 	switch action.GetType() {
 	case ofp.OFPATOutput:

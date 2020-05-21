@@ -51,7 +51,7 @@ type OFConnection struct {
 	lastUnsentMessage Message
 }
 
-func (ofc *OFConnection) peekAtOFHeader(buf []byte) (ofp.IHeader, error) {
+func (ofc *OFConnection) peekAtOFHeader(ctx context.Context, buf []byte) (ofp.IHeader, error) {
 	header := ofp.Header{}
 	header.Version = uint8(buf[0])
 	header.Type = uint8(buf[1])
@@ -63,7 +63,7 @@ func (ofc *OFConnection) peekAtOFHeader(buf []byte) (ofp.IHeader, error) {
 	return &header, nil
 }
 
-func (ofc *OFConnection) establishConnectionToController() error {
+func (ofc *OFConnection) establishConnectionToController(ctx context.Context) error {
 	if ofc.conn != nil {
 		logger.Debugw("closing-of-connection-to-reconnect",
 			log.Fields{"device-id": ofc.DeviceID})
@@ -80,7 +80,7 @@ func (ofc *OFConnection) establishConnectionToController() error {
 		} else {
 			if connection, err := net.DialTCP("tcp", nil, raddr); err == nil {
 				ofc.conn = connection
-				ofc.sayHello()
+				ofc.sayHello(ctx)
 				ofc.events <- ofcEventConnect
 				return nil
 			} else {
@@ -126,7 +126,7 @@ top:
 					state = ofcStateStarted
 					logger.Debug("STARTED MORE THAN ONCE")
 					go func() {
-						if err := ofc.establishConnectionToController(); err != nil {
+						if err := ofc.establishConnectionToController(ctx); err != nil {
 							logger.Errorw("controller-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
@@ -135,8 +135,8 @@ top:
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
 							"device-id":     ofc.DeviceID,
-							"current-state": state.String(),
-							"event":         event.String()})
+							"current-state": state.String(ctx),
+							"event":         event.String(ctx)})
 				}
 			case ofcEventConnect:
 				logger.Debugw("ofc-event-connected",
@@ -150,14 +150,14 @@ top:
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
 							"device-id":     ofc.DeviceID,
-							"current-state": state.String(),
-							"event":         event.String()})
+							"current-state": state.String(ctx),
+							"event":         event.String(ctx)})
 				}
 			case ofcEventDisconnect:
 				logger.Debugw("ofc-event-disconnected",
 					log.Fields{
 						"device-id": ofc.DeviceID,
-						"state":     state.String()})
+						"state":     state.String(ctx)})
 				if state == ofcStateConnected {
 					state = ofcStateDisconnected
 					if ofDone != nil {
@@ -165,7 +165,7 @@ top:
 						ofDone = nil
 					}
 					go func() {
-						if err := ofc.establishConnectionToController(); err != nil {
+						if err := ofc.establishConnectionToController(ctx); err != nil {
 							log.Errorw("controller-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
@@ -174,8 +174,8 @@ top:
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
 							"device-id":     ofc.DeviceID,
-							"current-state": state.String(),
-							"event":         event.String()})
+							"current-state": state.String(ctx),
+							"event":         event.String(ctx)})
 				}
 			case ofcEventStop:
 				logger.Debugw("ofc-event-stop",
@@ -187,16 +187,16 @@ top:
 					logger.Errorw("illegal-state-transition",
 						log.Fields{
 							"device-id":     ofc.DeviceID,
-							"current-state": state.String(),
-							"event":         event.String()})
+							"current-state": state.String(ctx),
+							"event":         event.String(ctx)})
 				}
 			}
 			logger.Debugw("state-transition",
 				log.Fields{
 					"device-id":      ofc.DeviceID,
-					"previous-state": previous.String(),
-					"current-state":  state.String(),
-					"event":          event.String()})
+					"previous-state": previous.String(ctx),
+					"current-state":  state.String(ctx),
+					"event":          event.String(ctx)})
 		}
 	}
 
@@ -258,7 +258,7 @@ top:
 			}
 
 			// Decode the header
-			peek, err := ofc.peekAtOFHeader(headerBuf)
+			peek, err := ofc.peekAtOFHeader(ctx, headerBuf)
 			if err != nil {
 				/*
 				 * Header is bad, assume stream is corrupted
@@ -305,7 +305,7 @@ top:
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			ofc.parseHeader(msg)
+			ofc.parseHeader(ctx, msg)
 		}
 	}
 	logger.Debugw("end-of-stream",
@@ -313,7 +313,7 @@ top:
 	ofc.events <- ofcEventDisconnect
 }
 
-func (ofc *OFConnection) sayHello() {
+func (ofc *OFConnection) sayHello(ctx context.Context) {
 	hello := ofp.NewHello()
 	hello.Xid = uint32(GetXid())
 	elem := ofp.NewHelloElemVersionbitmap()
@@ -328,7 +328,7 @@ func (ofc *OFConnection) sayHello() {
 				"device-id":     ofc.DeviceID,
 				"hello-message": js})
 	}
-	if err := ofc.SendMessage(hello); err != nil {
+	if err := ofc.SendMessage(ctx, hello); err != nil {
 		logger.Fatalw("Failed saying hello to Openflow Server, unable to proceed",
 			log.Fields{
 				"device-id": ofc.DeviceID,
@@ -336,7 +336,7 @@ func (ofc *OFConnection) sayHello() {
 	}
 }
 
-func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
+func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader) {
 	headerType := header.GetType()
 	logger.Debugw("packet-header-type",
 		log.Fields{
@@ -345,35 +345,35 @@ func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
 	case ofp.OFPTHello:
 		//x := header.(*ofp.Hello)
 	case ofp.OFPTError:
-		go ofc.handleErrMsg(header.(*ofp.ErrorMsg))
+		go ofc.handleErrMsg(ctx, header.(*ofp.ErrorMsg))
 	case ofp.OFPTEchoRequest:
-		go ofc.handleEchoRequest(header.(*ofp.EchoRequest))
+		go ofc.handleEchoRequest(ctx, header.(*ofp.EchoRequest))
 	case ofp.OFPTEchoReply:
 	case ofp.OFPTExperimenter:
 	case ofp.OFPTFeaturesRequest:
 		go func() {
-			if err := ofc.handleFeatureRequest(header.(*ofp.FeaturesRequest)); err != nil {
+			if err := ofc.handleFeatureRequest(ctx, header.(*ofp.FeaturesRequest)); err != nil {
 				logger.Errorw("handle-feature-request", log.Fields{"error": err})
 			}
 		}()
 	case ofp.OFPTFeaturesReply:
 	case ofp.OFPTGetConfigRequest:
-		go ofc.handleGetConfigRequest(header.(*ofp.GetConfigRequest))
+		go ofc.handleGetConfigRequest(ctx, header.(*ofp.GetConfigRequest))
 	case ofp.OFPTGetConfigReply:
 	case ofp.OFPTSetConfig:
-		go ofc.handleSetConfig(header.(*ofp.SetConfig))
+		go ofc.handleSetConfig(ctx, header.(*ofp.SetConfig))
 	case ofp.OFPTPacketIn:
 	case ofp.OFPTFlowRemoved:
 	case ofp.OFPTPortStatus:
 	case ofp.OFPTPacketOut:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
-			ofc.sendRoleSlaveError(header)
+			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
-		go ofc.handlePacketOut(header.(*ofp.PacketOut))
+		go ofc.handlePacketOut(ctx, header.(*ofp.PacketOut))
 	case ofp.OFPTFlowMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
-			ofc.sendRoleSlaveError(header)
+			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
 		/*
@@ -384,39 +384,39 @@ func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
 		 */
 		switch header.(ofp.IFlowMod).GetCommand() {
 		case ofp.OFPFCAdd:
-			ofc.handleFlowAdd(header.(*ofp.FlowAdd))
+			ofc.handleFlowAdd(ctx, header.(*ofp.FlowAdd))
 		case ofp.OFPFCModify:
-			ofc.handleFlowMod(header.(*ofp.FlowMod))
+			ofc.handleFlowMod(ctx, header.(*ofp.FlowMod))
 		case ofp.OFPFCModifyStrict:
-			ofc.handleFlowModStrict(header.(*ofp.FlowModifyStrict))
+			ofc.handleFlowModStrict(ctx, header.(*ofp.FlowModifyStrict))
 		case ofp.OFPFCDelete:
-			ofc.handleFlowDelete(header.(*ofp.FlowDelete))
+			ofc.handleFlowDelete(ctx, header.(*ofp.FlowDelete))
 		case ofp.OFPFCDeleteStrict:
-			ofc.handleFlowDeleteStrict(header.(*ofp.FlowDeleteStrict))
+			ofc.handleFlowDeleteStrict(ctx, header.(*ofp.FlowDeleteStrict))
 		}
 	case ofp.OFPTStatsRequest:
 		go func() {
-			if err := ofc.handleStatsRequest(header, header.(ofp.IStatsRequest).GetStatsType()); err != nil {
+			if err := ofc.handleStatsRequest(ctx, header, header.(ofp.IStatsRequest).GetStatsType()); err != nil {
 				logger.Errorw("ofpt-stats-request", log.Fields{"error": err})
 			}
 		}()
 	case ofp.OFPTBarrierRequest:
 		/* See note above at case ofp.OFPTFlowMod:*/
-		ofc.handleBarrierRequest(header.(*ofp.BarrierRequest))
+		ofc.handleBarrierRequest(ctx, header.(*ofp.BarrierRequest))
 	case ofp.OFPTRoleRequest:
-		go ofc.handleRoleRequest(header.(*ofp.RoleRequest))
+		go ofc.handleRoleRequest(ctx, header.(*ofp.RoleRequest))
 	case ofp.OFPTMeterMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
-			ofc.sendRoleSlaveError(header)
+			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
-		ofc.handleMeterModRequest(header.(*ofp.MeterMod))
+		ofc.handleMeterModRequest(ctx, header.(*ofp.MeterMod))
 	case ofp.OFPTGroupMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
-			ofc.sendRoleSlaveError(header)
+			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
-		ofc.handleGroupMod(header.(ofp.IGroupMod))
+		ofc.handleGroupMod(ctx, header.(ofp.IGroupMod))
 	}
 }
 
@@ -426,7 +426,7 @@ type Message interface {
 	Serialize(encoder *goloxi.Encoder) error
 }
 
-func (ofc *OFConnection) doSend(msg Message) error {
+func (ofc *OFConnection) doSend(ctx context.Context, msg Message) error {
 	if ofc.conn == nil {
 		return errors.New("no-connection")
 	}
@@ -450,7 +450,7 @@ func (ofc *OFConnection) doSend(msg Message) error {
 func (ofc *OFConnection) messageSender(ctx context.Context) {
 	// first process last fail if it exists
 	if ofc.lastUnsentMessage != nil {
-		if err := ofc.doSend(ofc.lastUnsentMessage); err != nil {
+		if err := ofc.doSend(ctx, ofc.lastUnsentMessage); err != nil {
 			ofc.events <- ofcEventDisconnect
 			return
 		}
@@ -462,7 +462,7 @@ top:
 		case <-ctx.Done():
 			break top
 		case msg := <-ofc.sendChannel:
-			if err := ofc.doSend(msg); err != nil {
+			if err := ofc.doSend(ctx, msg); err != nil {
 				ofc.lastUnsentMessage = msg
 				ofc.events <- ofcEventDisconnect
 				logger.Debugw("message-sender-error",
@@ -484,7 +484,7 @@ top:
 }
 
 // SendMessage queues a message to be sent to the openflow controller
-func (ofc *OFConnection) SendMessage(message Message) error {
+func (ofc *OFConnection) SendMessage(ctx context.Context, message Message) error {
 	logger.Debug("queuing-message")
 	ofc.sendChannel <- message
 	return nil

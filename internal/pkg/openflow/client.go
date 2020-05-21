@@ -52,7 +52,7 @@ const (
 	ofcRoleSlave
 )
 
-func (e ofcEvent) String() string {
+func (e ofcEvent) String(ctx context.Context) string {
 	switch e {
 	case ofcEventStart:
 		return "ofc-event-start"
@@ -67,7 +67,7 @@ func (e ofcEvent) String() string {
 	}
 }
 
-func (s ofcState) String() string {
+func (s ofcState) String(ctx context.Context) string {
 	switch s {
 	case ofcStateCreated:
 		return "ofc-state-created"
@@ -104,15 +104,15 @@ type OFClient struct {
 }
 
 type RoleManager interface {
-	UpdateRoles(from string, request *ofp.RoleRequest) bool
+	UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool
 }
 
-func distance(a uint64, b uint64) int64 {
+func distance(ctx context.Context, a uint64, b uint64) int64 {
 	return (int64)(a - b)
 }
 
 // UpdateRoles validates a role request and updates role state for connections where it changed
-func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
+func (ofc *OFClient) UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool {
 	log.Debug("updating role", log.Fields{
 		"from": from,
 		"to":   request.Role,
@@ -128,7 +128,7 @@ func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
 		return true
 	}
 
-	if ofc.generationIsDefined && distance(request.GenerationId, ofc.generationID) < 0 {
+	if ofc.generationIsDefined && distance(ctx, request.GenerationId, ofc.generationID) < 0 {
 		// generation ID is not valid
 		return false
 	} else {
@@ -158,7 +158,7 @@ func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
 
 // NewClient returns an initialized OFClient instance based on the configuration
 // specified
-func NewOFClient(config *OFClient) *OFClient {
+func NewOFClient(ctx context.Context, config *OFClient) *OFClient {
 
 	ofc := OFClient{
 		DeviceID:              config.DeviceID,
@@ -182,7 +182,7 @@ func NewOFClient(config *OFClient) *OFClient {
 }
 
 // Stop initiates a shutdown of the OFClient
-func (ofc *OFClient) Stop() {
+func (ofc *OFClient) Stop(ctx context.Context) {
 	for _, connection := range ofc.connections {
 		connection.events <- ofcEventStop
 	}
@@ -212,10 +212,10 @@ func (ofc *OFClient) Run(ctx context.Context) {
 	}
 }
 
-func (ofc *OFClient) SendMessage(message Message) error {
+func (ofc *OFClient) SendMessage(ctx context.Context, message Message) error {
 	for _, connection := range ofc.connections {
 		if connection.role == ofcRoleMaster || connection.role == ofcRoleEqual {
-			err := connection.SendMessage(message)
+			err := connection.SendMessage(ctx, message)
 			if err != nil {
 				return err
 			}

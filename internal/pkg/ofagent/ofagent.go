@@ -61,7 +61,7 @@ type OFAgent struct {
 	changeEventChannel chan *voltha.ChangeEvent
 }
 
-func NewOFAgent(config *OFAgent) (*OFAgent, error) {
+func NewOFAgent(ctx context.Context, config *OFAgent) (*OFAgent, error) {
 	ofa := OFAgent{
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
 		OFControllerEndPoints:     config.OFControllerEndPoints,
@@ -106,7 +106,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 	// If the context contains a k8s probe then register services
 	p := probe.GetProbeFromContext(ctx)
 	if p != nil {
-		p.RegisterService("voltha")
+		p.RegisterService(ctx, "voltha")
 	}
 
 	ofa.events <- ofaEventStart
@@ -150,7 +150,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				// connection to voltha
 				state = ofaStateConnecting
 				go func() {
-					if err := ofa.establishConnectionToVoltha(p); err != nil {
+					if err := ofa.establishConnectionToVoltha(ctx, p); err != nil {
 						logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
 						panic(err)
 					}
@@ -171,19 +171,19 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 
 			case ofaEventVolthaDisconnected:
 				if p != nil {
-					p.UpdateStatus("voltha", probe.ServiceStatusNotReady)
+					p.UpdateStatus(ctx, "voltha", probe.ServiceStatusNotReady)
 				}
 				logger.Debug("ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
-					ofa.volthaClient.Clear()
+					ofa.volthaClient.Clear(ctx)
 					volthaDone()
 					volthaDone = nil
 				}
 				if state != ofaStateConnecting {
 					state = ofaStateConnecting
 					go func() {
-						if err := ofa.establishConnectionToVoltha(p); err != nil {
+						if err := ofa.establishConnectionToVoltha(ctx, p); err != nil {
 							logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
