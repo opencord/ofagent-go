@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84b6ad47_d6a5bbfc",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-05-21T21:46:52Z",
+      "side": 1,
+      "message": "Is 500 because you saw a limit on what the protocol/ONOS can handle at a time?",
+      "revId": "478f1a15fde9ab169457bd3eb5ce73d4bcab80cf",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
