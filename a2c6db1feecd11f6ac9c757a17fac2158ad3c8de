@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3c9da20_f0b4f9cb",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-05-27T17:50:37Z",
+      "side": 1,
+      "message": "Will we eventually have two different chunk size for ports and flows?",
+      "revId": "a2c6db1feecd11f6ac9c757a17fac2158ad3c8de",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
