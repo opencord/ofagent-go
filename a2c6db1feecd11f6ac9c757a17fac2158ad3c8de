@@ -16,6 +16,24 @@
       "revId": "a2c6db1feecd11f6ac9c757a17fac2158ad3c8de",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d59a7d3_273ef380",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-05-28T17:58:36Z",
+      "side": 1,
+      "message": "They\u0027re different right now, 500 for ports and 150 for flows, but they are completely arbitrary values, my thinking is that we should calculate the size of the message and split it in chunk of 64KB, unless that affects performances",
+      "parentUuid": "b3c9da20_f0b4f9cb",
+      "revId": "a2c6db1feecd11f6ac9c757a17fac2158ad3c8de",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
