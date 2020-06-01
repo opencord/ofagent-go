@@ -49,6 +49,10 @@ type OFConnection struct {
 	events            chan ofcEvent
 	sendChannel       chan Message
 	lastUnsentMessage Message
+
+	flowsChunkSize     int
+	portsChunkSize     int
+	portsDescChunkSize int
 }
 
 func (ofc *OFConnection) peekAtOFHeader(buf []byte) (ofp.IHeader, error) {
