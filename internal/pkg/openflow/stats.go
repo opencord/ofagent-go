@@ -341,6 +341,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 	}
 	var flows []*ofp.FlowStatsEntry
 	for _, item := range resp.GetItems() {
+
 		entry := ofp.NewFlowStatsEntry()
 		entry.SetTableId(uint8(item.GetTableId()))
 		entry.SetDurationSec(item.GetDurationSec())
@@ -374,8 +375,9 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		flows = append(flows, entry)
 	}
 	var responses []*ofp.FlowStatsReply
-	chunkSize := 150
+	chunkSize := ofc.flowsChunkSize
 	total := len(flows) / chunkSize
+
 	n := 0
 	for n <= total {
 
@@ -589,7 +591,7 @@ func (ofc *OFConnection) handlePortStatsRequest(request *ofp.PortStatsRequest) (
 	}
 
 	var responses []*ofp.PortStatsReply
-	chunkSize := 500
+	chunkSize := ofc.portsChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
@@ -626,6 +628,7 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 	}
 	var entries []*ofp.PortDesc
 	for _, port := range logicalDevice.GetPorts() {
+
 		ofpPort := port.GetOfpPort()
 		var entry ofp.PortDesc
 		entry.SetPortNo(ofp.Port(ofpPort.GetPortNo()))
@@ -650,7 +653,7 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 	}
 
 	var responses []*ofp.PortDescStatsReply
-	chunkSize := 500
+	chunkSize := ofc.portsDescChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
