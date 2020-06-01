@@ -374,7 +374,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		flows = append(flows, entry)
 	}
 	var responses []*ofp.FlowStatsReply
-	chunkSize := 150
+	chunkSize := ofc.flowsChunkSize
 	total := len(flows) / chunkSize
 	n := 0
 	for n <= total {
@@ -589,7 +589,7 @@ func (ofc *OFConnection) handlePortStatsRequest(request *ofp.PortStatsRequest) (
 	}
 
 	var responses []*ofp.PortStatsReply
-	chunkSize := 500
+	chunkSize := ofc.portsChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
@@ -650,7 +650,7 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 	}
 
 	var responses []*ofp.PortDescStatsReply
-	chunkSize := 500
+	chunkSize := ofc.portsDescChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
