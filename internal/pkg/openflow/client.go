@@ -50,6 +50,12 @@ const (
 	ofcRoleEqual
 	ofcRoleMaster
 	ofcRoleSlave
+
+	// according to testing this is the maximum content of an
+	// openflow message to remain under 64KB
+	ofcFlowsChunkSize     = 450 // this amount of flows is around 57KB
+	ofcPortsChunkSize     = 550 // this amount of port stats is around 61KB
+	ofcPortsDescChunkSize = 900 // this amount of port desc is around 57KB
 )
 
 func (e ofcEvent) String() string {
@@ -101,6 +107,10 @@ type OFClient struct {
 	generationIsDefined bool
 	generationID        uint64
 	roleLock            sync.Mutex
+
+	flowsChunkSize     int
+	portsChunkSize     int
+	portsDescChunkSize int
 }
 
 type RoleManager interface {
@@ -168,6 +178,9 @@ func NewOFClient(config *OFClient) *OFClient {
 		ConnectionMaxRetries:  config.ConnectionMaxRetries,
 		ConnectionRetryDelay:  config.ConnectionRetryDelay,
 		connections:           make(map[string]*OFConnection),
+		flowsChunkSize:        ofcFlowsChunkSize,
+		portsChunkSize:        ofcPortsChunkSize,
+		portsDescChunkSize:    ofcPortsDescChunkSize,
 	}
 
 	if ofc.ConnectionRetryDelay <= 0 {
@@ -202,6 +215,9 @@ func (ofc *OFClient) Run(ctx context.Context) {
 			roleManager:          ofc,
 			events:               make(chan ofcEvent, 10),
 			sendChannel:          make(chan Message, 100),
+			flowsChunkSize:       ofc.flowsChunkSize,
+			portsChunkSize:       ofc.portsChunkSize,
+			portsDescChunkSize:   ofc.portsDescChunkSize,
 		}
 
 		ofc.connections[endpoint] = connection
