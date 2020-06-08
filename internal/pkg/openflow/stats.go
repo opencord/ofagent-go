@@ -19,12 +19,13 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+	"net"
+
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-protos/v3/go/common"
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
-	"net"
 )
 
 func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16) error {
@@ -619,13 +620,12 @@ func (ofc *OFConnection) handlePortDescStatsRequest(request *ofp.PortDescStatsRe
 		return nil, NoVolthaConnectionError
 	}
 
-	logicalDevice, err := volthaClient.GetLogicalDevice(context.Background(),
-		&common.ID{Id: ofc.DeviceID})
+	ports, err := volthaClient.ListLogicalDevicePorts(context.Background(), &common.ID{Id: ofc.DeviceID})
 	if err != nil {
 		return nil, err
 	}
 	var entries []*ofp.PortDesc
-	for _, port := range logicalDevice.GetPorts() {
+	for _, port := range ports.Items {
 		ofpPort := port.GetOfpPort()
 		var entry ofp.PortDesc
 		entry.SetPortNo(ofp.Port(ofpPort.GetPortNo()))
