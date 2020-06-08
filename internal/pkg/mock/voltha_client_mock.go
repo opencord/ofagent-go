@@ -18,6 +18,7 @@ package mock
 
 import (
 	"context"
+
 	. "github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/voltha-protos/v3/go/common"
 	"github.com/opencord/voltha-protos/v3/go/omci"
@@ -29,7 +30,6 @@ import (
 type MockVolthaClient struct {
 	LogicalDeviceFlows openflow_13.Flows
 	LogicalPorts       LogicalPorts
-	LogicalDevice      LogicalDevice
 }
 
 func (c MockVolthaClient) GetMembership(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Membership, error) {
@@ -61,7 +61,7 @@ func (c MockVolthaClient) ListLogicalDevices(ctx context.Context, in *Empty, opt
 }
 
 func (c MockVolthaClient) GetLogicalDevice(ctx context.Context, in *common.ID, opts ...grpc.CallOption) (*LogicalDevice, error) {
-	return &c.LogicalDevice, nil
+	return &LogicalDevice{}, nil
 }
 
 func (c MockVolthaClient) ListLogicalDevicePorts(ctx context.Context, in *common.ID, opts ...grpc.CallOption) (*LogicalPorts, error) {

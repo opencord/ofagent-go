@@ -18,6 +18,9 @@ package openflow
 
 import (
 	"fmt"
+	"math"
+	"testing"
+
 	"github.com/opencord/goloxi"
 	"github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/holder"
@@ -25,8 +28,6 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 	"github.com/stretchr/testify/assert"
-	"math"
-	"testing"
 )
 
 var msgSizeLimit = 64000
@@ -167,14 +168,9 @@ func newTestOFConnection(flowsCount int, portsCount int) *OFConnection {
 		Items: createRandomPorts(portsCount),
 	}
 
-	logicalDevice := voltha.LogicalDevice{
-		Ports: createRandomPorts(portsCount),
-	}
-
 	volthaClient := mock.MockVolthaClient{
 		LogicalDeviceFlows: flows,
 		LogicalPorts:       ports,
-		LogicalDevice:      logicalDevice,
 	}
 
 	volthaClientHolder := &holder.VolthaServiceClientHolder{}
