@@ -24,10 +24,10 @@ import (
 	"golang.org/x/net/context"
 )
 
-func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
+func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp.MeterMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleMeterModRequest called",
+		logger.Debugw(ctx, "handleMeterModRequest called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})
@@ -35,7 +35,7 @@ func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
 
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
-		logger.Errorw("no-voltha-connection",
+		logger.Errorw(ctx, "no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
 	}
@@ -88,13 +88,13 @@ func (ofc *OFConnection) handleMeterModRequest(request *ofp.MeterMod) {
 	meterModUpdate.MeterMod = &meterMod
 	if logger.V(log.DebugLevel) {
 		meterModJS, _ := json.Marshal(meterModUpdate)
-		logger.Debugw("handleMeterModUpdate sending request",
+		logger.Debugw(ctx, "handleMeterModUpdate sending request",
 			log.Fields{
 				"device-id":         ofc.DeviceID,
 				"meter-mod-request": meterModJS})
 	}
 	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate); err != nil {
-		logger.Errorw("Error calling UpdateLogicalDeviceMeterTable",
+		logger.Errorw(ctx, "Error calling UpdateLogicalDeviceMeterTable",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
