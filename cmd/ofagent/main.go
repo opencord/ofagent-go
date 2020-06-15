@@ -132,6 +132,13 @@ func main() {
 		logger.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
+	closer, err := log.InitTracingAndLogCorrelation(config.TraceEnabled, config.TraceAgentAddress, config.LogCorrelationEnabled)
+	if err != nil {
+		logger.Warnw("unable-to-initialize-tracing-and-log-correlation-module", log.Fields{"error": err})
+	} else {
+		defer closer.Close()
+	}
+
 	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
 		OFControllerEndPoints:     config.OFControllerEndPoints,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
