@@ -28,10 +28,10 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/openflow_13"
 )
 
-func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16) error {
+func (ofc *OFConnection) handleStatsRequest(ctx context.Context, request ofp.IHeader, statType uint16) error {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleStatsRequest called",
+		logger.Debugw(ctx, "handleStatsRequest called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"stat-type": statType,
@@ -48,23 +48,23 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-desc",
+			logger.Debugw(ctx, "handle-stats-request-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTFlow:
 		statsReq := request.(*ofp.FlowStatsRequest)
-		responses, err := ofc.handleFlowStatsRequest(statsReq)
+		responses, err := ofc.handleFlowStatsRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(responses)
-			logger.Debugw("handle-stats-request-flow",
+			logger.Debugw(ctx, "handle-stats-request-flow",
 				log.Fields{
 					"device-id":        ofc.DeviceID,
 					"request":          reqJs,
@@ -72,7 +72,7 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 					"response":         resJs})
 		}
 		for _, response := range responses {
-			err := ofc.SendMessage(response)
+			err := ofc.SendMessage(ctx, response)
 			if err != nil {
 				return err
 			}
@@ -88,20 +88,20 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-aggregate",
+			logger.Debugw(ctx, "handle-stats-request-aggregate",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTTable:
 		statsReq := request.(*ofp.TableStatsRequest)
 		response, e := ofc.handleTableStatsRequest(statsReq)
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-table",
+			logger.Debugw(ctx, "handle-stats-request-table",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
@@ -110,7 +110,7 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if e != nil {
 			return e
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTPort:
 		statsReq := request.(*ofp.PortStatsRequest)
 		responses, err := ofc.handlePortStatsRequest(statsReq)
@@ -120,14 +120,14 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(responses)
-			logger.Debugw("handle-stats-request-port",
+			logger.Debugw(ctx, "handle-stats-request-port",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
 		for _, response := range responses {
-			err := ofc.SendMessage(response)
+			err := ofc.SendMessage(ctx, response)
 			if err != nil {
 				return err
 			}
@@ -142,13 +142,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-queue",
+			logger.Debugw(ctx, "handle-stats-request-queue",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTGroup:
 		statsReq := request.(*ofp.GroupStatsRequest)
 		response, err := ofc.handleGroupStatsRequest(statsReq)
@@ -158,29 +158,29 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-group",
+			logger.Debugw(ctx, "handle-stats-request-group",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTGroupDesc:
 		statsReq := request.(*ofp.GroupDescStatsRequest)
-		response, err := ofc.handleGroupStatsDescRequest(statsReq)
+		response, err := ofc.handleGroupStatsDescRequest(ctx, statsReq)
 		if err != nil {
 			return err
 		}
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-group-desc",
+			logger.Debugw(ctx, "handle-stats-request-group-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 
 	case ofp.OFPSTGroupFeatures:
 		statsReq := request.(*ofp.GroupFeaturesStatsRequest)
@@ -191,13 +191,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-group-features",
+			logger.Debugw(ctx, "handle-stats-request-group-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeter:
 		statsReq := request.(*ofp.MeterStatsRequest)
 		response, err := ofc.handleMeterStatsRequest(statsReq)
@@ -207,13 +207,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-meter",
+			logger.Debugw(ctx, "handle-stats-request-meter",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeterConfig:
 		statsReq := request.(*ofp.MeterConfigStatsRequest)
 		response, err := ofc.handleMeterConfigStatsRequest(statsReq)
@@ -223,13 +223,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-meter-config",
+			logger.Debugw(ctx, "handle-stats-request-meter-config",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTMeterFeatures:
 		statsReq := request.(*ofp.MeterFeaturesStatsRequest)
 		response, err := ofc.handleMeterFeatureStatsRequest(statsReq)
@@ -239,13 +239,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-meter-features",
+			logger.Debugw(ctx, "handle-stats-request-meter-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTTableFeatures:
 		statsReq := request.(*ofp.TableFeaturesStatsRequest)
 		response, err := ofc.handleTableFeaturesStatsRequest(statsReq)
@@ -255,13 +255,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-table-features",
+			logger.Debugw(ctx, "handle-stats-request-table-features",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	case ofp.OFPSTPortDesc:
 		statsReq := request.(*ofp.PortDescStatsRequest)
 		responses, err := ofc.handlePortDescStatsRequest(statsReq)
@@ -271,14 +271,14 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(responses)
-			logger.Debugw("handle-stats-request-port-desc",
+			logger.Debugw(ctx, "handle-stats-request-port-desc",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
 		for _, response := range responses {
-			err := ofc.SendMessage(response)
+			err := ofc.SendMessage(ctx, response)
 			if err != nil {
 				return err
 			}
@@ -294,13 +294,13 @@ func (ofc *OFConnection) handleStatsRequest(request ofp.IHeader, statType uint16
 		if logger.V(log.DebugLevel) {
 			reqJs, _ := json.Marshal(statsReq)
 			resJs, _ := json.Marshal(response)
-			logger.Debugw("handle-stats-request-experimenter",
+			logger.Debugw(ctx, "handle-stats-request-experimenter",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"request":   reqJs,
 					"response":  resJs})
 		}
-		return ofc.SendMessage(response)
+		return ofc.SendMessage(ctx, response)
 	}
 	return nil
 }
@@ -330,7 +330,7 @@ func (ofc *OFConnection) handleDescStatsRequest(request *ofp.DescStatsRequest) (
 	return response, nil
 }
 
-func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) ([]*ofp.FlowStatsReply, error) {
+func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *ofp.FlowStatsRequest) ([]*ofp.FlowStatsReply, error) {
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
@@ -360,7 +360,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		for _, oxmField := range pbMatch.GetOxmFields() {
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm := parseOxm(ofbField)
+			iOxm := parseOxm(ctx, ofbField)
 			fields = append(fields, iOxm)
 		}
 
@@ -368,7 +368,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(request *ofp.FlowStatsRequest) (
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
-			instruction := parseInstructions(ofpInstruction)
+			instruction := parseInstructions(ctx, ofpInstruction)
 			instructions = append(instructions, instruction)
 		}
 		entry.Instructions = instructions
@@ -452,7 +452,7 @@ func (ofc *OFConnection) handleGroupStatsRequest(request *ofp.GroupStatsRequest)
 	return response, nil
 }
 
-func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
+func (ofc *OFConnection) handleGroupStatsDescRequest(ctx context.Context, request *ofp.GroupDescStatsRequest) (*ofp.GroupDescStatsReply, error) {
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
 		return nil, NoVolthaConnectionError
@@ -470,10 +470,10 @@ func (ofc *OFConnection) handleGroupStatsDescRequest(request *ofp.GroupDescStats
 	for _, item := range reply.GetItems() {
 		desc := item.GetDesc()
 
-		buckets := volthaBucketsToOpenflow(desc.Buckets)
+		buckets := volthaBucketsToOpenflow(ctx, desc.Buckets)
 
 		groupDesc := &ofp.GroupDescStatsEntry{
-			GroupType: volthaGroupTypeToOpenflow(desc.Type),
+			GroupType: volthaGroupTypeToOpenflow(ctx, desc.Type),
 			GroupId:   desc.GroupId,
 			Buckets:   buckets,
 		}

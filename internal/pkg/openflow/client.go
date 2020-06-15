@@ -114,7 +114,7 @@ type OFClient struct {
 }
 
 type RoleManager interface {
-	UpdateRoles(from string, request *ofp.RoleRequest) bool
+	UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool
 }
 
 func distance(a uint64, b uint64) int64 {
@@ -122,8 +122,8 @@ func distance(a uint64, b uint64) int64 {
 }
 
 // UpdateRoles validates a role request and updates role state for connections where it changed
-func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
-	log.Debug("updating role", log.Fields{
+func (ofc *OFClient) UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool {
+	logger.Debug(ctx, "updating role", log.Fields{
 		"from": from,
 		"to":   request.Role,
 		"id":   request.GenerationId})
@@ -168,7 +168,7 @@ func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
 
 // NewClient returns an initialized OFClient instance based on the configuration
 // specified
-func NewOFClient(config *OFClient) *OFClient {
+func NewOFClient(ctx context.Context, config *OFClient) *OFClient {
 
 	ofc := OFClient{
 		DeviceID:              config.DeviceID,
@@ -184,7 +184,7 @@ func NewOFClient(config *OFClient) *OFClient {
 	}
 
 	if ofc.ConnectionRetryDelay <= 0 {
-		logger.Warnw("connection retry delay not valid, setting to default",
+		logger.Warnw(ctx, "connection retry delay not valid, setting to default",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"value":     ofc.ConnectionRetryDelay.String(),
@@ -228,10 +228,10 @@ func (ofc *OFClient) Run(ctx context.Context) {
 	}
 }
 
-func (ofc *OFClient) SendMessage(message Message) error {
+func (ofc *OFClient) SendMessage(ctx context.Context, message Message) error {
 	for _, connection := range ofc.connections {
 		if connection.role == ofcRoleMaster || connection.role == ofcRoleEqual {
-			err := connection.SendMessage(message)
+			err := connection.SendMessage(ctx, message)
 			if err != nil {
 				return err
 			}

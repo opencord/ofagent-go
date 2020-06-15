@@ -31,14 +31,14 @@ import (
 )
 
 func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
-	logger.Debug("receive-packets-in-started")
+	logger.Debug(ctx, "receive-packets-in-started")
 	// If we exit, assume disconnected
 	defer func() {
 		ofa.events <- ofaEventVolthaDisconnected
-		logger.Debug("receive-packets-in-finished")
+		logger.Debug(ctx, "receive-packets-in-finished")
 	}()
 	if ofa.volthaClient == nil {
-		logger.Error("no-voltha-connection")
+		logger.Error(ctx, "no-voltha-connection")
 		return
 	}
 	opt := grpc.EmptyCallOption{}
@@ -46,7 +46,7 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 	defer streamDone()
 	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
-		logger.Errorw("Unable to establish Receive PacketIn Stream",
+		logger.Errorw(ctx, "Unable to establish Receive PacketIn Stream",
 			log.Fields{"error": err})
 		return
 	}
@@ -60,7 +60,7 @@ top:
 		default:
 			pkt, err := stream.Recv()
 			if err != nil {
-				logger.Errorw("error receiving packet",
+				logger.Errorw(ctx, "error receiving packet",
 					log.Fields{"error": err})
 				break top
 			}
@@ -70,7 +70,7 @@ top:
 }
 
 func (ofa *OFAgent) handlePacketsIn(ctx context.Context) {
-	logger.Debug("handle-packets-in-started")
+	logger.Debug(ctx, "handle-packets-in-started")
 top:
 	for {
 		select {
@@ -81,7 +81,7 @@ top:
 
 			if logger.V(log.DebugLevel) {
 				js, _ := json.Marshal(packetIn)
-				logger.Debugw("packet-in received", log.Fields{"packet-in": js})
+				logger.Debugw(ctx, "packet-in received", log.Fields{"packet-in": js})
 			}
 			deviceID := packet.GetId()
 			ofPacketIn := ofp.NewPacketIn()
@@ -140,7 +140,7 @@ top:
 
 					fields = append(fields, ofpVlanVid)
 				default:
-					logger.Warnw("receive-packet-in:unhandled-oxm-field",
+					logger.Warnw(ctx, "receive-packet-in:unhandled-oxm-field",
 						log.Fields{"field": ofbField.Type})
 				}
 			}
@@ -150,14 +150,14 @@ top:
 			ofPacketIn.SetMatch(*match)
 			ofPacketIn.SetReason(uint8(packetIn.GetReason()))
 			ofPacketIn.SetTableId(uint8(packetIn.GetTableId()))
-			ofc := ofa.getOFClient(deviceID)
-			if err := ofc.SendMessage(ofPacketIn); err != nil {
-				logger.Errorw("send-message-failed", log.Fields{
+			ofc := ofa.getOFClient(ctx, deviceID)
+			if err := ofc.SendMessage(ctx, ofPacketIn); err != nil {
+				logger.Errorw(ctx, "send-message-failed", log.Fields{
 					"device-id": deviceID,
 					"error":     err})
 			}
 
 		}
 	}
-	logger.Debug("handle-packets-in-finished")
+	logger.Debug(ctx, "handle-packets-in-finished")
 }
