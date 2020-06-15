@@ -38,6 +38,8 @@ type Config struct {
 	KVStoreTimeout            time.Duration
 	KVStoreAddress            string
 	InstanceID                string
+	TraceEnabled              bool
+	TraceAgentAddress         string
 }
 
 type multiFlag []string
@@ -123,6 +125,15 @@ func parseCommandLineArguments() (*Config, error) {
 	flag.StringVar(&(config.KVStoreAddress), "kv_store_address", "voltha-etcd-cluster-client.voltha.svc.cluster.local:2379", "KV store address")
 
 	flag.StringVar(&(config.LogLevel), "log_level", "WARN", "Log level")
+
+	flag.BoolVar(&(config.TraceEnabled),
+		"trace_enabled",
+		false,
+		"Whether to send logs to tracing agent?")
+	flag.StringVar(&(config.TraceAgentAddress),
+		"trace_agent_address",
+		"127.0.0.1:6831",
+		"The address of tracing agent to which span info should be sent.")
 
 	containerName := getContainerInfo()
 	if len(containerName) > 0 {
