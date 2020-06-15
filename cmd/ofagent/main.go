@@ -132,6 +132,15 @@ func main() {
 		logger.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
+	if config.TraceEnabled {
+		closer, err := log.StartTracing(config.TraceAgentAddress)
+		if err != nil {
+			logger.Warnw("unable-to-initialize-jaeger-tracing", log.Fields{"error": err})
+		} else {
+			defer closer.Close()
+		}
+	}
+
 	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
 		OFControllerEndPoints:     config.OFControllerEndPoints,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
