@@ -17,15 +17,16 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFConnection) handleEchoRequest(request *ofp.EchoRequest) {
+func (ofc *OFConnection) handleEchoRequest(ctx context.Context, request *ofp.EchoRequest) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleEchoRequest called",
+		logger.Debugw(ctx, "handleEchoRequest called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})
@@ -33,7 +34,7 @@ func (ofc *OFConnection) handleEchoRequest(request *ofp.EchoRequest) {
 	reply := ofp.NewEchoReply()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())
-	if err := ofc.SendMessage(reply); err != nil {
-		logger.Errorw("handle-echo-request-send-message", log.Fields{"error": err})
+	if err := ofc.SendMessage(ctx, reply); err != nil {
+		logger.Errorw(ctx, "handle-echo-request-send-message", log.Fields{"error": err})
 	}
 }

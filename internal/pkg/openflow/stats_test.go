@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"math"
 	"testing"
+	"context"
 
 	"github.com/opencord/goloxi"
 	"github.com/opencord/goloxi/of13"
@@ -192,7 +193,7 @@ func TestHandleFlowStatsRequest(t *testing.T) {
 
 	request := of13.NewFlowStatsRequest()
 
-	replies, err := ofc.handleFlowStatsRequest(request)
+	replies, err := ofc.handleFlowStatsRequest(context.Background(), request)
 	assert.Equal(t, err, nil)
 
 	// check that the correct number of messages is generated
