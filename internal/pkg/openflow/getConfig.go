@@ -17,15 +17,16 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFConnection) handleGetConfigRequest(request *ofp.GetConfigRequest) {
+func (ofc *OFConnection) handleGetConfigRequest(ctx context.Context, request *ofp.GetConfigRequest) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleGetConfigRequest called",
+		logger.Debugw(ctx, "handleGetConfigRequest called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})
@@ -36,12 +37,12 @@ func (ofc *OFConnection) handleGetConfigRequest(request *ofp.GetConfigRequest) {
 	reply.SetMissSendLen(ofp.OFPCMLNoBuffer)
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(reply)
-		logger.Debugw("handleGetConfigRequest reply",
+		logger.Debugw(ctx, "handleGetConfigRequest reply",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"reply":     js})
 	}
-	if err := ofc.SendMessage(reply); err != nil {
-		logger.Errorw("handle-get-config-request-send-message", log.Fields{"error": err})
+	if err := ofc.SendMessage(ctx, reply); err != nil {
+		logger.Errorw(ctx, "handle-get-config-request-send-message", log.Fields{"error": err})
 	}
 }

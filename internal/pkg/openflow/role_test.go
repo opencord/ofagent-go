@@ -17,6 +17,7 @@
 package openflow
 
 import (
+	"context"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -30,7 +31,7 @@ type testRoleManager struct {
 	generateError bool
 }
 
-func (trm *testRoleManager) UpdateRoles(from string, request *ofp.RoleRequest) bool {
+func (trm *testRoleManager) UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool {
 	trm.from = from
 	trm.role = request.Role
 	trm.generationId = request.GenerationId
@@ -79,12 +80,14 @@ func TestRoleChange(t *testing.T) {
 	// change role of e1 to master
 	rr := createRoleRequest(ofp.OFPCRRoleMaster, 1)
 
-	ok := ofclient.UpdateRoles("e1", rr)
+	ctx := context.Background()
+
+	ok := ofclient.UpdateRoles(ctx, "e1", rr)
 	assert.True(t, ok)
 	assert.Equal(t, ofclient.connections["e1"].role, ofcRoleMaster)
 
 	// change role of e2 to master
-	ok = ofclient.UpdateRoles("e2", rr)
+	ok = ofclient.UpdateRoles(ctx, "e2", rr)
 	assert.True(t, ok)
 	assert.Equal(t, ofclient.connections["e2"].role, ofcRoleMaster)
 	// e1 should now have reverted to slave
@@ -93,7 +96,7 @@ func TestRoleChange(t *testing.T) {
 	// change role of e2 to slave
 	rr = createRoleRequest(ofp.OFPCRRoleSlave, 1)
 
-	ok = ofclient.UpdateRoles("e2", rr)
+	ok = ofclient.UpdateRoles(ctx, "e2", rr)
 	assert.True(t, ok)
 	assert.Equal(t, ofclient.connections["e2"].role, ofcRoleSlave)
 }
@@ -103,14 +106,16 @@ func TestStaleRoleRequest(t *testing.T) {
 
 	rr1 := createRoleRequest(ofp.OFPCRRoleMaster, 2)
 
-	ok := ofclient.UpdateRoles("e1", rr1)
+	ctx := context.Background()
+
+	ok := ofclient.UpdateRoles(ctx, "e1", rr1)
 	assert.True(t, ok)
 	assert.Equal(t, ofclient.connections["e1"].role, ofcRoleMaster)
 
 	// 'stale' role request
 	rr2 := createRoleRequest(ofp.OFPCRRoleSlave, 1)
 
-	ok = ofclient.UpdateRoles("e1", rr2)
+	ok = ofclient.UpdateRoles(ctx, "e1", rr2)
 	// should not have succeeded
 	assert.False(t, ok)
 	// role should remain master
@@ -129,7 +134,7 @@ func TestHandleRoleRequest(t *testing.T) {
 
 	rr := createRoleRequest(ofp.OFPCRRoleMaster, 1)
 
-	connection.handleRoleRequest(rr)
+	connection.handleRoleRequest(context.Background(), rr)
 
 	assert.Equal(t, "e1", trm.from)
 	assert.EqualValues(t, ofp.OFPCRRoleMaster, trm.role)
@@ -152,7 +157,7 @@ func TestHandleRoleRequestError(t *testing.T) {
 
 	rr := createRoleRequest(ofp.OFPCRRoleMaster, 1)
 
-	connection.handleRoleRequest(rr)
+	connection.handleRoleRequest(context.Background(), rr)
 
 	resp := (<-connection.sendChannel).(*ofp.RoleRequestFailedErrorMsg)
 
