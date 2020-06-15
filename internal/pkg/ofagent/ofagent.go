@@ -61,7 +61,7 @@ type OFAgent struct {
 	changeEventChannel chan *voltha.ChangeEvent
 }
 
-func NewOFAgent(config *OFAgent) (*OFAgent, error) {
+func NewOFAgent(ctx context.Context, config *OFAgent) (*OFAgent, error) {
 	ofa := OFAgent{
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
 		OFControllerEndPoints:     config.OFControllerEndPoints,
@@ -77,7 +77,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 	}
 
 	if ofa.DeviceListRefreshInterval <= 0 {
-		logger.Warnw("device list refresh internal not valid, setting to default",
+		logger.Warnw(ctx, "device list refresh internal not valid, setting to default",
 			log.Fields{
 				"value":   ofa.DeviceListRefreshInterval.String(),
 				"default": (1 * time.Minute).String()})
@@ -85,7 +85,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 	}
 
 	if ofa.ConnectionRetryDelay <= 0 {
-		logger.Warnw("connection retry delay not value, setting to default",
+		logger.Warnw(ctx, "connection retry delay not value, setting to default",
 			log.Fields{
 				"value":   ofa.ConnectionRetryDelay.String(),
 				"default": (3 * time.Second).String()})
@@ -98,7 +98,7 @@ func NewOFAgent(config *OFAgent) (*OFAgent, error) {
 // Run - make the inital connection to voltha and kicks off io streams
 func (ofa *OFAgent) Run(ctx context.Context) {
 
-	logger.Debugw("Starting GRPC - VOLTHA client",
+	logger.Debugw(ctx, "Starting GRPC - VOLTHA client",
 		log.Fields{
 			"voltha-endpoint":     ofa.VolthaApiEndPoint,
 			"controller-endpoint": ofa.OFControllerEndPoints})
@@ -106,7 +106,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 	// If the context contains a k8s probe then register services
 	p := probe.GetProbeFromContext(ctx)
 	if p != nil {
-		p.RegisterService("voltha")
+		p.RegisterService(ctx, "voltha")
 	}
 
 	ofa.events <- ofaEventStart
@@ -139,7 +139,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 		case event := <-ofa.events:
 			switch event {
 			case ofaEventStart:
-				logger.Debug("ofagent-voltha-start-event")
+				logger.Debug(ctx, "ofagent-voltha-start-event")
 
 				// Start the loops that process messages
 				hdlCtx, hdlDone = context.WithCancel(context.Background())
@@ -150,14 +150,14 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				// connection to voltha
 				state = ofaStateConnecting
 				go func() {
-					if err := ofa.establishConnectionToVoltha(p); err != nil {
-						logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
+					if err := ofa.establishConnectionToVoltha(ctx, p); err != nil {
+						logger.Errorw(ctx, "voltha-connection-failed", log.Fields{"error": err})
 						panic(err)
 					}
 				}()
 
 			case ofaEventVolthaConnected:
-				logger.Debug("ofagent-voltha-connect-event")
+				logger.Debug(ctx, "ofagent-voltha-connect-event")
 
 				// Start the loops that poll from voltha
 				if state != ofaStateConnected {
@@ -171,9 +171,9 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 
 			case ofaEventVolthaDisconnected:
 				if p != nil {
-					p.UpdateStatus("voltha", probe.ServiceStatusNotReady)
+					p.UpdateStatus(ctx, "voltha", probe.ServiceStatusNotReady)
 				}
-				logger.Debug("ofagent-voltha-disconnect-event")
+				logger.Debug(ctx, "ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
 					ofa.volthaClient.Clear()
@@ -183,17 +183,17 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				if state != ofaStateConnecting {
 					state = ofaStateConnecting
 					go func() {
-						if err := ofa.establishConnectionToVoltha(p); err != nil {
-							logger.Errorw("voltha-connection-failed", log.Fields{"error": err})
+						if err := ofa.establishConnectionToVoltha(ctx, p); err != nil {
+							logger.Errorw(ctx, "voltha-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
 					}()
 				}
 
 			case ofaEventError:
-				logger.Debug("ofagent-error-event")
+				logger.Debug(ctx, "ofagent-error-event")
 			default:
-				logger.Fatalw("ofagent-unknown-event",
+				logger.Fatalw(ctx, "ofagent-unknown-event",
 					log.Fields{"event": event})
 			}
 		}

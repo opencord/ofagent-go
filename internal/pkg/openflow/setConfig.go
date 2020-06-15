@@ -17,15 +17,16 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFConnection) handleSetConfig(request *ofp.SetConfig) {
+func (ofc *OFConnection) handleSetConfig(ctx context.Context, request *ofp.SetConfig) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleSetConfig called",
+		logger.Debugw(ctx, "handleSetConfig called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})

@@ -25,11 +25,11 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func (ofc *OFConnection) handleGroupMod(groupMod ofp.IGroupMod) {
+func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroupMod) {
 
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
-		logger.Errorw("no-voltha-connection",
+		logger.Errorw(ctx, "no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
 	}
@@ -37,8 +37,8 @@ func (ofc *OFConnection) handleGroupMod(groupMod ofp.IGroupMod) {
 	groupUpdate := &openflow_13.FlowGroupTableUpdate{
 		Id: ofc.DeviceID,
 		GroupMod: &voltha.OfpGroupMod{
-			Command: openflowGroupModCommandToVoltha(groupMod.GetCommand()),
-			Type:    openflowGroupTypeToVoltha(groupMod.GetGroupType()),
+			Command: openflowGroupModCommandToVoltha(ctx, groupMod.GetCommand()),
+			Type:    openflowGroupTypeToVoltha(ctx, groupMod.GetGroupType()),
 			GroupId: groupMod.GetGroupId(),
 			Buckets: openflowBucketsToVoltha(groupMod.GetBuckets()),
 		},
@@ -46,13 +46,13 @@ func (ofc *OFConnection) handleGroupMod(groupMod ofp.IGroupMod) {
 
 	_, err := volthaClient.UpdateLogicalDeviceFlowGroupTable(context.Background(), groupUpdate)
 	if err != nil {
-		logger.Errorw("Error updating group table",
+		logger.Errorw(ctx, "Error updating group table",
 			log.Fields{"device-id": ofc.DeviceID, "error": err})
 	}
 
 }
 
-func openflowGroupModCommandToVoltha(command ofp.GroupModCommand) openflow_13.OfpGroupModCommand {
+func openflowGroupModCommandToVoltha(ctx context.Context, command ofp.GroupModCommand) openflow_13.OfpGroupModCommand {
 	switch command {
 	case ofp.OFPGCAdd:
 		return openflow_13.OfpGroupModCommand_OFPGC_ADD
@@ -61,11 +61,11 @@ func openflowGroupModCommandToVoltha(command ofp.GroupModCommand) openflow_13.Of
 	case ofp.OFPGCDelete:
 		return openflow_13.OfpGroupModCommand_OFPGC_DELETE
 	}
-	logger.Errorw("Unknown group mod command", log.Fields{"command": command})
+	logger.Errorw(ctx, "Unknown group mod command", log.Fields{"command": command})
 	return 0
 }
 
-func openflowGroupTypeToVoltha(t ofp.GroupType) openflow_13.OfpGroupType {
+func openflowGroupTypeToVoltha(ctx context.Context, t ofp.GroupType) openflow_13.OfpGroupType {
 	switch t {
 	case ofp.OFPGTAll:
 		return openflow_13.OfpGroupType_OFPGT_ALL
@@ -76,11 +76,11 @@ func openflowGroupTypeToVoltha(t ofp.GroupType) openflow_13.OfpGroupType {
 	case ofp.OFPGTFf:
 		return openflow_13.OfpGroupType_OFPGT_FF
 	}
-	logger.Errorw("Unknown openflow group type", log.Fields{"type": t})
+	logger.Errorw(ctx, "Unknown openflow group type", log.Fields{"type": t})
 	return 0
 }
 
-func volthaGroupTypeToOpenflow(t openflow_13.OfpGroupType) ofp.GroupType {
+func volthaGroupTypeToOpenflow(ctx context.Context, t openflow_13.OfpGroupType) ofp.GroupType {
 	switch t {
 	case openflow_13.OfpGroupType_OFPGT_ALL:
 		return ofp.OFPGTAll
@@ -91,7 +91,7 @@ func volthaGroupTypeToOpenflow(t openflow_13.OfpGroupType) ofp.GroupType {
 	case openflow_13.OfpGroupType_OFPGT_FF:
 		return ofp.OFPGTFf
 	}
-	logger.Errorw("Unknown voltha group type", log.Fields{"type": t})
+	logger.Errorw(ctx, "Unknown voltha group type", log.Fields{"type": t})
 	return 0
 }
 
@@ -121,11 +121,11 @@ func openflowActionsToVoltha(actions []goloxi.IAction) []*openflow_13.OfpAction 
 	return outActions
 }
 
-func volthaBucketsToOpenflow(buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
+func volthaBucketsToOpenflow(ctx context.Context, buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
 	outBuckets := make([]*ofp.Bucket, len(buckets))
 
 	for i, bucket := range buckets {
-		actions := volthaActionsToOpenflow(bucket.Actions)
+		actions := volthaActionsToOpenflow(ctx, bucket.Actions)
 		b := &ofp.Bucket{
 			Weight:     uint16(bucket.Weight),
 			WatchPort:  ofp.Port(bucket.WatchPort),
@@ -138,11 +138,11 @@ func volthaBucketsToOpenflow(buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
 	return outBuckets
 }
 
-func volthaActionsToOpenflow(actions []*openflow_13.OfpAction) []goloxi.IAction {
+func volthaActionsToOpenflow(ctx context.Context, actions []*openflow_13.OfpAction) []goloxi.IAction {
 	outActions := make([]goloxi.IAction, len(actions))
 
 	for i, action := range actions {
-		outActions[i] = parseAction(action)
+		outActions[i] = parseAction(ctx, action)
 	}
 
 	return outActions

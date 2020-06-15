@@ -17,15 +17,16 @@
 package openflow
 
 import (
+	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 )
 
-func (ofc *OFConnection) handleErrMsg(message ofp.IErrorMsg) {
+func (ofc *OFConnection) handleErrMsg(ctx context.Context, message ofp.IErrorMsg) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(message)
-		logger.Debugw("handleErrMsg called",
+		logger.Debugw(ctx, "handleErrMsg called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})

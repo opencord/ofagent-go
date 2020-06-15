@@ -25,10 +25,10 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/common"
 )
 
-func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) error {
+func (ofc *OFConnection) handleFeatureRequest(ctx context.Context, request *ofp.FeaturesRequest) error {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
-		logger.Debugw("handleFeatureRequest called",
+		logger.Debugw(ctx, "handleFeatureRequest called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"request":   js})
@@ -55,11 +55,11 @@ func (ofc *OFConnection) handleFeatureRequest(request *ofp.FeaturesRequest) erro
 
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(reply)
-		logger.Debugw("handleFeatureRequestReturn",
+		logger.Debugw(ctx, "handleFeatureRequestReturn",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"reply":     js})
 	}
-	err = ofc.SendMessage(reply)
+	err = ofc.SendMessage(ctx, reply)
 	return err
 }

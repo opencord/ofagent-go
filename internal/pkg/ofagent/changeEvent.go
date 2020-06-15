@@ -29,14 +29,14 @@ import (
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
-	logger.Debug("receive-change-events-started")
+	logger.Debug(ctx, "receive-change-events-started")
 	// If we exit, assume disconnected
 	defer func() {
 		ofa.events <- ofaEventVolthaDisconnected
-		logger.Debug("receive-change-events-finished")
+		logger.Debug(ctx, "receive-change-events-finished")
 	}()
 	if ofa.volthaClient == nil {
-		logger.Error("no-voltha-connection")
+		logger.Error(ctx, "no-voltha-connection")
 		return
 	}
 	opt := grpc.EmptyCallOption{}
@@ -44,7 +44,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 	defer streamDone()
 	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
-		logger.Errorw("Unable to establish Receive Change Event Stream",
+		logger.Errorw(ctx, "Unable to establish Receive Change Event Stream",
 			log.Fields{"error": err})
 		return
 	}
@@ -57,18 +57,18 @@ top:
 		default:
 			ce, err := stream.Recv()
 			if err != nil {
-				logger.Errorw("error receiving change event",
+				logger.Errorw(ctx, "error receiving change event",
 					log.Fields{"error": err})
 				break top
 			}
 			ofa.changeEventChannel <- ce
-			logger.Debug("receive-change-event-queued")
+			logger.Debug(ctx, "receive-change-event-queued")
 		}
 	}
 }
 
 func (ofa *OFAgent) handleChangeEvents(ctx context.Context) {
-	logger.Debug("handle-change-event-started")
+	logger.Debug(ctx, "handle-change-event-started")
 
 top:
 	for {
@@ -78,7 +78,7 @@ top:
 		case changeEvent := <-ofa.changeEventChannel:
 			deviceID := changeEvent.GetId()
 			portStatus := changeEvent.GetPortStatus()
-			logger.Debugw("received-change-event",
+			logger.Debugw(ctx, "received-change-event",
 				log.Fields{
 					"device-id":   deviceID,
 					"port-status": portStatus})
@@ -86,7 +86,7 @@ top:
 			if portStatus == nil {
 				if logger.V(log.WarnLevel) {
 					js, _ := json.Marshal(changeEvent.GetEvent())
-					logger.Warnw("Received change event that was not port status",
+					logger.Warnw(ctx, "Received change event that was not port status",
 						log.Fields{"ChangeEvent": js})
 				}
 				break
@@ -118,11 +118,11 @@ top:
 			ofDesc.SetState(ofp.PortState(desc.GetState()))
 			ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
 			ofPortStatus.SetDesc(*ofDesc)
-			if err := ofa.getOFClient(deviceID).SendMessage(ofPortStatus); err != nil {
-				logger.Errorw("handle-change-events-send-message", log.Fields{"error": err})
+			if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofPortStatus); err != nil {
+				logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
 			}
 		}
 	}
 
-	logger.Debug("handle-change-event-finsihed")
+	logger.Debug(ctx, "handle-change-event-finsihed")
 }

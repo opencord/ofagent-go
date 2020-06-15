@@ -45,13 +45,13 @@ func printVersion() {
 }
 
 func setLogConfig(ctx context.Context, kvStoreAddress, kvStoreType string, kvStoreTimeout time.Duration) (kvstore.Client, error) {
-	client, err := kvstore.NewEtcdClient(kvStoreAddress, kvStoreTimeout, log.WarnLevel)
+	client, err := kvstore.NewEtcdClient(ctx, kvStoreAddress, kvStoreTimeout, log.WarnLevel)
 
 	if err != nil {
 		return nil, err
 	}
 
-	cm := conf.NewConfigManager(client, kvStoreType, kvStoreAddress, kvStoreTimeout)
+	cm := conf.NewConfigManager(ctx, client, kvStoreType, kvStoreAddress, kvStoreTimeout)
 	go conf.StartLogLevelConfigProcessing(cm, ctx)
 	return client, nil
 }
@@ -62,10 +62,10 @@ func stop(ctx context.Context, kvClient kvstore.Client) {
 	if kvClient != nil {
 		// Release all reservations
 		if err := kvClient.ReleaseAllReservations(ctx); err != nil {
-			logger.Infow("fail-to-release-all-reservations", log.Fields{"error": err})
+			logger.Infow(ctx, "fail-to-release-all-reservations", log.Fields{"error": err})
 		}
 		// Close the DB connection
-		kvClient.Close()
+		kvClient.Close(ctx)
 	}
 
 }
@@ -84,11 +84,18 @@ func main() {
 		printBanner()
 	}
 
+	/*
+	 * Create a context which to start the services used by the applicaiton
+	 * and attach the probe to that context
+	 */
+	p := &probe.Probe{}
+	ctx := context.WithValue(context.Background(), probe.ProbeContextKey, p)
+
 	// Setup logging
 
 	logLevel, err := log.StringToLogLevel(config.LogLevel)
 	if err != nil {
-		logger.Fatalf("Cannot setup logging, %s", err)
+		logger.Fatalf(ctx, "Cannot setup logging, %s", err)
 	}
 
 	// Setup default logger - applies for packages that do not have specific logger set
@@ -109,7 +116,7 @@ func main() {
 	defer func() {
 		err := log.CleanUp()
 		if err != nil {
-			logger.Errorw("unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
+			logger.Errorw(ctx, "unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
 		}
 	}()
 
@@ -118,21 +125,14 @@ func main() {
 	 * is done in the main function so just in case the main starts multiple other
 	 * objects there can be a single probe end point for the process.
 	 */
-	p := &probe.Probe{}
-	go p.ListenAndServe(config.ProbeEndPoint)
-
-	/*
-	 * Create a context which to start the services used by the applicaiton
-	 * and attach the probe to that context
-	 */
-	ctx := context.WithValue(context.Background(), probe.ProbeContextKey, p)
+	go p.ListenAndServe(ctx, config.ProbeEndPoint)
 
 	client, err := setLogConfig(ctx, config.KVStoreAddress, config.KVStoreType, config.KVStoreTimeout)
 	if err != nil {
-		logger.Warnw("unable-to-create-kvstore-client", log.Fields{"error": err})
+		logger.Warnw(ctx, "unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
-	ofa, err := ofagent.NewOFAgent(&ofagent.OFAgent{
+	ofa, err := ofagent.NewOFAgent(ctx, &ofagent.OFAgent{
 		OFControllerEndPoints:     config.OFControllerEndPoints,
 		VolthaApiEndPoint:         config.VolthaApiEndPoint,
 		DeviceListRefreshInterval: config.DeviceListRefreshInterval,
@@ -140,7 +140,7 @@ func main() {
 		ConnectionRetryDelay:      config.ConnectionRetryDelay,
 	})
 	if err != nil {
-		logger.Fatalw("failed-to-create-ofagent",
+		logger.Fatalw(ctx, "failed-to-create-ofagent",
 			log.Fields{
 				"error": err})
 	}

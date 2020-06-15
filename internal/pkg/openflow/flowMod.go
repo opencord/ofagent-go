@@ -71,10 +71,10 @@ var oxmMap = map[string]int32{
 	"vlan_vid_masked": 200, //made up
 }
 
-func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
+func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowAdd)
-		logger.Debugw("handleFlowAdd called",
+		logger.Debugw(ctx, "handleFlowAdd called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"params":    js})
@@ -82,7 +82,7 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
-		logger.Errorw("no-voltha-connection",
+		logger.Errorw(ctx, "no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
 	}
@@ -234,14 +234,14 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	}
 	if logger.V(log.DebugLevel) {
 		flowUpdateJs, _ := json.Marshal(flowUpdate)
-		logger.Debugf("FlowAdd being sent to Voltha",
+		logger.Debugf(ctx, "FlowAdd being sent to Voltha",
 			log.Fields{
 				"device-id":        ofc.DeviceID,
 				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
-		logger.Errorw("Error calling FlowAdd ",
+		logger.Errorw(ctx, "Error calling FlowAdd ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
@@ -267,9 +267,9 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 		binary.BigEndian.PutUint64(cookie, flowAdd.Cookie)
 		bs = append(bs, cookie...)
 		message.SetData(bs)
-		err := ofc.SendMessage(message)
+		err := ofc.SendMessage(ctx, message)
 		if err != nil {
-			logger.Errorw("Error reporting failure of FlowUpdate to controller",
+			logger.Errorw(ctx, "Error reporting failure of FlowUpdate to controller",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"error":     err})
@@ -277,47 +277,47 @@ func (ofc *OFConnection) handleFlowAdd(flowAdd *ofp.FlowAdd) {
 	}
 }
 
-func (ofc *OFConnection) handleFlowMod(flowMod *ofp.FlowMod) {
+func (ofc *OFConnection) handleFlowMod(ctx context.Context, flowMod *ofp.FlowMod) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowMod)
-		logger.Debugw("handleFlowMod called",
+		logger.Debugw(ctx, "handleFlowMod called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"flow-mod":  js})
 	}
-	logger.Errorw("handleFlowMod not implemented",
+	logger.Errorw(ctx, "handleFlowMod not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFConnection) handleFlowModStrict(flowModStrict *ofp.FlowModifyStrict) {
+func (ofc *OFConnection) handleFlowModStrict(ctx context.Context, flowModStrict *ofp.FlowModifyStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowModStrict)
-		logger.Debugw("handleFlowModStrict called",
+		logger.Debugw(ctx, "handleFlowModStrict called",
 			log.Fields{
 				"device-id":       ofc.DeviceID,
 				"flow-mod-strict": js})
 	}
-	logger.Error("handleFlowModStrict not implemented",
+	logger.Error(ctx, "handleFlowModStrict not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
-func (ofc *OFConnection) handleFlowDelete(flowDelete *ofp.FlowDelete) {
+func (ofc *OFConnection) handleFlowDelete(ctx context.Context, flowDelete *ofp.FlowDelete) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDelete)
-		logger.Debugw("handleFlowDelete called",
+		logger.Debugw(ctx, "handleFlowDelete called",
 			log.Fields{
 				"device-id":   ofc.DeviceID,
 				"flow-delete": js})
 	}
-	logger.Error("handleFlowDelete not implemented",
+	logger.Error(ctx, "handleFlowDelete not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
 
 }
 
-func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDeleteStrict) {
+func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteStrict *ofp.FlowDeleteStrict) {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
-		logger.Debugw("handleFlowDeleteStrict called",
+		logger.Debugw(ctx, "handleFlowDeleteStrict called",
 			log.Fields{
 				"device-id":          ofc.DeviceID,
 				"flow-delete-strict": js})
@@ -325,7 +325,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
-		logger.Errorw("no-voltha-connection",
+		logger.Errorw(ctx, "no-voltha-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		return
 	}
@@ -438,13 +438,13 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 
 	if logger.V(log.DebugLevel) {
 		flowUpdateJs, _ := json.Marshal(flowUpdate)
-		logger.Debugf("FlowDeleteStrict being sent to Voltha",
+		logger.Debugf(ctx, "FlowDeleteStrict being sent to Voltha",
 			log.Fields{
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
-		logger.Errorw("Error calling FlowDelete ",
+		logger.Errorw(ctx, "Error calling FlowDelete ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
@@ -462,9 +462,9 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 		response.HardTimeout = flowDeleteStrict.HardTimeout
 		response.Xid = flowDeleteStrict.Xid
 
-		err := ofc.SendMessage(response)
+		err := ofc.SendMessage(ctx, response)
 		if err != nil {
-			logger.Errorw("Error sending FlowRemoved to ONOS",
+			logger.Errorw(ctx, "Error sending FlowRemoved to ONOS",
 				log.Fields{
 					"device-id": ofc.DeviceID,
 					"error":     err})

@@ -17,6 +17,7 @@ package openflow
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"encoding/json"
 	"github.com/opencord/goloxi"
@@ -26,10 +27,10 @@ import (
 	"github.com/opencord/voltha-protos/v3/go/voltha"
 )
 
-func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
+func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofbField)
-		logger.Debugw("parseOxm called",
+		logger.Debugw(ctx, "parseOxm called",
 			log.Fields{"ofbField": js})
 	}
 
@@ -60,7 +61,7 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 		buf := new(bytes.Buffer)
 		err := binary.Write(buf, binary.BigEndian, val.Ipv4Dst)
 		if err != nil {
-			logger.Errorw("error writing ipv4 address %v",
+			logger.Errorw(ctx, "error writing ipv4 address %v",
 				log.Fields{"error": err})
 		}
 		ofpIpv4Dst.Value = buf.Bytes()
@@ -118,17 +119,17 @@ func parseOxm(ofbField *openflow_13.OfpOxmOfbField) goloxi.IOxm {
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofbField)
-			logger.Warnw("ParseOXM Unhandled OxmField",
+			logger.Warnw(ctx, "ParseOXM Unhandled OxmField",
 				log.Fields{"OfbField": js})
 		}
 	}
 	return nil
 }
 
-func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruction {
+func parseInstructions(ctx context.Context, ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpInstruction)
-		logger.Debugw("parseInstructions called",
+		logger.Debugw(ctx, "parseInstructions called",
 			log.Fields{"Instruction": js})
 	}
 	instType := ofpInstruction.Type
@@ -154,13 +155,13 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruct
 
 		var actions []goloxi.IAction
 		for _, ofpAction := range ofpInstruction.GetActions().Actions {
-			action := parseAction(ofpAction)
+			action := parseAction(ctx, ofpAction)
 			actions = append(actions, action)
 		}
 		instruction.Actions = actions
 		if logger.V(log.DebugLevel) {
 			js, _ := json.Marshal(instruction)
-			logger.Debugw("parseInstructions returning",
+			logger.Debugw(ctx, "parseInstructions returning",
 				log.Fields{
 					"parsed-instruction": js})
 		}
@@ -170,10 +171,10 @@ func parseInstructions(ofpInstruction *openflow_13.OfpInstruction) ofp.IInstruct
 	return nil
 }
 
-func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
+func parseAction(ctx context.Context, ofpAction *openflow_13.OfpAction) goloxi.IAction {
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpAction)
-		logger.Debugw("parseAction called",
+		logger.Debugw(ctx, "parseAction called",
 			log.Fields{"action": js})
 	}
 	switch ofpAction.Type {
@@ -194,7 +195,7 @@ func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
 		ofpActionSetField := ofpAction.GetSetField()
 		setFieldAction := ofp.NewActionSetField()
 
-		iOxm := parseOxm(ofpActionSetField.GetField().GetOfbField())
+		iOxm := parseOxm(ctx, ofpActionSetField.GetField().GetOfbField())
 		setFieldAction.Field = iOxm
 		return setFieldAction
 	case openflow_13.OfpActionType_OFPAT_GROUP:
@@ -205,7 +206,7 @@ func parseAction(ofpAction *openflow_13.OfpAction) goloxi.IAction {
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofpAction)
-			logger.Warnw("parseAction unknow action",
+			logger.Warnw(ctx, "parseAction unknow action",
 				log.Fields{"action": js})
 		}
 	}
