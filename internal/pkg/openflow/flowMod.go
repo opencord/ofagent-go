@@ -400,6 +400,13 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 		oxmList = append(oxmList, &ofpOxmField)
 	}
 
+	responseRequired := false
+
+	log.Warnw("DEBUG flags", log.Fields{"flags": flowDeleteStrict.GetFlags()})
+	if flowDeleteStrict.GetFlags() == ofp.OFPFFSendFlowRem {
+		responseRequired = true
+	}
+
 	// Construct request
 	flowUpdate := openflow_13.FlowTableUpdate{
 		Id: ofc.DeviceID,
@@ -435,4 +442,24 @@ func (ofc *OFConnection) handleFlowDeleteStrict(flowDeleteStrict *ofp.FlowDelete
 				"device-id": ofc.DeviceID,
 				"error":     err})
 	}
+
+	if responseRequired {
+		response := ofp.NewFlowRemoved()
+
+		response.Cookie = flowDeleteStrict.Cookie
+		response.Priority = flowDeleteStrict.Priority
+		response.Reason = ofp.OFPRRDelete
+		response.Match = flowDeleteStrict.Match
+		response.IdleTimeout = flowDeleteStrict.IdleTimeout
+		response.HardTimeout = flowDeleteStrict.HardTimeout
+
+		err := ofc.SendMessage(response)
+		if err != nil {
+			logger.Errorw("Error sending FlowRemoved to ONOS",
+				log.Fields{
+					"device-id": ofc.DeviceID,
+					"error":     err})
+		}
+	}
+
 }

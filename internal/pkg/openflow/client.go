@@ -214,7 +214,7 @@ func (ofc *OFClient) Run(ctx context.Context) {
 			role:                 ofcRoleNone,
 			roleManager:          ofc,
 			events:               make(chan ofcEvent, 10),
-			sendChannel:          make(chan Message, 100),
+			sendChannel:          make(chan Message, 1000),
 			flowsChunkSize:       ofc.flowsChunkSize,
 			portsChunkSize:       ofc.portsChunkSize,
 			portsDescChunkSize:   ofc.portsDescChunkSize,
