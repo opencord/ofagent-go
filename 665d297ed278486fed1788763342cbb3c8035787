@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd32cafb_20cefe30",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-06-18T14:08:00Z",
+      "side": 1,
+      "message": "Is this the limit we are seeing during scale tests?   If the channel is filled with 1000 messages then the remaining messages may proceed out of order.  Not sure we will get there and may need to be addressed in a separate Jira.",
+      "revId": "665d297ed278486fed1788763342cbb3c8035787",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c60c60e_11df6e36",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-06-18T14:08:00Z",
+      "side": 1,
+      "message": "Should there be a flag indicating whether the request was successful or not?",
+      "revId": "665d297ed278486fed1788763342cbb3c8035787",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
