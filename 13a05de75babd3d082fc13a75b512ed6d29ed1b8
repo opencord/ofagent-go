@@ -22,6 +22,30 @@
       "revId": "13a05de75babd3d082fc13a75b512ed6d29ed1b8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07c010e2_30fdee2c",
+        "filename": "cmd/ofagent/config.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000526
+      },
+      "writtenOn": "2020-06-18T06:56:57Z",
+      "side": 1,
+      "message": "Will change",
+      "parentUuid": "3f1a89b8_c75578b8",
+      "range": {
+        "startLine": 132,
+        "startChar": 3,
+        "endLine": 132,
+        "endChar": 28
+      },
+      "revId": "13a05de75babd3d082fc13a75b512ed6d29ed1b8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
