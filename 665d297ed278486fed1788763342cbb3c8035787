@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b3c8523b_9175bc4e",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-06-19T15:27:17Z",
+      "side": 1,
+      "message": "Don\u0027t think this was actually filling up, reverting back to the original value",
+      "parentUuid": "dd32cafb_20cefe30",
+      "revId": "665d297ed278486fed1788763342cbb3c8035787",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c60c60e_11df6e36",
         "filename": "internal/pkg/openflow/flowMod.go",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2020-06-18T14:08:00Z",
       "side": 1,
       "message": "Should there be a flag indicating whether the request was successful or not?",
+      "revId": "665d297ed278486fed1788763342cbb3c8035787",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c3759ea_d3fe0318",
+        "filename": "internal/pkg/openflow/flowMod.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-06-19T15:27:17Z",
+      "side": 1,
+      "message": "This message needs to be sent only if the flow is successfully removed, added a return in case of error",
+      "parentUuid": "4c60c60e_11df6e36",
       "revId": "665d297ed278486fed1788763342cbb3c8035787",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
