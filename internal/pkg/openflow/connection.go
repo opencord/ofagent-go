@@ -232,7 +232,6 @@ func (ofc *OFConnection) processOFStream(ctx context.Context) {
 	 * a message larger than this then we will have issues
 	 */
 	headerBuf := make([]byte, 8)
-
 top:
 	// Continue until we are told to stop
 	for {
@@ -309,7 +308,9 @@ top:
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			ofc.parseHeader(msg)
+			go func() {
+				ofc.parseHeader(msg)
+			}()
 		}
 	}
 	logger.Debugw("end-of-stream",
