@@ -232,7 +232,6 @@ func (ofc *OFConnection) processOFStream(ctx context.Context) {
 	 * a message larger than this then we will have issues
 	 */
 	headerBuf := make([]byte, 8)
-
 top:
 	// Continue until we are told to stop
 	for {
@@ -309,7 +308,17 @@ top:
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			ofc.parseHeader(msg)
+			/*
+			 * Spawning a go routine for every incoming message removes processing ordering guarantees.
+			 * Removing such guarantees puts burden on the controller to ensure the correct ordering of
+			 * incoming messages and is a less optimal and safe agent implementation.
+			 * This is OK for now because ONOS keeps the order guaranteed but the agent needs to avoid
+			 * relying on external fairness. Particular care and attention has to be placed in flow add/delete
+			 * and relative barrier requests. e.g. a flowMod will be handled in thread different from a barrier,
+			 * with no guarantees of handling all messages before a barrier.
+			 * A multiple queue (incoming worker and outgoing) is a possible solution.
+			 */
+			go ofc.parseHeader(msg)
 		}
 	}
 	logger.Debugw("end-of-stream",
@@ -380,12 +389,6 @@ func (ofc *OFConnection) parseHeader(header ofp.IHeader) {
 			ofc.sendRoleSlaveError(header)
 			return
 		}
-		/*
-		 * Not using go routine to handle flow* messages or barrier requests
-		 * onos typically issues barrier requests just before a flow* message.
-		 * by handling in this thread I ensure all flow* are handled when barrier
-		 * request is issued.
-		 */
 		switch header.(ofp.IFlowMod).GetCommand() {
 		case ofp.OFPFCAdd:
 			ofc.handleFlowAdd(header.(*ofp.FlowAdd))
