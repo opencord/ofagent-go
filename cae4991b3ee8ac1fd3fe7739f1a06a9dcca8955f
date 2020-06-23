@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "79d584fd_91db18e0",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-06-23T13:50:10Z",
+      "side": 1,
+      "message": "yes, refuse, had some logs in there",
+      "parentUuid": "f7096726_366169b4",
+      "revId": "cae4991b3ee8ac1fd3fe7739f1a06a9dcca8955f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bcf18c46_eaedbfdb",
         "filename": "internal/pkg/openflow/connection.go",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-06-23T06:14:46Z",
       "side": 1,
       "message": "With this patch, this comment is not valid anymore. Now a flowMod will be handled in thread different from a barrier, with no guarantees of handling all messages before a barrier. Even without this patch, the barrier implementation was not quite right. A barrier must guarantee all messages that come before it (not just flowmods), get processed before the barrier reply goes out.",
+      "revId": "cae4991b3ee8ac1fd3fe7739f1a06a9dcca8955f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1ad38a7_341c3cde",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-06-23T13:50:10Z",
+      "side": 1,
+      "message": "Yes Saurav, you are correct, I think parallel processing with waits when required is the correct way of implementing things here. I\u0027ve removed the comment here and placed one where we spawn the go routine",
+      "parentUuid": "bcf18c46_eaedbfdb",
       "revId": "cae4991b3ee8ac1fd3fe7739f1a06a9dcca8955f",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
