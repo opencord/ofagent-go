@@ -22,6 +22,30 @@
       "revId": "d8c5d7336addb56c1dca549c9f2646f08ef3bd9a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cf96971_b22d8f7f",
+        "filename": "cmd/ofagent/main.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000526
+      },
+      "writtenOn": "2020-06-24T06:49:35Z",
+      "side": 1,
+      "message": "The failure of initialization of jaeger tracing client should just be reported as a warning. As it is not a essential dependency; no need to fail the startup. It will not lead to any panic later on. The Opentracing library already has a check that if the Jaeger Global tracer is not available (due to init failure), it use NoopTracer and NoopSpan instances when StartSpan() methods are called",
+      "parentUuid": "d8dbfeb4_bdfd3eaa",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 99
+      },
+      "revId": "d8c5d7336addb56c1dca549c9f2646f08ef3bd9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
