@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8dbfeb4_bdfd3eaa",
+        "filename": "cmd/ofagent/main.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-06-24T06:31:26Z",
+      "side": 1,
+      "message": "can we continue if this fails or will a panic happen later?",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 99
+      },
+      "revId": "d8c5d7336addb56c1dca549c9f2646f08ef3bd9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
