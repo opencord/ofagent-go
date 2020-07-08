@@ -123,7 +123,7 @@ func distance(a uint64, b uint64) int64 {
 
 // UpdateRoles validates a role request and updates role state for connections where it changed
 func (ofc *OFClient) UpdateRoles(from string, request *ofp.RoleRequest) bool {
-	log.Debug("updating role", log.Fields{
+	logger.Debug("updating role", log.Fields{
 		"from": from,
 		"to":   request.Role,
 		"id":   request.GenerationId})
