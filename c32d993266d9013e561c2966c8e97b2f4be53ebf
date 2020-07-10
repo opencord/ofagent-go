@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38d495ab_5a93f9b2",
+        "filename": "internal/pkg/ofagent/ofagent.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-07-10T14:34:00Z",
+      "side": 1,
+      "message": "As a general rule whenever a go routine is launched it\u0027s better to use context.Background() unless you need the go routine to use the same context which potentially may have a timeout set.  In this case, it does not really matter as the main function passes in a context with no timeout to this Run function.",
+      "revId": "c32d993266d9013e561c2966c8e97b2f4be53ebf",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
