@@ -16,7 +16,9 @@ Copyright 2020 the original author or authors.
 package openflow
 
 import (
+	"encoding/binary"
 	"encoding/json"
+	"unsafe"
 
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
@@ -98,5 +100,21 @@ func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp
 			log.Fields{
 				"device-id": ofc.DeviceID,
 				"error":     err})
+		message := ofp.NewMeterModFailedErrorMsg()
+		message.SetXid(request.Xid)
+		//OF 1.3
+		message.SetVersion(4)
+		//FIXME Hardcoding to Invalid Meter for now.
+		message.SetCode(ofp.OFPMMFCInvalidMeter)
+		meterByteId := make([]byte, 4)
+		binary.BigEndian.PutUint32(meterByteId, request.MeterId)
+		message.SetData(meterByteId)
+		message.Length = uint16(unsafe.Sizeof(*message))
+		if err := ofc.SendMessage(ctx, message); err != nil {
+			logger.Errorw(ctx, "Error reporting failure of MeterMod to controller",
+				log.Fields{
+					"device-id": ofc.DeviceID,
+					"error":     err})
+		}
 	}
 }
