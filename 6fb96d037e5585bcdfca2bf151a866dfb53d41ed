@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e08cde54_781ea209",
+        "filename": "internal/pkg/openflow/meter.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1000042
+      },
+      "writtenOn": "2020-07-21T12:28:46Z",
+      "side": 1,
+      "message": "fix",
+      "revId": "6fb96d037e5585bcdfca2bf151a866dfb53d41ed",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
