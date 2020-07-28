@@ -21,9 +21,12 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +43,15 @@ func (ofa *OFAgent) establishConnectionToVoltha(ctx context.Context, p *probe.Pr
 	ofa.volthaClient.Clear()
 	try := 1
 	for ofa.ConnectionMaxRetries == 0 || try < ofa.ConnectionMaxRetries {
-		conn, err := grpc.Dial(ofa.VolthaApiEndPoint, grpc.WithInsecure())
+		// Use Intercepters to automatically inject and publish Open Tracing Spans by this GRPC client
+		conn, err := grpc.Dial(ofa.VolthaApiEndPoint,
+			grpc.WithInsecure(),
+			grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
+				grpc_opentracing.StreamClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+			)),
+			grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
+				grpc_opentracing.UnaryClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+			)))
 		if err == nil {
 			svc := voltha.NewVolthaServiceClient(conn)
 			if svc != nil {
