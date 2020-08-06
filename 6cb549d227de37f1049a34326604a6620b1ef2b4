@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f5b88c8_f71def79",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1000526
+      },
+      "writtenOn": "2020-08-06T14:37:52Z",
+      "side": 1,
+      "message": "Is it the right place to create Span? Span name should represent some known algorithm or function performed by system; parseHeader is too abstract",
+      "revId": "6cb549d227de37f1049a34326604a6620b1ef2b4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
