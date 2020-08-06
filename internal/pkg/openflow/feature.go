@@ -38,7 +38,7 @@ func (ofc *OFConnection) handleFeatureRequest(ctx context.Context, request *ofp.
 		return NoVolthaConnectionError
 	}
 	var id = common.ID{Id: ofc.DeviceID}
-	logicalDevice, err := volthaClient.GetLogicalDevice(context.Background(), &id)
+	logicalDevice, err := volthaClient.GetLogicalDevice(log.WithSpanFromContext(context.Background(), ctx), &id)
 	if err != nil {
 		return err
 	}

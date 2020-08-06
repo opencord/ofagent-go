@@ -49,7 +49,7 @@ func (ofa *OFAgent) refreshDeviceList(ctx context.Context) {
 		ofa.events <- ofaEventVolthaDisconnected
 		return
 	}
-	deviceList, err := ofa.volthaClient.Get().ListLogicalDevices(context.Background(), &empty.Empty{})
+	deviceList, err := ofa.volthaClient.Get().ListLogicalDevices(log.WithSpanFromContext(context.Background(), ctx), &empty.Empty{})
 	if err != nil {
 		logger.Errorw(ctx, "ofagent failed to query device list from voltha",
 			log.Fields{"error": err})
@@ -98,7 +98,7 @@ func (ofa *OFAgent) addOFClient(ctx context.Context, deviceID string) *openflow.
 			ConnectionMaxRetries:  ofa.ConnectionMaxRetries,
 			ConnectionRetryDelay:  ofa.ConnectionRetryDelay,
 		})
-		ofc.Run(context.Background())
+		ofc.Run(log.WithSpanFromContext(context.Background(), ctx))
 		ofa.clientMap[deviceID] = ofc
 	}
 	ofa.mapLock.Unlock()

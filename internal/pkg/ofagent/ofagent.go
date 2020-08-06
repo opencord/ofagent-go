@@ -142,7 +142,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				logger.Debug(ctx, "ofagent-voltha-start-event")
 
 				// Start the loops that process messages
-				hdlCtx, hdlDone = context.WithCancel(context.Background())
+				hdlCtx, hdlDone = context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 				go ofa.handlePacketsIn(hdlCtx)
 				go ofa.handleChangeEvents(hdlCtx)
 
@@ -162,7 +162,7 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				// Start the loops that poll from voltha
 				if state != ofaStateConnected {
 					state = ofaStateConnected
-					volthaCtx, volthaDone = context.WithCancel(context.Background())
+					volthaCtx, volthaDone = context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 					go ofa.receiveChangeEvents(volthaCtx)
 					go ofa.receivePacketsIn(volthaCtx)
 					go ofa.streamPacketOut(volthaCtx)

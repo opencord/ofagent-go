@@ -42,7 +42,7 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 		return
 	}
 	opt := grpc.EmptyCallOption{}
-	streamCtx, streamDone := context.WithCancel(context.Background())
+	streamCtx, streamDone := context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 	defer streamDone()
 	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {

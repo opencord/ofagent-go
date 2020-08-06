@@ -147,7 +147,7 @@ top:
 					log.Fields{"device-id": ofc.DeviceID})
 				if state == ofcStateStarted || state == ofcStateDisconnected {
 					state = ofcStateConnected
-					ofCtx, ofDone = context.WithCancel(context.Background())
+					ofCtx, ofDone = context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 					go ofc.messageSender(ofCtx)
 					go ofc.processOFStream(ofCtx)
 				} else {
@@ -350,6 +350,8 @@ func (ofc *OFConnection) sayHello(ctx context.Context) {
 }
 
 func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader) {
+        span, ctx := log.CreateChildSpan(ctx, "parseHeader")
+        defer span.Finish()
 	headerType := header.GetType()
 	logger.Debugw(ctx, "packet-header-type",
 		log.Fields{

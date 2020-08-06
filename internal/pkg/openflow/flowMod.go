@@ -240,7 +240,7 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowAdd ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
@@ -443,7 +443,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowDelete ",
 			log.Fields{
 				"device-id": ofc.DeviceID,

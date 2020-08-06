@@ -55,7 +55,7 @@ func (ofa *OFAgent) establishConnectionToVoltha(ctx context.Context, p *probe.Pr
 		if err == nil {
 			svc := voltha.NewVolthaServiceClient(conn)
 			if svc != nil {
-				if _, err = svc.GetVoltha(context.Background(), &empty.Empty{}); err == nil {
+				if _, err = svc.GetVoltha(log.WithSpanFromContext(context.Background(), ctx), &empty.Empty{}); err == nil {
 					logger.Debugw(ctx, "Established connection to Voltha",
 						log.Fields{
 							"VolthaApiEndPoint": ofa.VolthaApiEndPoint,

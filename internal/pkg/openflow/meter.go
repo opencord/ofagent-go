@@ -95,7 +95,7 @@ func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp
 				"device-id":         ofc.DeviceID,
 				"meter-mod-request": meterModJS})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(log.WithSpanFromContext(context.Background(), ctx), &meterModUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling UpdateLogicalDeviceMeterTable",
 			log.Fields{
 				"device-id": ofc.DeviceID,
