@@ -380,12 +380,14 @@ func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader) {
 	case ofp.OFPTPortStatus:
 	case ofp.OFPTPacketOut:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
+			logger.Errorw(ctx, "packetOut from slave controller", log.Fields{"header": header})
 			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
 		go ofc.handlePacketOut(ctx, header.(*ofp.PacketOut))
 	case ofp.OFPTFlowMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
+			logger.Errorw(ctx, "flowMod from slave controller", log.Fields{"header": header})
 			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
@@ -414,12 +416,14 @@ func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader) {
 		go ofc.handleRoleRequest(ctx, header.(*ofp.RoleRequest))
 	case ofp.OFPTMeterMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
+			logger.Errorw(ctx, "MeterMod from slave controller", log.Fields{"header": header})
 			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
 		ofc.handleMeterModRequest(ctx, header.(*ofp.MeterMod))
 	case ofp.OFPTGroupMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
+			logger.Errorw(ctx, "GroupMod from slave controller", log.Fields{"header": header})
 			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}

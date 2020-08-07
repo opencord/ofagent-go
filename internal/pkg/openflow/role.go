@@ -83,7 +83,7 @@ func (ofc *OFConnection) sendRoleSlaveError(ctx context.Context, request ofp.IHe
 	reply := ofp.NewBadRequestErrorMsg()
 	reply.SetXid(request.GetXid())
 	reply.SetVersion(request.GetVersion())
-	reply.Code = ofp.OFPCRRoleSlave
+	reply.Code = 11
 
 	enc := goloxi.NewEncoder()
 	err := request.Serialize(enc)
