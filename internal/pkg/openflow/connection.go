@@ -147,7 +147,7 @@ top:
 					log.Fields{"device-id": ofc.DeviceID})
 				if state == ofcStateStarted || state == ofcStateDisconnected {
 					state = ofcStateConnected
-					ofCtx, ofDone = context.WithCancel(context.Background())
+					ofCtx, ofDone = context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 					go ofc.messageSender(ofCtx)
 					go ofc.processOFStream(ofCtx)
 				} else {

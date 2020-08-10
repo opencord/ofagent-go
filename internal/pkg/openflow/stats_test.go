@@ -242,7 +242,7 @@ func TestHandlePortStatsRequest(t *testing.T) {
 	// request stats for all ports
 	request.PortNo = 0xffffffff
 
-	replies, err := ofc.handlePortStatsRequest(request)
+	replies, err := ofc.handlePortStatsRequest(context.Background(), request)
 	assert.Equal(t, err, nil)
 
 	assert.Equal(t, int(math.Ceil(float64(generatedPortsCount)/ofcPortsChunkSize)), len(replies))
@@ -287,7 +287,7 @@ func TestHandlePortDescStatsRequest(t *testing.T) {
 
 	request := of13.NewPortDescStatsRequest()
 
-	replies, err := ofc.handlePortDescStatsRequest(request)
+	replies, err := ofc.handlePortDescStatsRequest(context.Background(), request)
 	assert.Equal(t, err, nil)
 
 	// check that the correct number of messages is generated

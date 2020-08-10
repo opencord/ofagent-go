@@ -27,6 +27,9 @@ import (
 )
 
 func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp.MeterMod) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-meter-modification")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw(ctx, "handleMeterModRequest called",
@@ -95,7 +98,7 @@ func (ofc *OFConnection) handleMeterModRequest(ctx context.Context, request *ofp
 				"device-id":         ofc.DeviceID,
 				"meter-mod-request": meterModJS})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(context.Background(), &meterModUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceMeterTable(log.WithSpanFromContext(context.Background(), ctx), &meterModUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling UpdateLogicalDeviceMeterTable",
 			log.Fields{
 				"device-id": ofc.DeviceID,

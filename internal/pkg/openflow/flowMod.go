@@ -72,6 +72,9 @@ var oxmMap = map[string]int32{
 }
 
 func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-add")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowAdd)
 		logger.Debugw(ctx, "handleFlowAdd called",
@@ -240,7 +243,7 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 				"flow-mod-object":  flowUpdate,
 				"flow-mod-request": flowUpdateJs})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowAdd ",
 			log.Fields{
 				"device-id": ofc.DeviceID,
@@ -278,6 +281,9 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 }
 
 func (ofc *OFConnection) handleFlowMod(ctx context.Context, flowMod *ofp.FlowMod) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-modification")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowMod)
 		logger.Debugw(ctx, "handleFlowMod called",
@@ -290,6 +296,9 @@ func (ofc *OFConnection) handleFlowMod(ctx context.Context, flowMod *ofp.FlowMod
 }
 
 func (ofc *OFConnection) handleFlowModStrict(ctx context.Context, flowModStrict *ofp.FlowModifyStrict) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-modification-strict")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowModStrict)
 		logger.Debugw(ctx, "handleFlowModStrict called",
@@ -302,6 +311,9 @@ func (ofc *OFConnection) handleFlowModStrict(ctx context.Context, flowModStrict 
 }
 
 func (ofc *OFConnection) handleFlowDelete(ctx context.Context, flowDelete *ofp.FlowDelete) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-delete")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDelete)
 		logger.Debugw(ctx, "handleFlowDelete called",
@@ -315,6 +327,9 @@ func (ofc *OFConnection) handleFlowDelete(ctx context.Context, flowDelete *ofp.F
 }
 
 func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteStrict *ofp.FlowDeleteStrict) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-delete-strict")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
 		logger.Debugw(ctx, "handleFlowDeleteStrict called",
@@ -443,7 +458,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
-	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(context.Background(), &flowUpdate); err != nil {
+	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowDelete ",
 			log.Fields{
 				"device-id": ofc.DeviceID,

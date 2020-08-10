@@ -202,7 +202,6 @@ func (ofc *OFClient) Stop() {
 }
 
 func (ofc *OFClient) Run(ctx context.Context) {
-
 	for _, endpoint := range ofc.OFControllerEndPoints {
 		connection := &OFConnection{
 			OFControllerEndPoint: endpoint,

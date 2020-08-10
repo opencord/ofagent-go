@@ -26,6 +26,8 @@ import (
 )
 
 func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroupMod) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-group-modification")
+	defer span.Finish()
 
 	volthaClient := ofc.VolthaClient.Get()
 	if volthaClient == nil {
@@ -44,7 +46,7 @@ func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroup
 		},
 	}
 
-	_, err := volthaClient.UpdateLogicalDeviceFlowGroupTable(context.Background(), groupUpdate)
+	_, err := volthaClient.UpdateLogicalDeviceFlowGroupTable(log.WithSpanFromContext(context.Background(), ctx), groupUpdate)
 	if err != nil {
 		logger.Errorw(ctx, "Error updating group table",
 			log.Fields{"device-id": ofc.DeviceID, "error": err})

@@ -25,6 +25,9 @@ import (
 )
 
 func (ofc *OFConnection) handleRoleRequest(ctx context.Context, request *ofp.RoleRequest) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-role")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw(ctx, "handleRoleRequest called",

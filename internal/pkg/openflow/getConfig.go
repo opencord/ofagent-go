@@ -24,6 +24,9 @@ import (
 )
 
 func (ofc *OFConnection) handleGetConfigRequest(ctx context.Context, request *ofp.GetConfigRequest) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-get-config")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw(ctx, "handleGetConfigRequest called",

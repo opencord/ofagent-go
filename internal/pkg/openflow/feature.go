@@ -26,6 +26,9 @@ import (
 )
 
 func (ofc *OFConnection) handleFeatureRequest(ctx context.Context, request *ofp.FeaturesRequest) error {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-feature")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw(ctx, "handleFeatureRequest called",
@@ -38,7 +41,7 @@ func (ofc *OFConnection) handleFeatureRequest(ctx context.Context, request *ofp.
 		return NoVolthaConnectionError
 	}
 	var id = common.ID{Id: ofc.DeviceID}
-	logicalDevice, err := volthaClient.GetLogicalDevice(context.Background(), &id)
+	logicalDevice, err := volthaClient.GetLogicalDevice(log.WithSpanFromContext(context.Background(), ctx), &id)
 	if err != nil {
 		return err
 	}

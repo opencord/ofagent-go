@@ -29,6 +29,9 @@ import (
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
+	span, ctx := log.CreateChildSpan(ctx, "receive-change-events")
+	defer span.Finish()
+
 	logger.Debug(ctx, "receive-change-events-started")
 	// If we exit, assume disconnected
 	defer func() {

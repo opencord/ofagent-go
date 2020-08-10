@@ -31,6 +31,9 @@ import (
 )
 
 func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
+	span, ctx := log.CreateChildSpan(ctx, "receive-packets-in")
+	defer span.Finish()
+
 	logger.Debug(ctx, "receive-packets-in-started")
 	// If we exit, assume disconnected
 	defer func() {
@@ -42,7 +45,7 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 		return
 	}
 	opt := grpc.EmptyCallOption{}
-	streamCtx, streamDone := context.WithCancel(context.Background())
+	streamCtx, streamDone := context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 	defer streamDone()
 	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
@@ -70,6 +73,9 @@ top:
 }
 
 func (ofa *OFAgent) handlePacketsIn(ctx context.Context) {
+	span, ctx := log.CreateChildSpan(ctx, "handle-packets-in")
+	defer span.Finish()
+
 	logger.Debug(ctx, "handle-packets-in-started")
 top:
 	for {

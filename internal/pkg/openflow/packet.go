@@ -25,6 +25,9 @@ import (
 )
 
 func (ofc *OFConnection) handlePacketOut(ctx context.Context, packetOut *ofp.PacketOut) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-packet-out")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(packetOut)
 		logger.Debugw(ctx, "handlePacketOut called",

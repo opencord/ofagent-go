@@ -24,6 +24,9 @@ import (
 )
 
 func (ofc *OFConnection) handleEchoRequest(ctx context.Context, request *ofp.EchoRequest) {
+	span, ctx := log.CreateChildSpan(ctx, "openflow-echo")
+	defer span.Finish()
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(request)
 		logger.Debugw(ctx, "handleEchoRequest called",
