@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5057c919_b7ab541d",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000107
+      },
+      "writtenOn": "2020-08-18T14:16:33Z",
+      "side": 0,
+      "message": "Looks like this needs a `make mod-update`.",
+      "range": {
+        "startLine": 11,
+        "startChar": 1,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "01e0c632fb60ee6402f391e54bd1106a43b64471",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
