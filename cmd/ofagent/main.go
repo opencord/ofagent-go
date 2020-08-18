@@ -53,6 +53,7 @@ func setLogConfig(ctx context.Context, kvStoreAddress, kvStoreType string, kvSto
 
 	cm := conf.NewConfigManager(ctx, client, kvStoreType, kvStoreAddress, kvStoreTimeout)
 	go conf.StartLogLevelConfigProcessing(cm, ctx)
+	go conf.StartLogFeaturesConfigProcessing(cm, ctx)
 	return client, nil
 }
 
