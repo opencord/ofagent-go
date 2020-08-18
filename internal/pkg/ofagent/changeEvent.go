@@ -45,7 +45,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
 	defer streamDone()
-	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
+	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(log.WithSpanFromContext(streamCtx, ctx), &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw(ctx, "Unable to establish Receive Change Event Stream",
 			log.Fields{"error": err})

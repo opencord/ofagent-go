@@ -26,7 +26,6 @@ import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
 	"github.com/opencord/voltha-protos/v3/go/voltha"
-	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 )
 
@@ -47,10 +46,10 @@ func (ofa *OFAgent) establishConnectionToVoltha(ctx context.Context, p *probe.Pr
 		conn, err := grpc.Dial(ofa.VolthaApiEndPoint,
 			grpc.WithInsecure(),
 			grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
-				grpc_opentracing.StreamClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+				grpc_opentracing.StreamClientInterceptor(grpc_opentracing.WithTracer(log.ActiveTracerProxy{})),
 			)),
 			grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
-				grpc_opentracing.UnaryClientInterceptor(grpc_opentracing.WithTracer(opentracing.GlobalTracer())),
+				grpc_opentracing.UnaryClientInterceptor(grpc_opentracing.WithTracer(log.ActiveTracerProxy{})),
 			)))
 		if err == nil {
 			svc := voltha.NewVolthaServiceClient(conn)
