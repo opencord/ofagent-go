@@ -105,7 +105,7 @@ func (ofa *OFAgent) addOFClient(ctx context.Context, deviceID string) *openflow.
 		ofa.clientMap[deviceID] = ofc
 	}
 	ofa.mapLock.Unlock()
-	logger.Debugw(ctx, "Finished with addClient", log.Fields{"deviceID": deviceID})
+	logger.Debugw(ctx, "Finished with addClient", log.Fields{"device-id": deviceID})
 	return ofc
 }
 
