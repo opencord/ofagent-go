@@ -39,8 +39,8 @@ func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
 		return
 	}
 	opt := grpc.EmptyCallOption{}
-	streamCtx, streamDone := context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
-	outClient, err := ofa.volthaClient.Get().StreamPacketsOut(streamCtx, opt)
+	streamCtx, streamDone := context.WithCancel(context.Background())
+	outClient, err := ofa.volthaClient.Get().StreamPacketsOut(log.WithSpanFromContext(streamCtx, ctx), opt)
 	defer streamDone()
 	if err != nil {
 		logger.Errorw(ctx, "streamPacketOut Error creating packetout stream ", log.Fields{"error": err})

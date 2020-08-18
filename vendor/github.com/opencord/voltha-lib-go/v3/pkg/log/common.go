@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package db
+package log
 
-import (
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
-)
-
-var logger log.CLogger
+var logger CLogger
 
 func init() {
 	// Setup this package so that it's log level can be modified at run time
 	var err error
-	logger, err = log.RegisterPackage(log.JSON, log.ErrorLevel, log.Fields{})
+	logger, err = RegisterPackage(JSON, ErrorLevel, Fields{})
 	if err != nil {
 		panic(err)
 	}

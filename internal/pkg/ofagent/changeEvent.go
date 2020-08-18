@@ -43,7 +43,7 @@ func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
 		return
 	}
 	opt := grpc.EmptyCallOption{}
-	streamCtx, streamDone := context.WithCancel(context.Background())
+	streamCtx, streamDone := context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 	defer streamDone()
 	stream, err := ofa.volthaClient.Get().ReceiveChangeEvents(streamCtx, &empty.Empty{}, opt)
 	if err != nil {

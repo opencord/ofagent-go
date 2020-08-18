@@ -53,6 +53,7 @@ func setLogConfig(ctx context.Context, kvStoreAddress, kvStoreType string, kvSto
 
 	cm := conf.NewConfigManager(ctx, client, kvStoreType, kvStoreAddress, kvStoreTimeout)
 	go conf.StartLogLevelConfigProcessing(cm, ctx)
+	go conf.StartLogFeaturesConfigProcessing(cm, ctx)
 	return client, nil
 }
 
@@ -120,6 +121,8 @@ func main() {
 		}
 	}()
 
+	logger.Infow(ctx, "ofagent-config", log.Fields{"config": *config})
+
 	/*
 	 * Create and start the liveness and readiness container management probes. This
 	 * is done in the main function so just in case the main starts multiple other
@@ -132,7 +135,7 @@ func main() {
 		logger.Warnw(ctx, "unable-to-create-kvstore-client", log.Fields{"error": err})
 	}
 
-	closer, err := log.InitTracingAndLogCorrelation(config.TraceEnabled, config.TraceAgentAddress, config.LogCorrelationEnabled)
+	closer, err := log.GetGlobalLFM().InitTracingAndLogCorrelation(config.TraceEnabled, config.TraceAgentAddress, config.LogCorrelationEnabled)
 	if err != nil {
 		logger.Warnw(ctx, "unable-to-initialize-tracing-and-log-correlation-module", log.Fields{"error": err})
 	} else {

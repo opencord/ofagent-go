@@ -44,7 +44,7 @@ github.com/mitchellh/mapstructure
 # github.com/opencord/goloxi v1.0.1
 github.com/opencord/goloxi
 github.com/opencord/goloxi/of13
-# github.com/opencord/voltha-lib-go/v3 v3.2.2
+# github.com/opencord/voltha-lib-go/v3 v3.2.8
 github.com/opencord/voltha-lib-go/v3/pkg/config
 github.com/opencord/voltha-lib-go/v3/pkg/db
 github.com/opencord/voltha-lib-go/v3/pkg/db/kvstore
