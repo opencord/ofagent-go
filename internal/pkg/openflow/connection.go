@@ -170,7 +170,7 @@ top:
 					}
 					go func() {
 						if err := ofc.establishConnectionToController(ctx); err != nil {
-							log.Errorw("controller-connection-failed", log.Fields{"error": err})
+							logger.Errorw(ctx, "controller-connection-failed", log.Fields{"error": err})
 							panic(err)
 						}
 					}()
@@ -206,19 +206,19 @@ top:
 
 	// If the child context exists, then cancel it
 	if ofDone != nil {
-		log.Debugw("closing-child-processes",
+		logger.Debugw(ctx, "closing-child-processes",
 			log.Fields{"device-id": ofc.DeviceID})
 		ofDone()
 	}
 
 	// If the connection is open, then close it
 	if ofc.conn != nil {
-		log.Debugw("closing-of-connection",
+		logger.Debugw(ctx, "closing-of-connection",
 			log.Fields{"device-id": ofc.DeviceID})
 		ofc.conn.Close()
 		ofc.conn = nil
 	}
-	log.Debugw("state-machine-finished",
+	logger.Debugw(ctx, "state-machine-finished",
 		log.Fields{"device-id": ofc.DeviceID})
 }
 
