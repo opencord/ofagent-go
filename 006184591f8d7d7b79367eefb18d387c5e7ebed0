@@ -22,6 +22,30 @@
       "revId": "006184591f8d7d7b79367eefb18d387c5e7ebed0",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9db867a8_b8a485c1",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000526
+      },
+      "writtenOn": "2020-08-25T18:16:52Z",
+      "side": 1,
+      "message": "Right. Moved to 2 lines above",
+      "parentUuid": "63e3d043_ee8a1a78",
+      "range": {
+        "startLine": 48,
+        "startChar": 59,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "006184591f8d7d7b79367eefb18d387c5e7ebed0",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
