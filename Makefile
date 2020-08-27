@@ -151,6 +151,7 @@ sca:
 	@mkdir -p ./sca-report
 	@echo "Running static code analysis..."
 	@${GOLANGCI_LINT} run --deadline=4m --out-format junit-xml ./... | tee ./sca-report/sca-report.xml
+	cat ./sca-report/sca-report.xml
 	@echo ""
 	@echo "Static code analysis OK"
 
@@ -163,3 +164,4 @@ distclean: clean
 mod-update:
 	${GO} mod tidy
 	${GO} mod vendor
+
