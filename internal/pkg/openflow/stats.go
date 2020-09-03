@@ -383,7 +383,9 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 	n := 0
 	for n <= total {
 
-		chunk := flows[n*chunkSize : min((n*chunkSize)+chunkSize, len(flows))]
+		limit := (n * chunkSize) + chunkSize
+
+		chunk := flows[n*chunkSize : min(limit, len(flows))]
 
 		if len(chunk) == 0 {
 			break
@@ -393,7 +395,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 		response.SetXid(request.GetXid())
 		response.SetVersion(4)
 		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
-		if total != n {
+		if limit < len(flows) {
 			response.SetFlags(ofp.StatsReplyFlags(ofp.OFPSFReplyMore))
 		}
 		response.SetEntries(chunk)

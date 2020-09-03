@@ -185,23 +185,29 @@ func newTestOFConnection(flowsCount int, portsCount int) *OFConnection {
 	}
 }
 
-func TestHandleFlowStatsRequest(t *testing.T) {
+func TestHandleFlowStatsRequestExactlyDivisible(t *testing.T) {
 
-	generatedFlowsCount := 2000
+	generatedFlowsCount := ofcFlowsChunkSize * 5
 
-	ofc := newTestOFConnection(2000, 0)
+	testCorrectChunkAndReplyMoreFlag(t, generatedFlowsCount)
+}
 
+func TestHandleFlowStatsRequestNotExactlyDivisible(t *testing.T) {
+
+	generatedFlowsCount := int(ofcFlowsChunkSize * 5.5)
+
+	testCorrectChunkAndReplyMoreFlag(t, generatedFlowsCount)
+}
+
+func testCorrectChunkAndReplyMoreFlag(t *testing.T, generatedFlowsCount int) {
+	ofc := newTestOFConnection(generatedFlowsCount, 0)
 	request := of13.NewFlowStatsRequest()
-
 	replies, err := ofc.handleFlowStatsRequest(context.Background(), request)
 	assert.Equal(t, err, nil)
-
 	// check that the correct number of messages is generated
 	assert.Equal(t, int(math.Ceil(float64(generatedFlowsCount)/ofcFlowsChunkSize)), len(replies))
-
 	n := 1
 	entriesCount := 0
-
 	for _, r := range replies {
 		json, _ := r.Flags.MarshalJSON()
 
@@ -226,7 +232,6 @@ func TestHandleFlowStatsRequest(t *testing.T) {
 		entriesCount = entriesCount + len(r.GetEntries())
 		n++
 	}
-
 	// make sure all the generate item are included in the responses
 	assert.Equal(t, generatedFlowsCount, entriesCount)
 }

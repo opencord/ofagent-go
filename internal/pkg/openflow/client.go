@@ -53,7 +53,7 @@ const (
 
 	// according to testing this is the maximum content of an
 	// openflow message to remain under 64KB
-	ofcFlowsChunkSize     = 450 // this amount of flows is around 57KB
+	ofcFlowsChunkSize     = 400 // this amount of flows is around 40KB for DT, 47KB ATT and 61KB for TT
 	ofcPortsChunkSize     = 550 // this amount of port stats is around 61KB
 	ofcPortsDescChunkSize = 900 // this amount of port desc is around 57KB
 )
