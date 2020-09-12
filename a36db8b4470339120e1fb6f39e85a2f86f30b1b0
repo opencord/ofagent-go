@@ -1,0 +1,7 @@
+Code-Review+2: Matteo Scandolo <teo@opennetworking.org>
+Verified+1: Jenkins Technical User <do-not-reply@opennetworking.org>
+Submitted-by: Matteo Scandolo <teo@opennetworking.org>
+Submitted-at: Sat, 12 Sep 2020 00:00:38 +0000
+Reviewed-on: https://gerrit.opencord.org/c/ofagent-go/+/20466
+Project: ofagent-go
+Branch: refs/heads/master
