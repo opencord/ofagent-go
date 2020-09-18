@@ -90,6 +90,22 @@ func (s ofcState) String() string {
 	}
 }
 
+func (r ofcRole) String() string {
+	switch r {
+	case ofcRoleNone:
+		return "ofcRoleNone"
+	case ofcRoleEqual:
+		return "ofcRoleEqual"
+	case ofcRoleMaster:
+		return "ofcRoleMaster"
+	case ofcRoleSlave:
+		return "ofcRoleSlave"
+	default:
+		return "ofc-role-unknown"
+
+	}
+}
+
 // OFClient the configuration and operational state of a connection to an
 // openflow controller
 type OFClient struct {
@@ -123,7 +139,7 @@ func distance(a uint64, b uint64) int64 {
 
 // UpdateRoles validates a role request and updates role state for connections where it changed
 func (ofc *OFClient) UpdateRoles(ctx context.Context, from string, request *ofp.RoleRequest) bool {
-	logger.Debug(ctx, "updating role", log.Fields{
+	logger.Debugw(ctx, "updating-role", log.Fields{
 		"from": from,
 		"to":   request.Role,
 		"id":   request.GenerationId})
@@ -150,9 +166,15 @@ func (ofc *OFClient) UpdateRoles(ctx context.Context, from string, request *ofp.
 			for endpoint, connection := range ofc.connections {
 				if endpoint == from {
 					connection.role = ofcRoleMaster
+					logger.Infow(ctx, "updating-master", log.Fields{
+						"endpoint": endpoint,
+					})
 				} else if connection.role == ofcRoleMaster {
 					// the old master should be set to slave
 					connection.role = ofcRoleSlave
+					logger.Debugw(ctx, "updating-slave", log.Fields{
+						"endpoint": endpoint,
+					})
 				}
 			}
 			return true
@@ -228,8 +250,28 @@ func (ofc *OFClient) Run(ctx context.Context) {
 }
 
 func (ofc *OFClient) SendMessage(ctx context.Context, message Message) error {
-	for _, connection := range ofc.connections {
-		if connection.role == ofcRoleMaster || connection.role == ofcRoleEqual {
+
+	var toEqual bool
+	var msgType string
+
+	switch message.(type) {
+	case *ofp.PortStatus:
+		msgType = "PortStatus"
+		toEqual = true
+	case *ofp.PacketIn:
+		msgType = "PacketIn"
+		toEqual = false
+	default:
+		toEqual = true
+	}
+
+	for endpoint, connection := range ofc.connections {
+		if connection.role == ofcRoleMaster || (connection.role == ofcRoleEqual && toEqual) {
+			logger.Debugw(ctx, "sending-message", log.Fields{
+				"endpoint": endpoint,
+				"toEqual":  toEqual,
+				"msgType":  msgType,
+			})
 			err := connection.SendMessage(ctx, message)
 			if err != nil {
 				return err
