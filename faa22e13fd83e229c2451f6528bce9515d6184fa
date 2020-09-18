@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51bb2521_45643bae",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000068
+      },
+      "writtenOn": "2020-09-18T21:53:50Z",
+      "side": 1,
+      "message": "bit misleading to have PacketOut here - switch never sends packetout to controller\nshould be replaced with FlowRemoved which is another asynch message sent to controller",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 0
+      },
+      "revId": "faa22e13fd83e229c2451f6528bce9515d6184fa",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
