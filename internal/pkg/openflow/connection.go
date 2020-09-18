@@ -492,7 +492,10 @@ top:
 
 // SendMessage queues a message to be sent to the openflow controller
 func (ofc *OFConnection) SendMessage(ctx context.Context, message Message) error {
-	logger.Debug(ctx, "queuing-message")
+	logger.Debugw(ctx, "queuing-message", log.Fields{
+		"endpoint": ofc.OFControllerEndPoint,
+		"role":     ofc.role,
+	})
 	ofc.sendChannel <- message
 	return nil
 }
