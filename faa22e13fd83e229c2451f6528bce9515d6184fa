@@ -22,6 +22,30 @@
       "revId": "faa22e13fd83e229c2451f6528bce9515d6184fa",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36c5edca_04cad4bd",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-09-21T16:57:08Z",
+      "side": 1,
+      "message": "SendMessage is only invoke in:\n- handleChangeEvents -\u003e responsible for the port status\n- handlePacketsIn -\u003e responsible for packet ins\n\nwe\u0027ll never get a flowRemoved message here. Does VOLTHA supports the deletion of flows via API?",
+      "parentUuid": "51bb2521_45643bae",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 0
+      },
+      "revId": "faa22e13fd83e229c2451f6528bce9515d6184fa",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
