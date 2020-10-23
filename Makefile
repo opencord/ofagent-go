@@ -86,8 +86,8 @@ endif
 ## Local Development Helpers
 local-lib-go:
 ifdef LOCAL_LIB_GO
-	mkdir -p vendor/github.com/opencord/voltha-lib-go/v3/pkg
-	cp -r ${LOCAL_LIB_GO}/pkg/* vendor/github.com/opencord/voltha-lib-go/v3/pkg/
+	mkdir -p vendor/github.com/opencord/voltha-lib-go/v4/pkg
+	cp -r ${LOCAL_LIB_GO}/pkg/* vendor/github.com/opencord/voltha-lib-go/v4/pkg/
 endif
 
 

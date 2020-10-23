@@ -20,10 +20,10 @@ import (
 	"context"
 
 	. "github.com/golang/protobuf/ptypes/empty"
-	"github.com/opencord/voltha-protos/v3/go/common"
-	"github.com/opencord/voltha-protos/v3/go/omci"
-	"github.com/opencord/voltha-protos/v3/go/openflow_13"
-	. "github.com/opencord/voltha-protos/v3/go/voltha"
+	"github.com/opencord/voltha-protos/v4/go/common"
+	"github.com/opencord/voltha-protos/v4/go/omci"
+	"github.com/opencord/voltha-protos/v4/go/openflow_13"
+	. "github.com/opencord/voltha-protos/v4/go/voltha"
 	"google.golang.org/grpc"
 )
 
@@ -274,4 +274,12 @@ func (c MockVolthaClient) GetExtValue(ctx context.Context, in *common.ValueSpeci
 
 func (c MockVolthaClient) StartOmciTestAction(ctx context.Context, in *OmciTestRequest, opts ...grpc.CallOption) (*TestResponse, error) {
 	return &TestResponse{}, nil
+}
+
+func (c MockVolthaClient) ForceDeleteDevice(ctx context.Context, in *common.ID, opts ...grpc.CallOption) (*Empty, error) {
+	return &Empty{}, nil
+}
+
+func (c MockVolthaClient) SetExtValue(ctx context.Context, in *ValueSet, opts ...grpc.CallOption) (*Empty, error) {
+	return &Empty{}, nil
 }

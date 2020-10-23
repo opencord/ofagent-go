@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
+	"github.com/opencord/voltha-lib-go/v4/pkg/log"
 )
 
 func (ofc *OFConnection) handleRoleRequest(ctx context.Context, request *ofp.RoleRequest) {

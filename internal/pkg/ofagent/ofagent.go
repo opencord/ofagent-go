@@ -23,9 +23,10 @@ import (
 
 	"github.com/opencord/ofagent-go/internal/pkg/holder"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
-	"github.com/opencord/voltha-lib-go/v3/pkg/probe"
-	"github.com/opencord/voltha-protos/v3/go/voltha"
+	"github.com/opencord/voltha-lib-go/v4/pkg/log"
+	"github.com/opencord/voltha-lib-go/v4/pkg/probe"
+	"github.com/opencord/voltha-protos/v4/go/openflow_13"
+	"github.com/opencord/voltha-protos/v4/go/voltha"
 	"google.golang.org/grpc"
 )
 
@@ -58,7 +59,7 @@ type OFAgent struct {
 
 	packetInChannel    chan *voltha.PacketIn
 	packetOutChannel   chan *voltha.PacketOut
-	changeEventChannel chan *voltha.ChangeEvent
+	changeEventChannel chan *openflow_13.ChangeEvent
 }
 
 func NewOFAgent(ctx context.Context, config *OFAgent) (*OFAgent, error) {
@@ -71,7 +72,7 @@ func NewOFAgent(ctx context.Context, config *OFAgent) (*OFAgent, error) {
 		volthaClient:              &holder.VolthaServiceClientHolder{},
 		packetInChannel:           make(chan *voltha.PacketIn),
 		packetOutChannel:          make(chan *voltha.PacketOut),
-		changeEventChannel:        make(chan *voltha.ChangeEvent),
+		changeEventChannel:        make(chan *openflow_13.ChangeEvent),
 		clientMap:                 make(map[string]*openflow.OFClient),
 		events:                    make(chan ofaEvent, 100),
 	}
