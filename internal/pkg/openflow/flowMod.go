@@ -330,6 +330,8 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	span, ctx := log.CreateChildSpan(ctx, "openflow-flow-delete-strict")
 	defer span.Finish()
 
+	logger.Infow(ctx, "[TEO] Received Flow delete strict", log.Fields{"cookie": flowDeleteStrict.Cookie})
+
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(flowDeleteStrict)
 		logger.Debugw(ctx, "handleFlowDeleteStrict called",
@@ -428,6 +430,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	if flowDeleteStrict.GetFlags() == ofp.OFPFFSendFlowRem {
 		responseRequired = true
 	}
+	logger.Infow(ctx, "[TEO] Flow delete strict, responseRequired", log.Fields{"cookie": flowDeleteStrict.Cookie, "responseRequired": responseRequired})
 
 	// Construct request
 	flowUpdate := openflow_13.FlowTableUpdate{
@@ -458,6 +461,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
+	logger.Infow(ctx, "[TEO] Flow delete strict sent to VOLTHA", log.Fields{"cookie": flowDeleteStrict.Cookie})
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowDelete ",
 			log.Fields{
@@ -465,6 +469,8 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				"error":     err})
 		return
 	}
+
+	logger.Infow(ctx, "[TEO] Flow delete strict response received from VOLTHA", log.Fields{"cookie": flowDeleteStrict.Cookie})
 
 	if responseRequired {
 		response := ofp.NewFlowRemoved()
@@ -477,6 +483,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 		response.HardTimeout = flowDeleteStrict.HardTimeout
 		response.Xid = flowDeleteStrict.Xid
 
+		logger.Infow(ctx, "[TEO] Flow delete strict response sent to ONOS", log.Fields{"cookie": flowDeleteStrict.Cookie})
 		err := ofc.SendMessage(ctx, response)
 		if err != nil {
 			logger.Errorw(ctx, "Error sending FlowRemoved to ONOS",
