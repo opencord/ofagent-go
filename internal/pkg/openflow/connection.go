@@ -23,6 +23,7 @@ import (
 	"errors"
 	"io"
 	"net"
+	"sync"
 	"time"
 
 	"github.com/opencord/goloxi"
@@ -232,6 +233,7 @@ func (ofc *OFConnection) processOFStream(ctx context.Context) {
 	 * a message larger than this then we will have issues
 	 */
 	headerBuf := make([]byte, 8)
+	wg := sync.WaitGroup{}
 top:
 	// Continue until we are told to stop
 	for {
@@ -308,17 +310,22 @@ top:
 						"device-id": ofc.DeviceID,
 						"header":    js})
 			}
-			/*
-			 * Spawning a go routine for every incoming message removes processing ordering guarantees.
-			 * Removing such guarantees puts burden on the controller to ensure the correct ordering of
-			 * incoming messages and is a less optimal and safe agent implementation.
-			 * This is OK for now because ONOS keeps the order guaranteed but the agent needs to avoid
-			 * relying on external fairness. Particular care and attention has to be placed in flow add/delete
-			 * and relative barrier requests. e.g. a flowMod will be handled in thread different from a barrier,
-			 * with no guarantees of handling all messages before a barrier.
-			 * A multiple queue (incoming worker and outgoing) is a possible solution.
-			 */
-			go ofc.parseHeader(ctx, msg)
+
+			// We can parallelize the processing of all the operations
+			// that we get before a BarrieRequest, then we need to wait.
+			// What we are doing is:
+			// - spawn threads until we get a Barrier
+			// - when we get a barrier wait for the threads to complete before continuing
+
+			msgType := msg.GetType()
+			if msgType == ofp.OFPTBarrierRequest {
+				logger.Debug(ctx, "received-barrier-request-waiting-for-pending-requests")
+				wg.Wait()
+				logger.Debug(ctx, "restarting-requests-processing")
+			}
+
+			wg.Add(1)
+			go ofc.parseHeader(ctx, msg, &wg)
 		}
 	}
 	logger.Debugw(ctx, "end-of-stream",
@@ -349,7 +356,8 @@ func (ofc *OFConnection) sayHello(ctx context.Context) {
 	}
 }
 
-func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader) {
+func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader, wg *sync.WaitGroup) {
+	defer wg.Done()
 	headerType := header.GetType()
 	logger.Debugw(ctx, "packet-header-type",
 		log.Fields{

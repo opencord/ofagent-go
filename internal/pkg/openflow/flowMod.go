@@ -458,6 +458,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				"device-id":   ofc.DeviceID,
 				"flow-update": flowUpdateJs})
 	}
+
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowDelete ",
 			log.Fields{
