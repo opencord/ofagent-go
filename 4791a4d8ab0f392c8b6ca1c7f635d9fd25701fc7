@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c16f041_f4f785d4",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2020-10-27T21:41:55Z",
+      "side": 1,
+      "message": "Is it a good idea to put this as \"defer wg.Done()\" at the start of the function to make sure it is called no matter what. Because we seem to \"return\" at several places in this function before this \"wg.Done()\" can be called.",
+      "revId": "4791a4d8ab0f392c8b6ca1c7f635d9fd25701fc7",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
