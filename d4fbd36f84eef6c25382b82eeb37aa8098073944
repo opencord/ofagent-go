@@ -16,6 +16,24 @@
       "revId": "d4fbd36f84eef6c25382b82eeb37aa8098073944",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5df2eb19_d0be077e",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-10-28T15:21:17Z",
+      "side": 1,
+      "message": "No everything is spawning a go routine within \"parseHeader\", eg: OFPTFlowMod is a blocking operation.\n\nMy assumption was that the operations that are treated asynchronously in \"parseHeader\" were operations that can be the run in the background. From what I can see the only requests that spawn a new thread are not really operation on traffic but really control messages like Get/SetConfigRequest, PacketIn/Out and Role changes.\n\nThe point of this patch is to guarantee that a batch of instructions are processed (namely sent to the core) before we start processing a new batch (basically honoring the BarrierRequest).",
+      "parentUuid": "90b355e3_ba602703",
+      "revId": "d4fbd36f84eef6c25382b82eeb37aa8098073944",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
