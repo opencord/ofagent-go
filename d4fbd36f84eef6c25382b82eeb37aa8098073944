@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b355e3_ba602703",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-10-28T12:19:19Z",
+      "side": 1,
+      "message": "This will wait until a go routine is spawned when parsing the header (ofc.parseHeader).  Once that routine is spawned it gets the header type and spawns further go routines (except for the barrier scenario).  This means the wait is the time to spawn a go routine in most cases and for barrier request the wait is for its completion.   \n\nIs this the intent?  Just want to double check if we are artificially adding a slight delay in the OF message processing.",
+      "revId": "d4fbd36f84eef6c25382b82eeb37aa8098073944",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
