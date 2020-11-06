@@ -20,7 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v3/pkg/log"
+	"github.com/opencord/voltha-lib-go/v4/pkg/log"
 )
 
 func (ofc *OFConnection) handleErrMsg(ctx context.Context, message ofp.IErrorMsg) {
