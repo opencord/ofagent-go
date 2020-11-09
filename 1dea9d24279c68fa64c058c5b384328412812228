@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a172c93_0289c4fa",
+        "filename": "cmd/ofagent/common.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000729
+      },
+      "writtenOn": "2020-11-09T06:03:05Z",
+      "side": 1,
+      "message": "recheck",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 1
+      },
+      "revId": "1dea9d24279c68fa64c058c5b384328412812228",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
