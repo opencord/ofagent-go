@@ -22,6 +22,29 @@
       "revId": "1dea9d24279c68fa64c058c5b384328412812228",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb6e7e3_b427cd41",
+        "filename": "go.mod",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2020-11-10T18:04:52Z",
+      "side": 1,
+      "message": "can we bump this to \"4.0.2\"?",
+      "range": {
+        "startLine": 10,
+        "startChar": 39,
+        "endLine": 10,
+        "endChar": 44
+      },
+      "revId": "1dea9d24279c68fa64c058c5b384328412812228",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
