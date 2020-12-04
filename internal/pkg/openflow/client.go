@@ -261,6 +261,9 @@ func (ofc *OFClient) SendMessage(ctx context.Context, message Message) error {
 	case *ofp.PacketIn:
 		msgType = "PacketIn"
 		toEqual = false
+	case *ofp.ErrorMsg:
+		msgType = "Error"
+		toEqual = false
 	default:
 		toEqual = true
 	}

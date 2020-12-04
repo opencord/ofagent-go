@@ -234,6 +234,7 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 
 			Instructions: instructions,
 		},
+		Xid: flowAdd.Xid,
 	}
 	if logger.V(log.DebugLevel) {
 		flowUpdateJs, _ := json.Marshal(flowUpdate)
@@ -449,6 +450,7 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 				OxmFields: oxmList,
 			},
 		},
+		Xid: flowDeleteStrict.Xid,
 	}
 
 	if logger.V(log.DebugLevel) {
