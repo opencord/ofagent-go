@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9252ba63_cf660a05",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-12-04T15:45:45Z",
+      "side": 1,
+      "message": "Missing sending the error message to ONOS",
+      "revId": "92ec3f0c4b66535fb215ea619ca7338638bb9a33",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
