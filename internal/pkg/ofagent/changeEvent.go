@@ -80,49 +80,72 @@ top:
 			break top
 		case changeEvent := <-ofa.changeEventChannel:
 			deviceID := changeEvent.GetId()
-			portStatus := changeEvent.GetPortStatus()
-			logger.Debugw(ctx, "received-change-event",
-				log.Fields{
-					"device-id":   deviceID,
-					"port-status": portStatus})
+			if errMsg := changeEvent.GetError(); errMsg != nil {
+				logger.Debugw(ctx, "received-change-event",
+					log.Fields{
+						"device-id": deviceID,
+						"error":     errMsg})
+				header := errMsg.Header
 
-			if portStatus == nil {
+				ofErrMsg := ofp.NewFlowModFailedErrorMsg()
+
+				ofErrMsg.SetXid(header.Xid)
+				if header.Version != 0 {
+					ofErrMsg.SetVersion(uint8(header.Version))
+				} else {
+					ofErrMsg.SetVersion(4)
+				}
+
+				ofErrMsg.SetType(uint8(errMsg.Header.Type))
+				ofErrMsg.SetCode(ofp.FlowModFailedCode(errMsg.Code))
+				ofErrMsg.SetData(errMsg.Data)
+
+				if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofErrMsg); err != nil {
+					logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
+				}
+
+			} else if portStatus := changeEvent.GetPortStatus(); portStatus != nil {
+				logger.Debugw(ctx, "received-change-event",
+					log.Fields{
+						"device-id":   deviceID,
+						"port-status": portStatus})
+				ofPortStatus := ofp.NewPortStatus()
+				ofPortStatus.SetXid(openflow.GetXid())
+				ofPortStatus.SetVersion(4)
+
+				ofReason := ofp.PortReason(portStatus.GetReason())
+				ofPortStatus.SetReason(ofReason)
+				ofDesc := ofp.NewPortDesc()
+
+				desc := portStatus.GetDesc()
+				ofDesc.SetAdvertised(ofp.PortFeatures(desc.GetAdvertised()))
+				ofDesc.SetConfig(ofp.PortConfig(0))
+				ofDesc.SetCurr(ofp.PortFeatures(desc.GetAdvertised()))
+				ofDesc.SetCurrSpeed(desc.GetCurrSpeed())
+				intArray := desc.GetHwAddr()
+				var octets []byte
+				for _, val := range intArray {
+					octets = append(octets, byte(val))
+				}
+				addr := net.HardwareAddr(octets)
+				ofDesc.SetHwAddr(addr)
+				ofDesc.SetMaxSpeed(desc.GetMaxSpeed())
+				ofDesc.SetName(openflow.PadString(desc.GetName(), 16))
+				ofDesc.SetPeer(ofp.PortFeatures(desc.GetPeer()))
+				ofDesc.SetPortNo(ofp.Port(desc.GetPortNo()))
+				ofDesc.SetState(ofp.PortState(desc.GetState()))
+				ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
+				ofPortStatus.SetDesc(*ofDesc)
+				if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofPortStatus); err != nil {
+					logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
+				}
+			} else {
 				if logger.V(log.WarnLevel) {
 					js, _ := json.Marshal(changeEvent.GetEvent())
-					logger.Warnw(ctx, "Received change event that was not port status",
+					logger.Warnw(ctx, "Received change event that was neither port status nor error message.",
 						log.Fields{"ChangeEvent": js})
 				}
 				break
-			}
-			ofPortStatus := ofp.NewPortStatus()
-			ofPortStatus.SetXid(openflow.GetXid())
-			ofPortStatus.SetVersion(4)
-
-			ofReason := ofp.PortReason(portStatus.GetReason())
-			ofPortStatus.SetReason(ofReason)
-			ofDesc := ofp.NewPortDesc()
-
-			desc := portStatus.GetDesc()
-			ofDesc.SetAdvertised(ofp.PortFeatures(desc.GetAdvertised()))
-			ofDesc.SetConfig(ofp.PortConfig(0))
-			ofDesc.SetCurr(ofp.PortFeatures(desc.GetAdvertised()))
-			ofDesc.SetCurrSpeed(desc.GetCurrSpeed())
-			intArray := desc.GetHwAddr()
-			var octets []byte
-			for _, val := range intArray {
-				octets = append(octets, byte(val))
-			}
-			addr := net.HardwareAddr(octets)
-			ofDesc.SetHwAddr(addr)
-			ofDesc.SetMaxSpeed(desc.GetMaxSpeed())
-			ofDesc.SetName(openflow.PadString(desc.GetName(), 16))
-			ofDesc.SetPeer(ofp.PortFeatures(desc.GetPeer()))
-			ofDesc.SetPortNo(ofp.Port(desc.GetPortNo()))
-			ofDesc.SetState(ofp.PortState(desc.GetState()))
-			ofDesc.SetSupported(ofp.PortFeatures(desc.GetSupported()))
-			ofPortStatus.SetDesc(*ofDesc)
-			if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofPortStatus); err != nil {
-				logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
 			}
 		}
 	}
