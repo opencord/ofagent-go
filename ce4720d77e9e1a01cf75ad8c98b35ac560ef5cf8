@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e94ce5d9_25b4ef00",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1000729
+      },
+      "writtenOn": "2020-12-05T00:48:11Z",
+      "side": 1,
+      "message": "Need to confirm whether error message will be send to all OF controllers or just the primary one.",
+      "range": {
+        "startLine": 266,
+        "startChar": 1,
+        "endLine": 266,
+        "endChar": 2
+      },
+      "revId": "ce4720d77e9e1a01cf75ad8c98b35ac560ef5cf8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}

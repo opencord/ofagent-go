@@ -16,6 +16,24 @@
       "revId": "92ec3f0c4b66535fb215ea619ca7338638bb9a33",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0899d7c_72ddba55",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000729
+      },
+      "writtenOn": "2020-12-05T00:48:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9252ba63_cf660a05",
+      "revId": "92ec3f0c4b66535fb215ea619ca7338638bb9a33",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
