@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "628df72b_453257a5",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-12-15T14:21:19Z",
+      "side": 1,
+      "message": "Is this debug still required?",
+      "revId": "9b1181e11bf8fb6fe5cd80633a15956f2ca1375a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5114a6fe_59620013",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-12-15T14:21:19Z",
+      "side": 1,
+      "message": "Was it confirmed from someone from ONOS that only the master OF controller should receive this error?",
+      "revId": "9b1181e11bf8fb6fe5cd80633a15956f2ca1375a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
