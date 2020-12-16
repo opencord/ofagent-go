@@ -51,6 +51,24 @@
       "revId": "9b1181e11bf8fb6fe5cd80633a15956f2ca1375a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8618c9d6_af030fab",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1000729
+      },
+      "writtenOn": "2020-12-16T14:31:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5114a6fe_59620013",
+      "revId": "9b1181e11bf8fb6fe5cd80633a15956f2ca1375a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
