@@ -90,16 +90,14 @@ top:
 				ofErrMsg := ofp.NewFlowModFailedErrorMsg()
 
 				ofErrMsg.SetXid(header.Xid)
+				ofErrMsg.SetCode(ofp.FlowModFailedCode(errMsg.Code))
+
 				if header.Version != 0 {
 					ofErrMsg.SetVersion(uint8(header.Version))
 				} else {
 					ofErrMsg.SetVersion(4)
 				}
-
-				ofErrMsg.SetType(uint8(errMsg.Header.Type))
-				ofErrMsg.SetCode(ofp.FlowModFailedCode(errMsg.Code))
 				ofErrMsg.SetData(errMsg.Data)
-
 				if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofErrMsg); err != nil {
 					logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
 				}
