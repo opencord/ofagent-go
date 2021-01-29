@@ -16,6 +16,24 @@
       "revId": "111fc349c57cb48bd54e03d5e85db4a0fbcfa1a2",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34379bb2_ba83bf18",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-01-29T13:51:15Z",
+      "side": 1,
+      "message": "the type is already set when the message is created here ofErrMsg :\u003d ofp.NewFlowModFailedErrorMsg(), overriding the type for the flowMod error message with another type causes serialisation issues",
+      "parentUuid": "7bfc813f_c623ec6d",
+      "revId": "111fc349c57cb48bd54e03d5e85db4a0fbcfa1a2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
