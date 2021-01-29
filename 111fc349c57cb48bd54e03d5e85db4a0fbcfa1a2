@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7bfc813f_c623ec6d",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000726
+      },
+      "writtenOn": "2021-01-29T13:33:45Z",
+      "side": 1,
+      "message": "reason behind removal of setting type",
+      "revId": "111fc349c57cb48bd54e03d5e85db4a0fbcfa1a2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
