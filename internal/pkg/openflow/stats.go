@@ -343,6 +343,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 	if err != nil {
 		return nil, err
 	}
+	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"flows": resp})
 	var flows []*ofp.FlowStatsEntry
 	for _, item := range resp.GetItems() {
 		entry := ofp.NewFlowStatsEntry()
@@ -372,7 +373,11 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
 			instruction := parseInstructions(ctx, ofpInstruction)
-			instructions = append(instructions, instruction)
+			if instruction != nil {
+				instructions = append(instructions, instruction)
+			} else {
+				logger.Errorw(ctx, "error-parsing-instruction", log.Fields{"instruction": instruction})
+			}
 		}
 		entry.Instructions = instructions
 		flows = append(flows, entry)

@@ -130,7 +130,8 @@ func parseInstructions(ctx context.Context, ofpInstruction *openflow_13.OfpInstr
 	if logger.V(log.DebugLevel) {
 		js, _ := json.Marshal(ofpInstruction)
 		logger.Debugw(ctx, "parseInstructions called",
-			log.Fields{"Instruction": js})
+			log.Fields{"Instruction": js,
+				"ofp-Instruction": ofpInstruction})
 	}
 	instType := ofpInstruction.Type
 	data := ofpInstruction.GetData()
@@ -168,6 +169,8 @@ func parseInstructions(ctx context.Context, ofpInstruction *openflow_13.OfpInstr
 		return instruction
 	}
 	//shouldn't have reached here :<
+	logger.Errorw(ctx, "Can't parseInstructions",
+		log.Fields{"ofp-Instruction": ofpInstruction})
 	return nil
 }
 
