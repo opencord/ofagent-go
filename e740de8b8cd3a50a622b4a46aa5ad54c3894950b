@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37e23691_0d078d6c",
+        "filename": "internal/pkg/openflow/parseGrpcReturn.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2021-03-04T16:14:09Z",
+      "side": 1,
+      "message": "Minor: wouldn\u0027t it be better to return an error?",
+      "range": {
+        "startLine": 172,
+        "startChar": 1,
+        "endLine": 174,
+        "endChar": 11
+      },
+      "revId": "e740de8b8cd3a50a622b4a46aa5ad54c3894950b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
