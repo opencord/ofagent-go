@@ -18,6 +18,7 @@ package openflow
 
 import (
 	"context"
+	"fmt"
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v4/pkg/log"
@@ -123,11 +124,14 @@ func openflowActionsToVoltha(actions []goloxi.IAction) []*openflow_13.OfpAction 
 	return outActions
 }
 
-func volthaBucketsToOpenflow(ctx context.Context, buckets []*openflow_13.OfpBucket) []*ofp.Bucket {
+func volthaBucketsToOpenflow(ctx context.Context, buckets []*openflow_13.OfpBucket) ([]*ofp.Bucket, error) {
 	outBuckets := make([]*ofp.Bucket, len(buckets))
 
 	for i, bucket := range buckets {
-		actions := volthaActionsToOpenflow(ctx, bucket.Actions)
+		actions, err := volthaActionsToOpenflow(ctx, bucket.Actions)
+		if err != nil {
+			return nil, err
+		}
 		b := &ofp.Bucket{
 			Weight:     uint16(bucket.Weight),
 			WatchPort:  ofp.Port(bucket.WatchPort),
@@ -137,15 +141,21 @@ func volthaBucketsToOpenflow(ctx context.Context, buckets []*openflow_13.OfpBuck
 		outBuckets[i] = b
 	}
 
-	return outBuckets
+	return outBuckets, nil
 }
 
-func volthaActionsToOpenflow(ctx context.Context, actions []*openflow_13.OfpAction) []goloxi.IAction {
+func volthaActionsToOpenflow(ctx context.Context, actions []*openflow_13.OfpAction) ([]goloxi.IAction, error) {
 	outActions := make([]goloxi.IAction, len(actions))
 
 	for i, action := range actions {
-		outActions[i] = parseAction(ctx, action)
+		outAction, err := parseAction(ctx, action)
+		if err == nil {
+			outActions[i] = outAction
+		} else {
+			return nil, fmt.Errorf("can't-parse-action %v", err)
+		}
+
 	}
 
-	return outActions
+	return outActions, nil
 }
