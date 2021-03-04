@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c3795ae_53b4d125",
+        "filename": "internal/pkg/openflow/parseGrpcReturn.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2021-03-04T17:00:09Z",
+      "side": 1,
+      "message": "is it ok to continue in this case. The rw-core is going to receive a flow that isn\u0027t intended by ONOS.",
+      "revId": "61cb56444cb190a8626461e6b72ce993be232cce",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5de22e10_9802fb7e",
+        "filename": "internal/pkg/openflow/parseGrpcReturn.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2021-03-04T17:00:09Z",
+      "side": 1,
+      "message": "Is it ok to continue in this case. rw-core is going to receive a flow that isn\u0027t intended by ONOS.",
+      "revId": "61cb56444cb190a8626461e6b72ce993be232cce",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
