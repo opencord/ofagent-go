@@ -144,7 +144,13 @@ func volthaActionsToOpenflow(ctx context.Context, actions []*openflow_13.OfpActi
 	outActions := make([]goloxi.IAction, len(actions))
 
 	for i, action := range actions {
-		outActions[i] = parseAction(ctx, action)
+		outAction, err := parseAction(ctx, action)
+		if err == nil {
+			outActions[i] = outAction
+		} else {
+			logger.Errorw(ctx, "error-parsing-action", log.Fields{"err": err})
+		}
+
 	}
 
 	return outActions

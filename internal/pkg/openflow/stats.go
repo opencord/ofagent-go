@@ -343,6 +343,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 	if err != nil {
 		return nil, err
 	}
+	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"flows": resp})
 	var flows []*ofp.FlowStatsEntry
 	for _, item := range resp.GetItems() {
 		entry := ofp.NewFlowStatsEntry()
@@ -363,16 +364,24 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 		for _, oxmField := range pbMatch.GetOxmFields() {
 			field := oxmField.GetField()
 			ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
-			iOxm := parseOxm(ctx, ofbField)
-			fields = append(fields, iOxm)
+			iOxm, err := parseOxm(ctx, ofbField)
+			if err == nil {
+				fields = append(fields, iOxm)
+			} else {
+				logger.Errorw(ctx, "error-parsing-oxm", log.Fields{"err": err})
+			}
 		}
 
 		match.OxmList = fields
 		entry.SetMatch(*match)
 		var instructions []ofp.IInstruction
 		for _, ofpInstruction := range item.Instructions {
-			instruction := parseInstructions(ctx, ofpInstruction)
-			instructions = append(instructions, instruction)
+			instruction, err := parseInstructions(ctx, ofpInstruction)
+			if err == nil {
+				instructions = append(instructions, instruction)
+			} else {
+				logger.Errorw(ctx, "error-parsing-instruction", log.Fields{"err": err})
+			}
 		}
 		entry.Instructions = instructions
 		flows = append(flows, entry)
