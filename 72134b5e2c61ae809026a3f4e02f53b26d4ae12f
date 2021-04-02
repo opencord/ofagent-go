@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98d59fc0_c2c357a2",
+        "filename": "docker/Dockerfile.ofagent-go",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000438
+      },
+      "writtenOn": "2021-04-02T15:53:54Z",
+      "side": 1,
+      "message": "Any thought about more recent version of go?",
+      "revId": "72134b5e2c61ae809026a3f4e02f53b26d4ae12f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
