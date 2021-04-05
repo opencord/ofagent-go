@@ -34,6 +34,24 @@
       "revId": "72134b5e2c61ae809026a3f4e02f53b26d4ae12f",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "017ed9dc_b872b27c",
+        "filename": "docker/Dockerfile.ofagent-go",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-04-05T17:40:03Z",
+      "side": 1,
+      "message": "but perhaps upgrade to 1.16 needs to be discussed at TST and updated in a separate patch",
+      "parentUuid": "6510584b_45dc915e",
+      "revId": "72134b5e2c61ae809026a3f4e02f53b26d4ae12f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
