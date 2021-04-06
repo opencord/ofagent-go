@@ -29,6 +29,7 @@ DOCKER_EXTRA_ARGS          ?=
 DOCKER_REGISTRY            ?=
 DOCKER_REPOSITORY          ?=
 DOCKER_TAG                 ?= ${VERSION}$(shell [[ ${DOCKER_LABEL_VCS_DIRTY} == "true" ]] && echo "-dirty" || true)
+DOCKER_TARGET              ?= prod
 ADAPTER_IMAGENAME          := ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}voltha-ofagent-go
 
 ## Docker labels. Only set ref and commit date if committed
@@ -58,58 +59,47 @@ GOCOVER_COBERTURA = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app
 GOLANGCI_LINT     = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app $(shell test -t 0 && echo "-it") -v gocache:/.cache -v gocache-${VOLTHA_TOOLS_VERSION}:/go/pkg voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}-golangci-lint golangci-lint
 HADOLINT          = docker run --rm --user $$(id -u):$$(id -g) -v ${CURDIR}:/app $(shell test -t 0 && echo "-it") voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}-hadolint hadolint
 
-.PHONY: local-protos local-voltha
-
-# This should to be the first and default target in this Makefile
-help:
-	@echo "Usage: make [<target>]"
-	@echo "where available targets are:"
-	@echo
-	@echo "build             : Build ofagent-go docker image"
-	@echo "docker-build      : Build ofagent-go docker image"
-	@echo "help              : Print this help"
-	@echo "docker-push       : Push the docker images to an external repository"
-	@echo "lint              : Run lint verification, depenancy, gofmt and reference check"
-	@echo "sca               : Runs various SCA through golangci-lint tool"
-	@echo "test              : Run unit tests, if any"
-	@echo
-
+.PHONY: docker-build local-protos local-lib-go local-voltha help
+.DEFAULT_GOAL := help
 
 ## Local Development Helpers
 
-local-protos:
+local-protos: ## Copies a local version of the voltha-protos dependency into the vendor directory
 ifdef LOCAL_PROTOS
+	rm -rf vendor/github.com/opencord/voltha-protos/go
 	mkdir -p vendor/github.com/opencord/voltha-protos/go
 	cp -r ${GOPATH}/src/github.com/opencord/voltha-protos/go/* vendor/github.com/opencord/voltha-protos/go
 endif
 
 ## Local Development Helpers
-local-lib-go:
+local-lib-go: ## Copies a local version of the voltha-lib-go dependency into the vendor directory
 ifdef LOCAL_LIB_GO
+	rm -rf vendor/github.com/opencord/voltha-lib-go/v4/pkg
 	mkdir -p vendor/github.com/opencord/voltha-lib-go/v4/pkg
 	cp -r ${LOCAL_LIB_GO}/pkg/* vendor/github.com/opencord/voltha-lib-go/v4/pkg/
 endif
 
 
-local-voltha:
+local-voltha: ## Copies a local version of the voltha-go dependency into the vendor directory
 ifdef LOCAL_VOLTHA
+	rm -rf vendor/github.com/opencord/voltha-go/
 	mkdir -p vendor/github.com/opencord/voltha-go/
 	cp -rf ${GOPATH}/src/github.com/opencord/voltha-go/ vendor/github.com/opencord/
 	rm -rf vendor/github.com/opencord/voltha-go/vendor
 endif
 
 ## Docker targets
-build: docker-build
+build: docker-build ## Alias for 'docker-build'
 
 ## Docker targets
 
-docker-build: local-protos local-voltha local-lib-go
-	docker build $(DOCKER_BUILD_ARGS) -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -f docker/Dockerfile.ofagent-go .
+docker-build: local-protos local-voltha local-lib-go ## Build docker image (set BUILD_PROFILED=true to also build the profiled image)
+	docker build $(DOCKER_BUILD_ARGS) --target=${DOCKER_TARGET} -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -f docker/Dockerfile.ofagent-go .
 ifdef BUILD_PROFILED
-	docker build $(DOCKER_BUILD_ARGS) --build-arg EXTRA_GO_BUILD_TAGS="-tags profile" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile -f docker/Dockerfile.ofagent-go .
+	docker build $(DOCKER_BUILD_ARGS) --target=${DOCKER_TARGET} --build-arg EXTRA_GO_BUILD_TAGS="-tags profile" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile -f docker/Dockerfile.ofagent-go .
 endif
 
-docker-push:
+docker-push: ## Push the docker images to an external repository
 	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}
 ifdef BUILD_PROFILED
 	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile
@@ -117,12 +107,12 @@ endif
 
 ## lint and unit tests
 
-lint-dockerfile:
+lint-dockerfile: ## Perform static analysis on Dockerfile
 	@echo "Running Dockerfile lint check..."
 	@${HADOLINT} $$(find . -name "Dockerfile.*")
 	@echo "Dockerfile lint check OK"
 
-lint-mod:
+lint-mod: ## Verify the Go dependencies
 	@echo "Running dependency check..."
 	@${GO} mod verify
 	@echo "Dependency check OK. Running vendor check..."
@@ -136,9 +126,9 @@ lint-mod:
 	@[[ `git ls-files --exclude-standard --others go.mod go.sum vendor` == "" ]] || (echo "ERROR: Untracked files detected after running go mod tidy / go mod vendor" && git status -- go.mod go.sum vendor && git checkout -- go.mod go.sum vendor && exit 1)
 	@echo "Vendor check OK."
 
-lint: lint-mod lint-dockerfile
+lint: lint-mod lint-dockerfile ## Run all lint targets
 
-test: local-lib-go
+test: local-lib-go ## Run unit tests
 	@mkdir -p ./tests/results
 	@${GO} test -mod=vendor -v -coverprofile ./tests/results/go-test-coverage.out -covermode count ./... 2>&1 | tee ./tests/results/go-test-results.out ;\
 	RETURN=$$? ;\
@@ -146,7 +136,7 @@ test: local-lib-go
 	${GOCOVER_COBERTURA} < ./tests/results/go-test-coverage.out > ./tests/results/go-test-coverage.xml ;\
 	exit $$RETURN
 
-sca:
+sca: ## Runs static code analysis with the golangci-lint tool
 	@rm -rf ./sca-report
 	@mkdir -p ./sca-report
 	@echo "Running static code analysis..."
@@ -154,12 +144,20 @@ sca:
 	@echo ""
 	@echo "Static code analysis OK"
 
-clean:
+clean: ## Removes any local filesystem artifacts generated by a build
 	rm -rf ./sca-report
 
-distclean: clean
+distclean: clean ## Removes any local filesystem artifacts generated by a build or test run
 	rm -rf ${VENVDIR}
 
-mod-update:
+mod-update: ## Update go mod files
 	${GO} mod tidy
 	${GO} mod vendor
+
+# For each makefile target, add ## <description> on the target line and it will be listed by 'make help'
+help: ## Print help for each Makefile target
+	@echo "Usage: make [<target>]"
+	@echo "where available targets are:"
+	@echo
+	@grep '^[[:alpha:]_-]*:.* ##' $(MAKEFILE_LIST) \
+		| sort | awk 'BEGIN {FS=":.* ## "}; {printf "%-25s : %s\n", $$1, $$2};'
