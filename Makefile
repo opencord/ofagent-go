@@ -94,15 +94,21 @@ build: docker-build ## Alias for 'docker-build'
 ## Docker targets
 
 docker-build: local-protos local-voltha local-lib-go ## Build docker image (set BUILD_PROFILED=true to also build the profiled image)
-	docker build $(DOCKER_BUILD_ARGS) --target=${DOCKER_TARGET} -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -f docker/Dockerfile.ofagent-go .
+	docker build $(DOCKER_BUILD_ARGS) --build-arg CGO_PARAMETER=0 --target=${DOCKER_TARGET} -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG} -f docker/Dockerfile.ofagent-go .
 ifdef BUILD_PROFILED
-	docker build $(DOCKER_BUILD_ARGS) --target=${DOCKER_TARGET} --build-arg EXTRA_GO_BUILD_TAGS="-tags profile" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile -f docker/Dockerfile.ofagent-go .
+	docker build $(DOCKER_BUILD_ARGS) --build-arg CGO_PARAMETER=1 --target=dev --build-arg EXTRA_GO_BUILD_TAGS="-tags profile" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile -f docker/Dockerfile.ofagent-go .
+endif
+ifdef BUILD_RACE
+	docker build $(DOCKER_BUILD_ARGS) --build-arg CGO_PARAMETER=1 --target=dev --build-arg EXTRA_GO_BUILD_TAGS="--race" -t ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-rd -f docker/Dockerfile.ofagent-go .
 endif
 
 docker-push: ## Push the docker images to an external repository
 	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}
 ifdef BUILD_PROFILED
 	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-profile
+endif
+ifdef BUILD_RACE
+	docker push ${ADAPTER_IMAGENAME}:${DOCKER_TAG}-rd
 endif
 
 ## lint and unit tests

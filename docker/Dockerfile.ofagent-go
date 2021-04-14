@@ -17,10 +17,15 @@
 
 FROM --platform=linux/amd64 golang:1.16.3-alpine3.13 AS dev
 
+# Install required packages
+RUN apk add --no-cache build-base=0.5-r2
+
 WORKDIR /go/src
 COPY . .
 
 ARG EXTRA_GO_BUILD_TAGS=""
+
+ARG CGO_PARAMETER="0"
 
 ARG org_label_schema_version=unknown
 ARG org_label_schema_vcs_url=unknown
@@ -32,7 +37,7 @@ ARG org_opencord_vcs_dirty=unknown
 # Build
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 RUN \
-CGO_ENABLED=0 go build $EXTRA_GO_BUILD_TAGS -mod=vendor -o /app/ofagent \
+CGO_ENABLED=$CGO_PARAMETER go build $EXTRA_GO_BUILD_TAGS -mod=vendor -o /app/ofagent \
 -ldflags \
 "-X github.com/opencord/voltha-lib-go/v2/pkg/version.version=$org_label_schema_version \
 -X github.com/opencord/voltha-lib-go/v2/pkg/version.vcsRef=$org_label_schema_vcs_ref \
