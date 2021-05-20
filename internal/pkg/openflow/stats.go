@@ -343,7 +343,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 	if err != nil {
 		return nil, err
 	}
-	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"flows": resp})
+	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"logical-device-id": ofc.DeviceID, "num-flows": len(resp.Items)})
 	var flows []*ofp.FlowStatsEntry
 	for _, item := range resp.GetItems() {
 		entry := ofp.NewFlowStatsEntry()
@@ -387,23 +387,29 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 		flows = append(flows, entry)
 	}
 	var responses []*ofp.FlowStatsReply
+
 	chunkSize := ofc.flowsChunkSize
 	total := len(flows) / chunkSize
 	n := 0
 	for n <= total {
+		response := ofp.NewFlowStatsReply()
+		response.SetXid(request.GetXid())
+		response.SetVersion(request.GetVersion())
+		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 
 		limit := (n * chunkSize) + chunkSize
-
 		chunk := flows[n*chunkSize : min(limit, len(flows))]
 
 		if len(chunk) == 0 {
+			// Special case - no flows
+			if len(flows) == 0 {
+				logger.Debugw(ctx, "no-flows-present", log.Fields{"logical-device-id": ofc.DeviceID})
+				response.SetEntries(chunk)
+				responses = append(responses, response)
+			}
 			break
 		}
 
-		response := ofp.NewFlowStatsReply()
-		response.SetXid(request.GetXid())
-		response.SetVersion(4)
-		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 		if limit < len(flows) {
 			response.SetFlags(ofp.StatsReplyFlags(ofp.OFPSFReplyMore))
 		}
@@ -607,24 +613,32 @@ func (ofc *OFConnection) handlePortStatsRequest(ctx context.Context, request *of
 	}
 
 	var responses []*ofp.PortStatsReply
+
 	chunkSize := ofc.portsChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
+		response := ofp.NewPortStatsReply()
+		response.SetXid(request.GetXid())
+		response.SetVersion(request.GetVersion())
+		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
 
 		chunk := entries[n*chunkSize : min((n*chunkSize)+chunkSize, len(entries))]
 
 		if len(chunk) == 0 {
+			// handle the case of no ports
+			if len(entries) == 0 {
+				logger.Debugw(ctx, "no-ports-present", log.Fields{"logical-device-id": ofc.DeviceID})
+				response.SetEntries(chunk)
+				responses = append(responses, response)
+			}
 			break
 		}
 
-		response := ofp.NewPortStatsReply()
-		response.SetXid(request.GetXid())
-		response.SetVersion(request.GetVersion())
 		if total != n {
 			response.SetFlags(ofp.StatsReplyFlags(ofp.OFPSFReplyMore))
 		}
-		response.SetEntries(entries[n*chunkSize : min((n*chunkSize)+chunkSize, len(entries))])
+		response.SetEntries(chunk)
 		responses = append(responses, response)
 		n++
 	}
@@ -667,21 +681,27 @@ func (ofc *OFConnection) handlePortDescStatsRequest(ctx context.Context, request
 	}
 
 	var responses []*ofp.PortDescStatsReply
+
 	chunkSize := ofc.portsDescChunkSize
 	total := len(entries) / chunkSize
 	n := 0
 	for n <= total {
-
-		chunk := entries[n*chunkSize : min((n*chunkSize)+chunkSize, len(entries))]
-
-		if len(chunk) == 0 {
-			break
-		}
-
 		response := ofp.NewPortDescStatsReply()
 		response.SetVersion(request.GetVersion())
 		response.SetXid(request.GetXid())
 		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+
+		chunk := entries[n*chunkSize : min((n*chunkSize)+chunkSize, len(entries))]
+
+		if len(chunk) == 0 {
+			if len(entries) == 0 {
+				logger.Debugw(ctx, "no-ports-desc-present", log.Fields{"logical-device-id": ofc.DeviceID})
+				response.SetEntries(chunk)
+				responses = append(responses, response)
+			}
+			break
+		}
+
 		if total != n {
 			response.SetFlags(ofp.StatsReplyFlags(ofp.OFPSFReplyMore))
 		}
