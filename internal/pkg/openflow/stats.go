@@ -343,7 +343,7 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 	if err != nil {
 		return nil, err
 	}
-	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"flows": resp})
+	logger.Debugw(ctx, "logicalDeviceFlows", log.Fields{"logical-device-id": ofc.DeviceID, "flows": resp})
 	var flows []*ofp.FlowStatsEntry
 	for _, item := range resp.GetItems() {
 		entry := ofp.NewFlowStatsEntry()
@@ -387,6 +387,20 @@ func (ofc *OFConnection) handleFlowStatsRequest(ctx context.Context, request *of
 		flows = append(flows, entry)
 	}
 	var responses []*ofp.FlowStatsReply
+
+	// Handle case where there are no flows
+	if len(flows) == 0 {
+		logger.Debugw(ctx, "no-flows-present", log.Fields{"logical-device-id": ofc.DeviceID})
+		response := ofp.NewFlowStatsReply()
+		response.SetXid(request.GetXid())
+		response.SetVersion(4)
+		response.SetFlags(ofp.StatsReplyFlags(request.GetFlags()))
+		response.SetEntries([]*ofp.FlowStatsEntry{})
+		responses = append(responses, response)
+		return responses, nil
+	}
+
+	// Now we do have flows
 	chunkSize := ofc.flowsChunkSize
 	total := len(flows) / chunkSize
 	n := 0
@@ -607,6 +621,18 @@ func (ofc *OFConnection) handlePortStatsRequest(ctx context.Context, request *of
 	}
 
 	var responses []*ofp.PortStatsReply
+
+	// handle the case of no ports
+	if len(entries) == 0 {
+		logger.Debugw(ctx, "no-ports-present", log.Fields{"logical-device-id": ofc.DeviceID})
+		response := ofp.NewPortStatsReply()
+		response.SetXid(request.GetXid())
+		response.SetVersion(request.GetVersion())
+		response.SetEntries([]*ofp.PortStatsEntry{})
+		responses = append(responses, response)
+		return responses, nil
+	}
+
 	chunkSize := ofc.portsChunkSize
 	total := len(entries) / chunkSize
 	n := 0
@@ -667,6 +693,18 @@ func (ofc *OFConnection) handlePortDescStatsRequest(ctx context.Context, request
 	}
 
 	var responses []*ofp.PortDescStatsReply
+
+	// Handle no desc present case
+	if len(entries) == 0 {
+		logger.Debugw(ctx, "no-ports-desc-present", log.Fields{"logical-device-id": ofc.DeviceID})
+		response := ofp.NewPortDescStatsReply()
+		response.SetVersion(request.GetVersion())
+		response.SetXid(request.GetXid())
+		response.SetEntries([]*ofp.PortDesc{})
+		responses = append(responses, response)
+		return responses, nil
+	}
+
 	chunkSize := ofc.portsDescChunkSize
 	total := len(entries) / chunkSize
 	n := 0
