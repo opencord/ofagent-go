@@ -73,6 +73,29 @@
     },
     {
       "key": {
+        "uuid": "a6885f27_f636e426",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-05-21T20:38:10Z",
+      "side": 1,
+      "message": "i think if we change this to `if n \u003e 0 \u0026\u0026 len(chunk) \u003d\u003d 0 {` then this look should work with no flows.",
+      "range": {
+        "startLine": 413,
+        "startChar": 2,
+        "endLine": 415,
+        "endChar": 3
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24cc20f8_934218e6",
         "filename": "internal/pkg/openflow/stats.go",
         "patchSetId": 1
