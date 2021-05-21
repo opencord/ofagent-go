@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a97ad2f4_f3afb27b",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-05-21T16:08:45Z",
+      "side": 1,
+      "message": "The loop below has one iteration if there are no flows. Should the fix here be to handle the no flows situation in that loop? i.e. when n \u003d 0. This may center around setting the entries correctly?",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 404,
+        "endChar": 0
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24cc20f8_934218e6",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-05-21T16:08:45Z",
+      "side": 1,
+      "message": "similar comment as above",
+      "range": {
+        "startLine": 624,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 0
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
