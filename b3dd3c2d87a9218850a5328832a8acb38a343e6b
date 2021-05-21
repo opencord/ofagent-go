@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c797be8c_5caecdb3",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-05-21T16:54:03Z",
+      "side": 1,
+      "message": "I can support either approach. i guess what bothers me most is the below case (i think) was meant to manage all cases and it clearly doesn\u0027t. so are there other logic flaws in it that just haven\u0027t been exposed yet.",
+      "parentUuid": "058adde4_64decb4f",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 404,
+        "endChar": 0
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24cc20f8_934218e6",
         "filename": "internal/pkg/openflow/stats.go",
         "patchSetId": 1
