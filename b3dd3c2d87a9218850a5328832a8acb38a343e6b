@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "555617f0_62cf95aa",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-05-24T10:00:14Z",
+      "side": 1,
+      "message": "agreed! @khen, can you make this change and re-test ? also, while you are at it, do you mind doing response.SetVersion(request.GetVersion()) instead of hardcoding it at line 419? \n\nthanks!",
+      "parentUuid": "a6885f27_f636e426",
+      "range": {
+        "startLine": 413,
+        "startChar": 2,
+        "endLine": 415,
+        "endChar": 3
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24cc20f8_934218e6",
         "filename": "internal/pkg/openflow/stats.go",
         "patchSetId": 1
@@ -113,6 +137,47 @@
         "endLine": 636,
         "endChar": 0
       },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c515d297_9ce8ab67",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-05-24T10:00:14Z",
+      "side": 1,
+      "message": "agreed",
+      "parentUuid": "24cc20f8_934218e6",
+      "range": {
+        "startLine": 624,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 0
+      },
+      "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcc41899_aefa0298",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-05-24T10:00:14Z",
+      "side": 1,
+      "message": "same here I think",
       "revId": "b3dd3c2d87a9218850a5328832a8acb38a343e6b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
