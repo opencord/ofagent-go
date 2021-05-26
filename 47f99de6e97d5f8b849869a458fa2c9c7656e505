@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38363f2b_b65526bd",
+        "filename": "internal/pkg/openflow/stats.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-05-26T15:02:00Z",
+      "side": 1,
+      "message": "I must be missing something subtle. Wouldn\u0027t this produce the same result if we just removed this block? without this check/break response.SetEntries(chunk) is still called and the response is appended to the list.\n\nIs the issue we only want to do this when len(chunk) \u003d\u003d 0 and len(flows) \u003d\u003d 0? Is there a case when len(chunk) \u003d\u003d 0 and len(flows) !\u003d 0?",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 0
+      },
+      "revId": "47f99de6e97d5f8b849869a458fa2c9c7656e505",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
