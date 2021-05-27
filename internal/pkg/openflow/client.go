@@ -219,6 +219,11 @@ func NewOFClient(ctx context.Context, config *OFClient) *OFClient {
 // Stop initiates a shutdown of the OFClient
 func (ofc *OFClient) Stop() {
 	for _, connection := range ofc.connections {
+		for len(connection.sendChannel) > 0 || connection.lastUnsentMessage != nil {
+			logger.Debugw(context.Background(), "waiting for channel to be empty before closing", log.Fields{
+				"len": connection.sendChannel})
+			//do nothing, waiting for the channel to send the messages
+		}
 		connection.events <- ofcEventStop
 	}
 }
