@@ -167,7 +167,6 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 					go ofa.receiveChangeEvents(volthaCtx)
 					go ofa.receivePacketsIn(volthaCtx)
 					go ofa.streamPacketOut(volthaCtx)
-					go ofa.synchronizeDeviceList(volthaCtx)
 				}
 
 			case ofaEventVolthaDisconnected:
