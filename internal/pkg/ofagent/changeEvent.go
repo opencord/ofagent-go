@@ -19,13 +19,13 @@ package ofagent
 import (
 	"context"
 	"encoding/json"
-	"net"
-
 	"github.com/golang/protobuf/ptypes/empty"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 	"google.golang.org/grpc"
+	"net"
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
@@ -90,8 +90,8 @@ top:
 					log.Fields{
 						"device-id": deviceID,
 						"error":     errMsg})
-				header := errMsg.Header
 
+				header := errMsg.Header
 				ofErrMsg := ofp.NewFlowModFailedErrorMsg()
 
 				ofErrMsg.SetXid(header.Xid)
@@ -141,6 +141,16 @@ top:
 				ofPortStatus.SetDesc(*ofDesc)
 				if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofPortStatus); err != nil {
 					logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
+				}
+			} else if deviceStatus := changeEvent.GetDeviceStatus(); deviceStatus != nil {
+				if deviceStatus.Status == openflow_13.OfpDeviceConnection_OFPDEV_DISCONNECTED {
+					logger.Debugw(ctx, "received-device-disconnect",
+						log.Fields{
+							"device-id": deviceID})
+					ofa.mapLock.Lock()
+					ofa.clientMap[deviceID].Stop()
+					delete(ofa.clientMap, deviceID)
+					ofa.mapLock.Unlock()
 				}
 			} else {
 				if logger.V(log.WarnLevel) {
