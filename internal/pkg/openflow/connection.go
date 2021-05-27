@@ -54,6 +54,9 @@ type OFConnection struct {
 	flowsChunkSize     int
 	portsChunkSize     int
 	portsDescChunkSize int
+
+	// this lock protects the lastUnsentMessage so we are sure we use it correctly.
+	lock   sync.RWMutex
 }
 
 func (ofc *OFConnection) peekAtOFHeader(buf []byte) (ofp.IHeader, error) {
@@ -474,6 +477,7 @@ func (ofc *OFConnection) doSend(ctx context.Context, msg Message) error {
 
 func (ofc *OFConnection) messageSender(ctx context.Context) {
 	// first process last fail if it exists
+	ofc.lock.Lock()
 	if ofc.lastUnsentMessage != nil {
 		if err := ofc.doSend(ctx, ofc.lastUnsentMessage); err != nil {
 			ofc.events <- ofcEventDisconnect
@@ -481,6 +485,7 @@ func (ofc *OFConnection) messageSender(ctx context.Context) {
 		}
 		ofc.lastUnsentMessage = nil
 	}
+	ofc.lock.Unlock()
 top:
 	for {
 		select {
@@ -488,7 +493,9 @@ top:
 			break top
 		case msg := <-ofc.sendChannel:
 			if err := ofc.doSend(ctx, msg); err != nil {
+				ofc.lock.Lock()
 				ofc.lastUnsentMessage = msg
+				ofc.lock.Unlock()
 				ofc.events <- ofcEventDisconnect
 				logger.Debugw(ctx, "message-sender-error",
 					log.Fields{
@@ -499,7 +506,9 @@ top:
 			logger.Debugw(ctx, "message-sender-send",
 				log.Fields{
 					"device-id": ofc.DeviceID})
+			ofc.lock.Lock()
 			ofc.lastUnsentMessage = nil
+			ofc.lock.Unlock()
 		}
 	}
 
@@ -518,4 +527,12 @@ func (ofc *OFConnection) SendMessage(ctx context.Context, message Message) error
 	//})
 	ofc.sendChannel <- message
 	return nil
+}
+
+// GetLastUnsentMessage returns
+func (ofc *OFConnection) GetLastUnsentMessage() Message {
+	ofc.lock.Lock()
+	msg := ofc.lastUnsentMessage
+	ofc.lock.Unlock()
+	return msg
 }
