@@ -19,13 +19,12 @@ package ofagent
 import (
 	"context"
 	"encoding/json"
-	"net"
-
 	"github.com/golang/protobuf/ptypes/empty"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v5/pkg/log"
 	"google.golang.org/grpc"
+	"net"
 )
 
 func (ofa *OFAgent) receiveChangeEvents(ctx context.Context) {
@@ -85,21 +84,31 @@ top:
 					log.Fields{
 						"device-id": deviceID,
 						"error":     errMsg})
-				header := errMsg.Header
+				// using Hello Failed for device deletion notification
+				// bends the OF spec but it's the closes thing to a device connection error that is there.
+				if errMsg.Type == ofp.OFPETHelloFailed {
+					ofa.clientMap[deviceID].Stop()
+					ofa.mapLock.Lock()
+					delete(ofa.clientMap, deviceID)
+					ofa.mapLock.Unlock()
 
-				ofErrMsg := ofp.NewFlowModFailedErrorMsg()
+				} else if errMsg.Type == ofp.OFPETFlowModFailed {
 
-				ofErrMsg.SetXid(header.Xid)
-				ofErrMsg.SetCode(ofp.FlowModFailedCode(errMsg.Code))
+					header := errMsg.Header
+					ofErrMsg := ofp.NewFlowModFailedErrorMsg()
 
-				if header.Version != 0 {
-					ofErrMsg.SetVersion(uint8(header.Version))
-				} else {
-					ofErrMsg.SetVersion(4)
-				}
-				ofErrMsg.SetData(errMsg.Data)
-				if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofErrMsg); err != nil {
-					logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
+					ofErrMsg.SetXid(header.Xid)
+					ofErrMsg.SetCode(ofp.FlowModFailedCode(errMsg.Code))
+
+					if header.Version != 0 {
+						ofErrMsg.SetVersion(uint8(header.Version))
+					} else {
+						ofErrMsg.SetVersion(4)
+					}
+					ofErrMsg.SetData(errMsg.Data)
+					if err := ofa.getOFClient(ctx, deviceID).SendMessage(ctx, ofErrMsg); err != nil {
+						logger.Errorw(ctx, "handle-change-events-send-message", log.Fields{"error": err})
+					}
 				}
 
 			} else if portStatus := changeEvent.GetPortStatus(); portStatus != nil {
