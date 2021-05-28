@@ -100,12 +100,12 @@ func main() {
 	}
 
 	// Setup default logger - applies for packages that do not have specific logger set
-	if _, err := log.SetDefaultLogger(log.JSON, logLevel, log.Fields{"instanceId": config.InstanceID}); err != nil {
+	if _, err = log.SetDefaultLogger(log.JSON, logLevel, log.Fields{"instanceId": config.InstanceID}); err != nil {
 		logger.With(log.Fields{"error": err}).Fatal(ctx, "Cannot setup logging")
 	}
 
 	// Update all loggers (provisionned via init) with a common field
-	if err := log.UpdateAllLoggers(log.Fields{"instanceId": config.InstanceID}); err != nil {
+	if err = log.UpdateAllLoggers(log.Fields{"instanceId": config.InstanceID}); err != nil {
 		logger.With(log.Fields{"error": err}).Fatal(ctx, "Cannot setup logging")
 	}
 
@@ -115,7 +115,7 @@ func main() {
 	realMain()
 
 	defer func() {
-		err := log.CleanUp()
+		err = log.CleanUp()
 		if err != nil {
 			logger.Errorw(ctx, "unable-to-flush-any-buffered-log-entries", log.Fields{"error": err})
 		}
@@ -139,7 +139,12 @@ func main() {
 	if err != nil {
 		logger.Warnw(ctx, "unable-to-initialize-tracing-and-log-correlation-module", log.Fields{"error": err})
 	} else {
-		defer closer.Close()
+		defer func() {
+			err = closer.Close()
+			if err != nil {
+				logger.Errorf(ctx, "failed to close global LFM: %v", err)
+			}
+		}()
 	}
 
 	ofa, err := ofagent.NewOFAgent(ctx, &ofagent.OFAgent{

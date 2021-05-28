@@ -124,7 +124,7 @@ func createRandomFlows(count int) []*openflow_13.OfpFlowStats {
 
 		flows = append(flows, &flow)
 
-		n = n + 1
+		n++
 	}
 	return flows
 }
@@ -154,7 +154,7 @@ func createRandomPorts(count int) []*voltha.LogicalPort {
 
 		ports = append(ports, &port)
 
-		n = n + 1
+		n++
 	}
 	return ports
 }
@@ -229,7 +229,7 @@ func testCorrectChunkAndReplyMoreFlag(t *testing.T, generatedFlowsCount int) {
 			t.Fatal("Message size is bigger than 64KB")
 		}
 
-		entriesCount = entriesCount + len(r.GetEntries())
+		entriesCount += len(r.GetEntries())
 		n++
 	}
 	// make sure all the generate item are included in the responses
@@ -276,7 +276,7 @@ func TestHandlePortStatsRequest(t *testing.T) {
 			t.Fatal("Message size is bigger than 64KB")
 		}
 
-		entriesCount = entriesCount + len(r.GetEntries())
+		entriesCount += len(r.GetEntries())
 		n++
 	}
 
@@ -322,7 +322,7 @@ func TestHandlePortDescStatsRequest(t *testing.T) {
 			t.Fatal("Message size is bigger than 64KB")
 		}
 
-		entriesCount = entriesCount + len(r.GetEntries())
+		entriesCount += len(r.GetEntries())
 		n++
 	}
 

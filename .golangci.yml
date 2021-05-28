@@ -15,12 +15,19 @@
 run:
   modules-download-mode: vendor
 
+issues:
+  exclude-use-default: false #we should decide ourselves about false positives
+  exclude-rules:
+    - linters:
+        - gosec
+      text: "G103:" #this rule is a false positive as there is no recommendation how to audit unsafe usages
+
 linters:
   enable:
     #- gochecknoglobals
     #- gochecknoinits
-    #- gocritic
+    - gocritic
     - gofmt
     - gosec
-    #- golint
+    - errcheck
     #- unparam

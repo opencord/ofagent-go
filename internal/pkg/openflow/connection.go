@@ -72,7 +72,10 @@ func (ofc *OFConnection) establishConnectionToController(ctx context.Context) er
 	if ofc.conn != nil {
 		logger.Debugw(ctx, "closing-of-connection-to-reconnect",
 			log.Fields{"device-id": ofc.DeviceID})
-		ofc.conn.Close()
+		err := ofc.conn.Close()
+		if err != nil {
+			logger.Errorw(ctx, "failed-connection-close-proceeding-setting-to-nil", log.Fields{"error": err})
+		}
 		ofc.conn = nil
 	}
 	try := 1
@@ -216,7 +219,10 @@ top:
 	if ofc.conn != nil {
 		logger.Debugw(ctx, "closing-of-connection",
 			log.Fields{"device-id": ofc.DeviceID})
-		ofc.conn.Close()
+		err := ofc.conn.Close()
+		if err != nil {
+			logger.Errorw(ctx, "closing-of-connection", log.Fields{"error": err})
+		}
 		ofc.conn = nil
 	}
 	logger.Debugw(ctx, "state-machine-finished",

@@ -35,7 +35,10 @@ func (ofa *OFAgent) establishConnectionToVoltha(ctx context.Context, p *probe.Pr
 	}
 
 	if ofa.volthaConnection != nil {
-		ofa.volthaConnection.Close()
+		err := ofa.volthaConnection.Close()
+		if err != nil {
+			logger.Errorw(ctx, "failed-connection-close-proceeding-setting-to-nil", log.Fields{"error": err})
+		}
 	}
 
 	ofa.volthaConnection = nil
