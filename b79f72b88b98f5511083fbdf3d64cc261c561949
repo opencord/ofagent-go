@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ee5a497_83bcbd41",
+        "filename": "internal/pkg/ofagent/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-05-28T13:54:26Z",
+      "side": 1,
+      "message": "failed-connection-close-proceeding-setting-to-nil",
+      "revId": "b79f72b88b98f5511083fbdf3d64cc261c561949",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5574098f_e98eb795",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-05-28T13:54:26Z",
+      "side": 1,
+      "message": "\"failed-connection-close-proceeding-setting-to-nil\"",
+      "revId": "b79f72b88b98f5511083fbdf3d64cc261c561949",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
