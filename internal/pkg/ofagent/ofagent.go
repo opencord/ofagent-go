@@ -177,6 +177,9 @@ func (ofa *OFAgent) Run(ctx context.Context) {
 				logger.Debug(ctx, "ofagent-voltha-disconnect-event")
 				if state == ofaStateConnected {
 					state = ofaStateDisconnected
+					// Clear all the OF connections to the OF controller.  These will be recreated when the
+					// connection to voltha is established
+					ofa.clearAllOFClient()
 					ofa.volthaClient.Clear()
 					volthaDone()
 					volthaDone = nil
