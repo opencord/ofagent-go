@@ -110,9 +110,22 @@ func (ofa *OFAgent) addOFClient(ctx context.Context, deviceID string) *openflow.
 }
 
 func (ofa *OFAgent) getOFClient(ctx context.Context, deviceID string) *openflow.OFClient {
+	ofa.mapLock.Lock()
 	ofc := ofa.clientMap[deviceID]
+	ofa.mapLock.Unlock()
 	if ofc == nil {
 		ofc = ofa.addOFClient(ctx, deviceID)
 	}
 	return ofc
+}
+
+//clearAllOFClient clears all OF connections for all clients
+func (ofa *OFAgent) clearAllOFClient() {
+	logger.Debug(context.Background(), "stopping-all-of-connections...")
+	ofa.mapLock.Lock()
+	for deviceID := range ofa.clientMap {
+		ofa.clientMap[deviceID].Stop()
+		delete(ofa.clientMap, deviceID)
+	}
+	ofa.mapLock.Unlock()
 }
