@@ -283,3 +283,27 @@ func (c MockVolthaClient) ForceDeleteDevice(ctx context.Context, in *common.ID, 
 func (c MockVolthaClient) SetExtValue(ctx context.Context, in *ValueSet, opts ...grpc.CallOption) (*Empty, error) {
 	return &Empty{}, nil
 }
+
+func (c MockVolthaClient) AbortImageUpgradeToDevice(ctx context.Context, imageRequest *DeviceImageRequest, opts ...grpc.CallOption) (*DeviceImageResponse, error) {
+	return &DeviceImageResponse{}, nil
+}
+
+func (c MockVolthaClient) ActivateImage(ctx context.Context, imageRequest *DeviceImageRequest, opts ...grpc.CallOption) (*DeviceImageResponse, error) {
+	return &DeviceImageResponse{}, nil
+}
+
+func (c MockVolthaClient) CommitImage(ctx context.Context, imageRequest *DeviceImageRequest, opts ...grpc.CallOption) (*DeviceImageResponse, error) {
+	return &DeviceImageResponse{}, nil
+}
+
+func (c MockVolthaClient) DownloadImageToDevice(ctx context.Context, imageRequest *DeviceImageDownloadRequest, opts ...grpc.CallOption) (*DeviceImageResponse, error) {
+	return &DeviceImageResponse{}, nil
+}
+
+func (c MockVolthaClient) GetImageStatus(ctx context.Context, imageRequest *DeviceImageRequest, opts ...grpc.CallOption) (*DeviceImageResponse, error) {
+	return &DeviceImageResponse{}, nil
+}
+
+func (c MockVolthaClient) GetOnuImages(ctx context.Context, id *common.ID, opts ...grpc.CallOption) (*OnuImages, error) {
+	return &OnuImages{}, nil
+}
