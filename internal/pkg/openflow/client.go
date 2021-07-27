@@ -273,6 +273,7 @@ func (ofc *OFClient) SendMessage(ctx context.Context, message Message) error {
 			logger.Debugw(ctx, "sending-message", log.Fields{
 				"endpoint": endpoint,
 				"toEqual":  toEqual,
+				"role":     connection.role,
 				"msgType":  msgType,
 			})
 			err := connection.SendMessage(ctx, message)

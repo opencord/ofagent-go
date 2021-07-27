@@ -506,10 +506,12 @@ top:
 
 // SendMessage queues a message to be sent to the openflow controller
 func (ofc *OFConnection) SendMessage(ctx context.Context, message Message) error {
-	logger.Debugw(ctx, "queuing-message", log.Fields{
-		"endpoint": ofc.OFControllerEndPoint,
-		"role":     ofc.role,
-	})
+	// Removing this very chatty DEBUG log, it's the same as line 273 of client.go
+	//which has been extended to include the role.
+	//logger.Debugw(ctx, "queuing-message", log.Fields{
+	//	"endpoint": ofc.OFControllerEndPoint,
+	//	"role":     ofc.role,
+	//})
 	ofc.sendChannel <- message
 	return nil
 }
