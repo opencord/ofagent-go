@@ -19,9 +19,10 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
 )
 
 func (ofc *OFConnection) handleRoleRequest(ctx context.Context, request *ofp.RoleRequest) {

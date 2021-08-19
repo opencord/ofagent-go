@@ -20,7 +20,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
 	"google.golang.org/grpc"
 )
 
@@ -40,8 +40,13 @@ func (ofa *OFAgent) streamPacketOut(ctx context.Context) {
 	}
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(context.Background())
-	outClient, err := ofa.volthaClient.Get().StreamPacketsOut(log.WithSpanFromContext(streamCtx, ctx), opt)
 	defer streamDone()
+	vc := ofa.volthaClient.Get()
+	if vc == nil {
+		logger.Error(ctx, "No client found to create packetout stream")
+		return
+	}
+	outClient, err := vc.StreamPacketsOut(log.WithSpanFromContext(streamCtx, ctx), opt)
 	if err != nil {
 		logger.Errorw(ctx, "streamPacketOut Error creating packetout stream ", log.Fields{"error": err})
 		return

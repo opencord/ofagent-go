@@ -18,11 +18,12 @@ package openflow
 
 import (
 	"fmt"
-	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
 	"net"
 	"strings"
 	"sync"
+
+	ofp "github.com/opencord/goloxi/of13"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 )
 
 var mu sync.Mutex

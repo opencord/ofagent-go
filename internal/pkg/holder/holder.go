@@ -19,7 +19,7 @@ package holder
 import (
 	"sync"
 
-	"github.com/opencord/voltha-protos/v4/go/voltha"
+	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 // VolthaServiceClientHolder provides a consistent (voluntarily unmutable) reference
