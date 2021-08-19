@@ -20,14 +20,15 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/opencord/ofagent-go/internal/pkg/ofagent"
-	conf "github.com/opencord/voltha-lib-go/v5/pkg/config"
-	"github.com/opencord/voltha-lib-go/v5/pkg/db/kvstore"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-lib-go/v5/pkg/probe"
-	"github.com/opencord/voltha-lib-go/v5/pkg/version"
 	"os"
 	"time"
+
+	"github.com/opencord/ofagent-go/internal/pkg/ofagent"
+	conf "github.com/opencord/voltha-lib-go/v7/pkg/config"
+	"github.com/opencord/voltha-lib-go/v7/pkg/db/kvstore"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-lib-go/v7/pkg/probe"
+	"github.com/opencord/voltha-lib-go/v7/pkg/version"
 )
 
 func printBanner() {
