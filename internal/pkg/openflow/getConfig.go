@@ -20,7 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
+	"github.com/opencord/voltha-lib-go/v6/pkg/log"
 )
 
 func (ofc *OFConnection) handleGetConfigRequest(ctx context.Context, request *ofp.GetConfigRequest) {
