@@ -19,11 +19,12 @@ package openflow
 import (
 	"context"
 	"fmt"
+
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
-	"github.com/opencord/voltha-protos/v4/go/voltha"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
+	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroupMod) {
