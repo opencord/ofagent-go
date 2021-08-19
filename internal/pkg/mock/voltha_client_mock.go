@@ -20,10 +20,10 @@ import (
 	"context"
 
 	. "github.com/golang/protobuf/ptypes/empty"
-	"github.com/opencord/voltha-protos/v4/go/common"
-	"github.com/opencord/voltha-protos/v4/go/omci"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
-	. "github.com/opencord/voltha-protos/v4/go/voltha"
+	"github.com/opencord/voltha-protos/v5/go/common"
+	"github.com/opencord/voltha-protos/v5/go/omci"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
+	. "github.com/opencord/voltha-protos/v5/go/voltha"
 	"google.golang.org/grpc"
 )
 

@@ -21,8 +21,8 @@ import (
 	"unsafe"
 
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 	"golang.org/x/net/context"
 )
 

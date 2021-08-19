@@ -20,11 +20,12 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/json"
-	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
-	"github.com/opencord/voltha-protos/v4/go/voltha"
 	"net"
+
+	ofp "github.com/opencord/goloxi/of13"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
+	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 var oxmMap = map[string]int32{
@@ -253,12 +254,11 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 		Xid: flowAdd.Xid,
 	}
 	if logger.V(log.DebugLevel) {
-		flowUpdateJs, _ := json.Marshal(flowUpdate)
-		logger.Debugf(ctx, "FlowAdd being sent to Voltha",
+		logger.Debugw(ctx, "FlowAdd being sent to Voltha",
 			log.Fields{
-				"device-id":        ofc.DeviceID,
-				"flow-mod-object":  flowUpdate,
-				"flow-mod-request": flowUpdateJs})
+				"device-id":       ofc.DeviceID,
+				"flow-mod-object": flowUpdate,
+			})
 	}
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
 		logger.Errorw(ctx, "Error calling FlowAdd ",

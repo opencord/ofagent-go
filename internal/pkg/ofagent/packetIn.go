@@ -24,9 +24,9 @@ import (
 	"github.com/opencord/goloxi"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-protos/v4/go/openflow_13"
-	"github.com/opencord/voltha-protos/v4/go/voltha"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
+	"github.com/opencord/voltha-protos/v5/go/voltha"
 	"google.golang.org/grpc"
 )
 
@@ -47,7 +47,12 @@ func (ofa *OFAgent) receivePacketsIn(ctx context.Context) {
 	opt := grpc.EmptyCallOption{}
 	streamCtx, streamDone := context.WithCancel(log.WithSpanFromContext(context.Background(), ctx))
 	defer streamDone()
-	stream, err := ofa.volthaClient.Get().ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
+	vc := ofa.volthaClient.Get()
+	if vc == nil {
+		logger.Error(ctx, "No client found to establish Receive PacketIn Stream")
+		return
+	}
+	stream, err := vc.ReceivePacketsIn(streamCtx, &empty.Empty{}, opt)
 	if err != nil {
 		logger.Errorw(ctx, "Unable to establish Receive PacketIn Stream",
 			log.Fields{"error": err})

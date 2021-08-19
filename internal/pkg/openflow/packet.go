@@ -19,9 +19,10 @@ package openflow
 import (
 	"context"
 	"encoding/json"
+
 	ofp "github.com/opencord/goloxi/of13"
-	"github.com/opencord/voltha-lib-go/v5/pkg/log"
-	"github.com/opencord/voltha-protos/v4/go/voltha"
+	"github.com/opencord/voltha-lib-go/v7/pkg/log"
+	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 func (ofc *OFConnection) handlePacketOut(ctx context.Context, packetOut *ofp.PacketOut) {
