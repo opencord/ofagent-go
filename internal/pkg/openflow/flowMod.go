@@ -129,6 +129,10 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 			field.Value = &voltha.OfpOxmOfbField_EthDst{
 				EthDst: val.(net.HardwareAddr),
 			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC:
+			field.Value = &voltha.OfpOxmOfbField_EthSrc{
+				EthSrc: val.(net.HardwareAddr),
+			}
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 			field.Value = &voltha.OfpOxmOfbField_UdpSrc{
 				UdpSrc: uint32(val.(uint16)),
@@ -144,6 +148,18 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
 			field.Value = &voltha.OfpOxmOfbField_VlanPcp{
 				VlanPcp: uint32(val.(uint8)),
+			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_LABEL:
+			field.Value = &voltha.OfpOxmOfbField_MplsLabel{
+				MplsLabel: val.(uint32),
+			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_BOS:
+			field.Value = &voltha.OfpOxmOfbField_MplsBos{
+				MplsBos: uint32(val.(uint8)),
+			}
+		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_TC:
+			field.Value = &voltha.OfpOxmOfbField_MplsTc{
+				MplsTc: val.(uint32),
 			}
 		case 200: // voltha-protos doesn't actually have a type for vlan_mask
 			field = voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
