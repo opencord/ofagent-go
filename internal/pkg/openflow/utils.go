@@ -20,6 +20,7 @@ import (
 	"fmt"
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-protos/v4/go/openflow_13"
+	"net"
 	"strings"
 	"sync"
 )
@@ -62,6 +63,14 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 	case ofp.OFPATCopyTtlOut: //CopyTtltOut
 	case ofp.OFPATCopyTtlIn: //CopyTtlIn
 	case ofp.OFPATSetMplsTtl: //SetMplsTtl
+		mplsTtl := action.(*ofp.ActionSetMplsTtl)
+		setMplsTtl := openflow_13.OfpAction_MplsTtl{
+			MplsTtl: &openflow_13.OfpActionMplsTtl{
+				MplsTtl: uint32(mplsTtl.MplsTtl),
+			},
+		}
+		ofpAction.Type = openflow_13.OfpActionType_OFPAT_SET_MPLS_TTL
+		ofpAction.Action = &setMplsTtl
 	case ofp.OFPATDecMplsTtl: //DecMplsTtl
 	case ofp.OFPATPushVLAN: //PushVlan
 		var pushVlan openflow_13.OfpAction_Push
@@ -74,7 +83,15 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 	case ofp.OFPATPopVLAN: //PopVlan
 		ofpAction.Type = openflow_13.OfpActionType_OFPAT_POP_VLAN
 	case ofp.OFPATPushMpls: //PushMpls
+		var pushMpls openflow_13.OfpAction_Push
+		mplsPushAction := action.(*ofp.ActionPushMpls)
+		var push openflow_13.OfpActionPush
+		push.Ethertype = uint32(mplsPushAction.Ethertype)
+		pushMpls.Push = &push
+		ofpAction.Type = openflow_13.OfpActionType_OFPAT_PUSH_MPLS
+		ofpAction.Action = &pushMpls
 	case ofp.OFPATPopMpls: //PopMpls
+		ofpAction.Type = openflow_13.OfpActionType_OFPAT_POP_MPLS
 	case ofp.OFPATSetQueue: //SetQueue
 	case ofp.OFPATGroup: //ActionGroup
 		ofpAction.Type = openflow_13.OfpActionType_OFPAT_GROUP
@@ -110,6 +127,30 @@ func extractAction(action ofp.IAction) *openflow_13.OfpAction {
 			var VlanPcp = loxiSetField.Field.GetOXMValue().(uint8)
 			vlanPcp.VlanPcp = uint32(VlanPcp)
 			ofpOxmOfbField.Value = &vlanPcp
+		case "mpls_label":
+			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_LABEL
+			var mplsLabel openflow_13.OfpOxmOfbField_MplsLabel
+			label := loxiSetField.Field.GetOXMValue().(uint32)
+			mplsLabel.MplsLabel = label
+			ofpOxmOfbField.Value = &mplsLabel
+		case "mpls_bos":
+			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_BOS
+			var mplsBos openflow_13.OfpOxmOfbField_MplsBos
+			bos := loxiSetField.Field.GetOXMValue().(uint8)
+			mplsBos.MplsBos = uint32(bos)
+			ofpOxmOfbField.Value = &mplsBos
+		case "eth_src":
+			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC
+			var ethSrc openflow_13.OfpOxmOfbField_EthSrc
+			src := loxiSetField.Field.GetOXMValue().(net.HardwareAddr)
+			ethSrc.EthSrc = src
+			ofpOxmOfbField.Value = &ethSrc
+		case "eth_dst":
+			ofpOxmOfbField.Type = openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST
+			var ethDst openflow_13.OfpOxmOfbField_EthDst
+			dst := loxiSetField.Field.GetOXMValue().(net.HardwareAddr)
+			ethDst.EthDst = dst
+			ofpOxmOfbField.Value = &ethDst
 		}
 		ofpOxmField_OfbField.OfbField = &ofpOxmOfbField
 		ofpOxmField.Field = &ofpOxmField_OfbField
