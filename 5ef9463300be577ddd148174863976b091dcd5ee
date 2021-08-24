@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "320d6812_464226db",
+        "filename": "internal/pkg/openflow/flowMod_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-08-24T08:31:38Z",
+      "side": 1,
+      "message": "this class has some duplicated code in the instructions/actions part. Do you mind checking and avoiding through method/object extraction, thanks.",
+      "revId": "5ef9463300be577ddd148174863976b091dcd5ee",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
