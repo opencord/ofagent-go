@@ -372,23 +372,21 @@ func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader, wg
 	case ofp.OFPTHello:
 		//x := header.(*ofp.Hello)
 	case ofp.OFPTError:
-		go ofc.handleErrMsg(ctx, header.(*ofp.ErrorMsg))
+		ofc.handleErrMsg(ctx, header.(*ofp.ErrorMsg))
 	case ofp.OFPTEchoRequest:
-		go ofc.handleEchoRequest(ctx, header.(*ofp.EchoRequest))
+		ofc.handleEchoRequest(ctx, header.(*ofp.EchoRequest))
 	case ofp.OFPTEchoReply:
 	case ofp.OFPTExperimenter:
 	case ofp.OFPTFeaturesRequest:
-		go func() {
-			if err := ofc.handleFeatureRequest(ctx, header.(*ofp.FeaturesRequest)); err != nil {
-				logger.Errorw(ctx, "handle-feature-request", log.Fields{"error": err})
-			}
-		}()
+		if err := ofc.handleFeatureRequest(ctx, header.(*ofp.FeaturesRequest)); err != nil {
+			logger.Errorw(ctx, "handle-feature-request", log.Fields{"error": err})
+		}
 	case ofp.OFPTFeaturesReply:
 	case ofp.OFPTGetConfigRequest:
-		go ofc.handleGetConfigRequest(ctx, header.(*ofp.GetConfigRequest))
+		ofc.handleGetConfigRequest(ctx, header.(*ofp.GetConfigRequest))
 	case ofp.OFPTGetConfigReply:
 	case ofp.OFPTSetConfig:
-		go ofc.handleSetConfig(ctx, header.(*ofp.SetConfig))
+		ofc.handleSetConfig(ctx, header.(*ofp.SetConfig))
 	case ofp.OFPTPacketIn:
 	case ofp.OFPTFlowRemoved:
 	case ofp.OFPTPortStatus:
@@ -397,7 +395,7 @@ func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader, wg
 			ofc.sendRoleSlaveError(ctx, header)
 			return
 		}
-		go ofc.handlePacketOut(ctx, header.(*ofp.PacketOut))
+		ofc.handlePacketOut(ctx, header.(*ofp.PacketOut))
 	case ofp.OFPTFlowMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
 			ofc.sendRoleSlaveError(ctx, header)
@@ -416,16 +414,14 @@ func (ofc *OFConnection) parseHeader(ctx context.Context, header ofp.IHeader, wg
 			ofc.handleFlowDeleteStrict(ctx, header.(*ofp.FlowDeleteStrict))
 		}
 	case ofp.OFPTStatsRequest:
-		go func() {
-			if err := ofc.handleStatsRequest(ctx, header, header.(ofp.IStatsRequest).GetStatsType()); err != nil {
-				logger.Errorw(ctx, "ofpt-stats-request", log.Fields{"error": err})
-			}
-		}()
+		if err := ofc.handleStatsRequest(ctx, header, header.(ofp.IStatsRequest).GetStatsType()); err != nil {
+			logger.Errorw(ctx, "ofpt-stats-request", log.Fields{"error": err})
+		}
 	case ofp.OFPTBarrierRequest:
 		/* See note above at case ofp.OFPTFlowMod:*/
 		ofc.handleBarrierRequest(ctx, header.(*ofp.BarrierRequest))
 	case ofp.OFPTRoleRequest:
-		go ofc.handleRoleRequest(ctx, header.(*ofp.RoleRequest))
+		ofc.handleRoleRequest(ctx, header.(*ofp.RoleRequest))
 	case ofp.OFPTMeterMod:
 		if !(ofc.role == ofcRoleMaster || ofc.role == ofcRoleEqual) {
 			ofc.sendRoleSlaveError(ctx, header)
