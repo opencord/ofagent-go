@@ -29,7 +29,6 @@ github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 # github.com/golang/protobuf v1.5.2
 ## explicit
 github.com/golang/protobuf/proto
-github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
@@ -47,7 +46,7 @@ github.com/grpc-ecosystem/go-grpc-middleware/util/metautils
 ## explicit
 github.com/opencord/goloxi
 github.com/opencord/goloxi/of13
-# github.com/opencord/voltha-lib-go/v7 v7.0.0
+# github.com/opencord/voltha-lib-go/v7 v7.0.0 => ../voltha-lib-go
 ## explicit
 github.com/opencord/voltha-lib-go/v7/pkg/config
 github.com/opencord/voltha-lib-go/v7/pkg/db
@@ -55,10 +54,11 @@ github.com/opencord/voltha-lib-go/v7/pkg/db/kvstore
 github.com/opencord/voltha-lib-go/v7/pkg/log
 github.com/opencord/voltha-lib-go/v7/pkg/probe
 github.com/opencord/voltha-lib-go/v7/pkg/version
-# github.com/opencord/voltha-protos/v5 v5.0.0
+# github.com/opencord/voltha-protos/v5 v5.0.0 => ../voltha-protos
 ## explicit
 github.com/opencord/voltha-protos/v5/go/common
 github.com/opencord/voltha-protos/v5/go/ext/config
+github.com/opencord/voltha-protos/v5/go/extension
 github.com/opencord/voltha-protos/v5/go/omci
 github.com/opencord/voltha-protos/v5/go/openflow_13
 github.com/opencord/voltha-protos/v5/go/voltha
@@ -202,5 +202,7 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 gopkg.in/yaml.v3
 # github.com/coreos/bbolt v1.3.4 => go.etcd.io/bbolt v1.3.4
+# github.com/opencord/voltha-lib-go/v7 => ../voltha-lib-go
+# github.com/opencord/voltha-protos/v5 => ../voltha-protos
 # go.etcd.io/bbolt v1.3.4 => github.com/coreos/bbolt v1.3.4
 # google.golang.org/grpc => google.golang.org/grpc v1.25.1
