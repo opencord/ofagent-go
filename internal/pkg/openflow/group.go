@@ -24,7 +24,6 @@ import (
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
 	"github.com/opencord/voltha-protos/v5/go/openflow_13"
-	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroupMod) {
@@ -40,7 +39,7 @@ func (ofc *OFConnection) handleGroupMod(ctx context.Context, groupMod ofp.IGroup
 
 	groupUpdate := &openflow_13.FlowGroupTableUpdate{
 		Id: ofc.DeviceID,
-		GroupMod: &voltha.OfpGroupMod{
+		GroupMod: &openflow_13.OfpGroupMod{
 			Command: openflowGroupModCommandToVoltha(ctx, groupMod.GetCommand()),
 			Type:    openflowGroupTypeToVoltha(ctx, groupMod.GetGroupType()),
 			GroupId: groupMod.GetGroupId(),
