@@ -26,7 +26,6 @@ import (
 	"github.com/opencord/ofagent-go/internal/pkg/openflow"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
 	"github.com/opencord/voltha-protos/v5/go/openflow_13"
-	"github.com/opencord/voltha-protos/v5/go/voltha"
 	"google.golang.org/grpc"
 )
 
@@ -109,37 +108,37 @@ top:
 				field := oxmField.GetField()
 				ofbField := field.(*openflow_13.OfpOxmField_OfbField).OfbField
 				switch ofbField.Type {
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
 					ofpInPort := ofp.NewOxmInPort()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Port)
 					ofpInPort.Value = ofp.Port(val.Port)
 					fields = append(fields, ofpInPort)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
 					ofpEthType := ofp.NewOxmEthType()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthType)
 					ofpEthType.Value = ofp.EthernetType(val.EthType)
 					fields = append(fields, ofpEthType)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
 					ofpInPhyPort := ofp.NewOxmInPhyPort()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_PhysicalPort)
 					ofpInPhyPort.Value = ofp.Port(val.PhysicalPort)
 					fields = append(fields, ofpInPhyPort)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 					ofpIpProto := ofp.NewOxmIpProto()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
 					ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
 					fields = append(fields, ofpIpProto)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 					ofpUdpSrc := ofp.NewOxmUdpSrc()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
 					ofpUdpSrc.Value = uint16(val.UdpSrc)
 					fields = append(fields, ofpUdpSrc)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
 					ofpUdpDst := ofp.NewOxmUdpDst()
 					val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpDst)
 					ofpUdpDst.Value = uint16(val.UdpDst)
 					fields = append(fields, ofpUdpDst)
-				case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
+				case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 					ofpVlanVid := ofp.NewOxmVlanVid()
 					val := ofbField.GetValue()
 					if val != nil {

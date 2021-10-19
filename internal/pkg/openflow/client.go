@@ -25,7 +25,7 @@ import (
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/ofagent-go/internal/pkg/holder"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
-	"github.com/opencord/voltha-protos/v5/go/voltha"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 )
 
 var NoVolthaConnectionError = errors.New("no-voltha-connection")
@@ -112,7 +112,7 @@ type OFClient struct {
 	OFControllerEndPoints []string
 	DeviceID              string
 	VolthaClient          *holder.VolthaServiceClientHolder
-	PacketOutChannel      chan *voltha.PacketOut
+	PacketOutChannel      chan *openflow_13.PacketOut
 	ConnectionMaxRetries  int
 	ConnectionRetryDelay  time.Duration
 

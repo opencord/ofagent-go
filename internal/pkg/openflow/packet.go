@@ -22,7 +22,7 @@ import (
 
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
-	"github.com/opencord/voltha-protos/v5/go/voltha"
+	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 )
 
 func (ofc *OFConnection) handlePacketOut(ctx context.Context, packetOut *ofp.PacketOut) {
@@ -38,15 +38,15 @@ func (ofc *OFConnection) handlePacketOut(ctx context.Context, packetOut *ofp.Pac
 	}
 
 	// Collection actions
-	var actions []*voltha.OfpAction
+	var actions []*openflow_13.OfpAction
 	for _, action := range packetOut.GetActions() {
 		actions = append(actions, extractAction(action))
 	}
 
 	// Build packet out
-	pbPacketOut := voltha.PacketOut{
+	pbPacketOut := openflow_13.PacketOut{
 		Id: ofc.DeviceID,
-		PacketOut: &voltha.OfpPacketOut{
+		PacketOut: &openflow_13.OfpPacketOut{
 			BufferId: packetOut.GetBufferId(),
 			InPort:   uint32(packetOut.GetInPort()),
 			Actions:  actions,

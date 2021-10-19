@@ -21,6 +21,7 @@ import (
 
 	. "github.com/golang/protobuf/ptypes/empty"
 	"github.com/opencord/voltha-protos/v5/go/common"
+	"github.com/opencord/voltha-protos/v5/go/extension"
 	"github.com/opencord/voltha-protos/v5/go/omci"
 	"github.com/opencord/voltha-protos/v5/go/openflow_13"
 	. "github.com/opencord/voltha-protos/v5/go/voltha"
@@ -30,14 +31,6 @@ import (
 type MockVolthaClient struct {
 	LogicalDeviceFlows openflow_13.Flows
 	LogicalPorts       LogicalPorts
-}
-
-func (c MockVolthaClient) GetMembership(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Membership, error) {
-	return &Membership{}, nil
-}
-
-func (c MockVolthaClient) UpdateMembership(ctx context.Context, in *Membership, opts ...grpc.CallOption) (*Empty, error) {
-	return &Empty{}, nil
 }
 
 func (c MockVolthaClient) GetVoltha(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Voltha, error) {
@@ -196,10 +189,6 @@ func (c MockVolthaClient) GetDeviceType(ctx context.Context, in *common.ID, opts
 	return &DeviceType{}, nil
 }
 
-func (c MockVolthaClient) ListDeviceGroups(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DeviceGroups, error) {
-	return &DeviceGroups{}, nil
-}
-
 func (c MockVolthaClient) StreamPacketsOut(ctx context.Context, opts ...grpc.CallOption) (VolthaService_StreamPacketsOutClient, error) {
 	return nil, nil
 }
@@ -210,10 +199,6 @@ func (c MockVolthaClient) ReceivePacketsIn(ctx context.Context, in *Empty, opts 
 
 func (c MockVolthaClient) ReceiveChangeEvents(ctx context.Context, in *Empty, opts ...grpc.CallOption) (VolthaService_ReceiveChangeEventsClient, error) {
 	return nil, nil
-}
-
-func (c MockVolthaClient) GetDeviceGroup(ctx context.Context, in *common.ID, opts ...grpc.CallOption) (*DeviceGroup, error) {
-	return &DeviceGroup{}, nil
 }
 
 func (c MockVolthaClient) CreateEventFilter(ctx context.Context, in *EventFilter, opts ...grpc.CallOption) (*EventFilter, error) {
@@ -256,10 +241,6 @@ func (c MockVolthaClient) SimulateAlarm(ctx context.Context, in *SimulateAlarmRe
 	return &common.OperationResp{}, nil
 }
 
-func (c MockVolthaClient) Subscribe(ctx context.Context, in *OfAgentSubscriber, opts ...grpc.CallOption) (*OfAgentSubscriber, error) {
-	return &OfAgentSubscriber{}, nil
-}
-
 func (c MockVolthaClient) EnablePort(ctx context.Context, in *Port, opts ...grpc.CallOption) (*Empty, error) {
 	return &Empty{}, nil
 }
@@ -268,19 +249,19 @@ func (c MockVolthaClient) DisablePort(ctx context.Context, in *Port, opts ...grp
 	return &Empty{}, nil
 }
 
-func (c MockVolthaClient) GetExtValue(ctx context.Context, in *common.ValueSpecifier, opts ...grpc.CallOption) (*common.ReturnValues, error) {
-	return &common.ReturnValues{}, nil
+func (c MockVolthaClient) GetExtValue(ctx context.Context, in *extension.ValueSpecifier, opts ...grpc.CallOption) (*extension.ReturnValues, error) {
+	return &extension.ReturnValues{}, nil
 }
 
-func (c MockVolthaClient) StartOmciTestAction(ctx context.Context, in *OmciTestRequest, opts ...grpc.CallOption) (*TestResponse, error) {
-	return &TestResponse{}, nil
+func (c MockVolthaClient) StartOmciTestAction(ctx context.Context, in *omci.OmciTestRequest, opts ...grpc.CallOption) (*omci.TestResponse, error) {
+	return &omci.TestResponse{}, nil
 }
 
 func (c MockVolthaClient) ForceDeleteDevice(ctx context.Context, in *common.ID, opts ...grpc.CallOption) (*Empty, error) {
 	return &Empty{}, nil
 }
 
-func (c MockVolthaClient) SetExtValue(ctx context.Context, in *ValueSet, opts ...grpc.CallOption) (*Empty, error) {
+func (c MockVolthaClient) SetExtValue(ctx context.Context, in *extension.ValueSet, opts ...grpc.CallOption) (*Empty, error) {
 	return &Empty{}, nil
 }
 
