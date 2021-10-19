@@ -37,27 +37,27 @@ func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) (goloxi
 	}
 
 	switch ofbField.Type {
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
 		ofpInPort := ofp.NewOxmInPort()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Port)
 		ofpInPort.Value = ofp.Port(val.Port)
 		return ofpInPort, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
 		ofpEthType := ofp.NewOxmEthType()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthType)
 		ofpEthType.Value = ofp.EthernetType(val.EthType)
 		return ofpEthType, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
 		ofpInPhyPort := ofp.NewOxmInPhyPort()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_PhysicalPort)
 		ofpInPhyPort.Value = ofp.Port(val.PhysicalPort)
 		return ofpInPhyPort, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
 		ofpIpProto := ofp.NewOxmIpProto()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_IpProto)
 		ofpIpProto.Value = ofp.IpPrototype(val.IpProto)
 		return ofpIpProto, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
 		ofpIpv4Dst := ofp.NewOxmIpv4Dst()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_Ipv4Dst)
 		buf := new(bytes.Buffer)
@@ -68,17 +68,17 @@ func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) (goloxi
 		}
 		ofpIpv4Dst.Value = buf.Bytes()
 		return ofpIpv4Dst, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 		ofpUdpSrc := ofp.NewOxmUdpSrc()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpSrc)
 		ofpUdpSrc.Value = uint16(val.UdpSrc)
 		return ofpUdpSrc, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
 		ofpUdpDst := ofp.NewOxmUdpDst()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_UdpDst)
 		ofpUdpDst.Value = uint16(val.UdpDst)
 		return ofpUdpDst, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
 		ofpVlanVid := ofp.NewOxmVlanVid()
 		val := ofbField.GetValue()
 		if val == nil {
@@ -102,18 +102,18 @@ func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) (goloxi
 		}
 		ofpVlanVid.Value = uint16(vlanId.VlanVid) | 0x1000
 		return ofpVlanVid, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
 		ofpMetadata := ofp.NewOxmMetadata()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_TableMetadata)
 		ofpMetadata.Value = val.TableMetadata
 		return ofpMetadata, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
 		ofpVlanPcp := ofp.NewOxmVlanPcp()
 		val := ofbField.GetValue()
 		vlanPcp := val.(*openflow_13.OfpOxmOfbField_VlanPcp)
 		ofpVlanPcp.Value = uint8(vlanPcp.VlanPcp)
 		return ofpVlanPcp, nil
-	case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
 		ofpEthDst := ofp.NewOxmEthDst()
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthDst)
 		ofpEthDst.Value = val.EthDst

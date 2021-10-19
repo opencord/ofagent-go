@@ -25,7 +25,6 @@ import (
 	ofp "github.com/opencord/goloxi/of13"
 	"github.com/opencord/voltha-lib-go/v7/pkg/log"
 	"github.com/opencord/voltha-protos/v5/go/openflow_13"
-	"github.com/opencord/voltha-protos/v5/go/voltha"
 )
 
 var oxmMap = map[string]int32{
@@ -92,88 +91,88 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 	}
 
 	// Construct the match
-	var oxmList []*voltha.OfpOxmField
+	var oxmList []*openflow_13.OfpOxmField
 	for _, oxmField := range flowAdd.Match.GetOxmList() {
 		name := oxmMap[oxmField.GetOXMName()]
 		val := oxmField.GetOXMValue()
-		field := voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(name)}
-		ofpOxmField := voltha.OfpOxmField{
+		field := openflow_13.OfpOxmOfbField{Type: openflow_13.OxmOfbFieldTypes(name)}
+		ofpOxmField := openflow_13.OfpOxmField{
 			OxmClass: ofp.OFPXMCOpenflowBasic,
 			Field:    &openflow_13.OfpOxmField_OfbField{OfbField: &field},
 		}
-		switch voltha.OxmOfbFieldTypes(name) {
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
-			field.Value = &voltha.OfpOxmOfbField_Port{
+		switch openflow_13.OxmOfbFieldTypes(name) {
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
+			field.Value = &openflow_13.OfpOxmOfbField_Port{
 				Port: uint32(val.(ofp.Port)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
-			field.Value = &voltha.OfpOxmOfbField_PhysicalPort{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
+			field.Value = &openflow_13.OfpOxmOfbField_PhysicalPort{
 				PhysicalPort: val.(uint32),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
-			field.Value = &voltha.OfpOxmOfbField_TableMetadata{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
+			field.Value = &openflow_13.OfpOxmOfbField_TableMetadata{
 				TableMetadata: val.(uint64),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
-			field.Value = &voltha.OfpOxmOfbField_EthType{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
+			field.Value = &openflow_13.OfpOxmOfbField_EthType{
 				EthType: uint32(val.(ofp.EthernetType)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
-			field.Value = &voltha.OfpOxmOfbField_IpProto{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
+			field.Value = &openflow_13.OfpOxmOfbField_IpProto{
 				IpProto: uint32(val.(ofp.IpPrototype)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
-			field.Value = &voltha.OfpOxmOfbField_Ipv4Dst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_Ipv4Dst{
 				Ipv4Dst: binary.BigEndian.Uint32(val.(net.IP)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
-			field.Value = &voltha.OfpOxmOfbField_EthDst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_EthDst{
 				EthDst: val.(net.HardwareAddr),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC:
-			field.Value = &voltha.OfpOxmOfbField_EthSrc{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC:
+			field.Value = &openflow_13.OfpOxmOfbField_EthSrc{
 				EthSrc: val.(net.HardwareAddr),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
-			field.Value = &voltha.OfpOxmOfbField_UdpSrc{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
+			field.Value = &openflow_13.OfpOxmOfbField_UdpSrc{
 				UdpSrc: uint32(val.(uint16)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
-			field.Value = &voltha.OfpOxmOfbField_UdpDst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_UdpDst{
 				UdpDst: uint32(val.(uint16)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
-			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
+			field.Value = &openflow_13.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32((val.(uint16) & 0xfff) | 0x1000),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
-			field.Value = &voltha.OfpOxmOfbField_VlanPcp{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
+			field.Value = &openflow_13.OfpOxmOfbField_VlanPcp{
 				VlanPcp: uint32(val.(uint8)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_LABEL:
-			field.Value = &voltha.OfpOxmOfbField_MplsLabel{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_LABEL:
+			field.Value = &openflow_13.OfpOxmOfbField_MplsLabel{
 				MplsLabel: val.(uint32),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_BOS:
-			field.Value = &voltha.OfpOxmOfbField_MplsBos{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_BOS:
+			field.Value = &openflow_13.OfpOxmOfbField_MplsBos{
 				MplsBos: uint32(val.(uint8)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_TC:
-			field.Value = &voltha.OfpOxmOfbField_MplsTc{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_MPLS_TC:
+			field.Value = &openflow_13.OfpOxmOfbField_MplsTc{
 				MplsTc: val.(uint32),
 			}
 		case 200: // voltha-protos doesn't actually have a type for vlan_mask
-			field = voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
+			field = openflow_13.OfpOxmOfbField{Type: openflow_13.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
 			field.HasMask = true
-			ofpOxmField = voltha.OfpOxmField{
+			ofpOxmField = openflow_13.OfpOxmField{
 				OxmClass: ofp.OFPXMCOpenflowBasic,
 				Field:    &openflow_13.OfpOxmField_OfbField{OfbField: &field},
 			}
-			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+			field.Value = &openflow_13.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32(val.(uint16)),
 			}
 			vidMask := val.(uint16)
-			field.Mask = &voltha.OfpOxmOfbField_VlanVidMask{
+			field.Mask = &openflow_13.OfpOxmOfbField_VlanVidMask{
 				VlanVidMask: uint32(vidMask),
 			}
 		}
@@ -181,10 +180,10 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 	}
 
 	// Construct the instructions
-	var instructions []*voltha.OfpInstruction
+	var instructions []*openflow_13.OfpInstruction
 	for _, ofpInstruction := range flowAdd.GetInstructions() {
 		instructionType := ofpInstruction.GetType()
-		instruction := voltha.OfpInstruction{Type: uint32(instructionType)}
+		instruction := openflow_13.OfpInstruction{Type: uint32(instructionType)}
 		switch instructionType {
 		case ofp.OFPITGotoTable:
 			instruction.Data = &openflow_13.OfpInstruction_GotoTable{
@@ -232,11 +231,11 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 	// Construct the request
 	flowUpdate := openflow_13.FlowTableUpdate{
 		Id: ofc.DeviceID,
-		FlowMod: &voltha.OfpFlowMod{
+		FlowMod: &openflow_13.OfpFlowMod{
 			Cookie:      flowAdd.Cookie,
 			CookieMask:  flowAdd.CookieMask,
 			TableId:     uint32(flowAdd.TableId),
-			Command:     voltha.OfpFlowModCommand_OFPFC_ADD,
+			Command:     openflow_13.OfpFlowModCommand_OFPFC_ADD,
 			IdleTimeout: uint32(flowAdd.IdleTimeout),
 			HardTimeout: uint32(flowAdd.HardTimeout),
 			Priority:    uint32(flowAdd.Priority),
@@ -244,8 +243,8 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 			OutPort:     uint32(flowAdd.OutPort),
 			OutGroup:    uint32(flowAdd.OutGroup),
 			Flags:       uint32(flowAdd.Flags),
-			Match: &voltha.OfpMatch{
-				Type:      voltha.OfpMatchType(flowAdd.Match.GetType()),
+			Match: &openflow_13.OfpMatch{
+				Type:      openflow_13.OfpMatchType(flowAdd.Match.GetType()),
 				OxmFields: oxmList,
 			},
 
@@ -363,76 +362,76 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	}
 
 	// Construct match
-	var oxmList []*voltha.OfpOxmField
+	var oxmList []*openflow_13.OfpOxmField
 	for _, oxmField := range flowDeleteStrict.Match.GetOxmList() {
 		name := oxmMap[oxmField.GetOXMName()]
 		val := oxmField.GetOXMValue()
-		var ofpOxmField voltha.OfpOxmField
+		var ofpOxmField openflow_13.OfpOxmField
 		ofpOxmField.OxmClass = ofp.OFPXMCOpenflowBasic
-		var field voltha.OfpOxmOfbField
-		field.Type = voltha.OxmOfbFieldTypes(name)
+		var field openflow_13.OfpOxmOfbField
+		field.Type = openflow_13.OxmOfbFieldTypes(name)
 
 		var x openflow_13.OfpOxmField_OfbField
 		x.OfbField = &field
 		ofpOxmField.Field = &x
 
-		switch voltha.OxmOfbFieldTypes(name) {
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
-			field.Value = &voltha.OfpOxmOfbField_Port{
+		switch openflow_13.OxmOfbFieldTypes(name) {
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PORT:
+			field.Value = &openflow_13.OfpOxmOfbField_Port{
 				Port: uint32(val.(ofp.Port)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
-			field.Value = &voltha.OfpOxmOfbField_PhysicalPort{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IN_PHY_PORT:
+			field.Value = &openflow_13.OfpOxmOfbField_PhysicalPort{
 				PhysicalPort: val.(uint32),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
-			field.Value = &voltha.OfpOxmOfbField_TableMetadata{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_METADATA:
+			field.Value = &openflow_13.OfpOxmOfbField_TableMetadata{
 				TableMetadata: val.(uint64),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
-			field.Value = &voltha.OfpOxmOfbField_EthType{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_TYPE:
+			field.Value = &openflow_13.OfpOxmOfbField_EthType{
 				EthType: uint32(val.(ofp.EthernetType)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
-			field.Value = &voltha.OfpOxmOfbField_IpProto{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IP_PROTO:
+			field.Value = &openflow_13.OfpOxmOfbField_IpProto{
 				IpProto: uint32(val.(ofp.IpPrototype)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
-			field.Value = &voltha.OfpOxmOfbField_Ipv4Dst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_IPV4_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_Ipv4Dst{
 				Ipv4Dst: binary.BigEndian.Uint32(val.(net.IP)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
-			field.Value = &voltha.OfpOxmOfbField_EthDst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_EthDst{
 				EthDst: val.(net.HardwareAddr),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
-			field.Value = &voltha.OfpOxmOfbField_UdpSrc{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
+			field.Value = &openflow_13.OfpOxmOfbField_UdpSrc{
 				UdpSrc: uint32(val.(uint16)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
-			field.Value = &voltha.OfpOxmOfbField_UdpDst{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_DST:
+			field.Value = &openflow_13.OfpOxmOfbField_UdpDst{
 				UdpDst: uint32(val.(uint16)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
-			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_VID:
+			field.Value = &openflow_13.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32(val.(uint16)),
 			}
-		case voltha.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
-			field.Value = &voltha.OfpOxmOfbField_VlanPcp{
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_VLAN_PCP:
+			field.Value = &openflow_13.OfpOxmOfbField_VlanPcp{
 				VlanPcp: uint32(val.(uint8)),
 			}
 		case 200: // voltha-protos doesn't actually have a type for vlan_mask
-			field = voltha.OfpOxmOfbField{Type: voltha.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
+			field = openflow_13.OfpOxmOfbField{Type: openflow_13.OxmOfbFieldTypes(oxmMap["vlan_vid"])}
 			field.HasMask = true
-			ofpOxmField = voltha.OfpOxmField{
+			ofpOxmField = openflow_13.OfpOxmField{
 				OxmClass: ofp.OFPXMCOpenflowBasic,
 				Field:    &openflow_13.OfpOxmField_OfbField{OfbField: &field},
 			}
-			field.Value = &voltha.OfpOxmOfbField_VlanVid{
+			field.Value = &openflow_13.OfpOxmOfbField_VlanVid{
 				VlanVid: uint32(val.(uint16)),
 			}
 			vidMask := val.(uint16)
-			field.Mask = &voltha.OfpOxmOfbField_VlanVidMask{
+			field.Mask = &openflow_13.OfpOxmOfbField_VlanVidMask{
 				VlanVidMask: uint32(vidMask),
 			}
 		}
@@ -449,11 +448,11 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	// Construct request
 	flowUpdate := openflow_13.FlowTableUpdate{
 		Id: ofc.DeviceID,
-		FlowMod: &voltha.OfpFlowMod{
+		FlowMod: &openflow_13.OfpFlowMod{
 			Cookie:      flowDeleteStrict.Cookie,
 			CookieMask:  flowDeleteStrict.CookieMask,
 			TableId:     uint32(flowDeleteStrict.TableId),
-			Command:     voltha.OfpFlowModCommand_OFPFC_DELETE_STRICT,
+			Command:     openflow_13.OfpFlowModCommand_OFPFC_DELETE_STRICT,
 			IdleTimeout: uint32(flowDeleteStrict.IdleTimeout),
 			HardTimeout: uint32(flowDeleteStrict.HardTimeout),
 			Priority:    uint32(flowDeleteStrict.Priority),
@@ -461,8 +460,8 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 			OutPort:     uint32(flowDeleteStrict.OutPort),
 			OutGroup:    uint32(flowDeleteStrict.OutGroup),
 			Flags:       uint32(flowDeleteStrict.Flags),
-			Match: &voltha.OfpMatch{
-				Type:      voltha.OfpMatchType(flowDeleteStrict.Match.GetType()),
+			Match: &openflow_13.OfpMatch{
+				Type:      openflow_13.OfpMatchType(flowDeleteStrict.Match.GetType()),
 				OxmFields: oxmList,
 			},
 		},
