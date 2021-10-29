@@ -188,6 +188,14 @@ top:
 			case ofcEventStop:
 				logger.Debugw(ctx, "ofc-event-stop",
 					log.Fields{"device-id": ofc.DeviceID})
+				// check for empty send channel to make sure we are not loosing any message to the controller
+				for len(ofc.sendChannel) != 0 {
+					logger.Debugw(ctx, "wait-for-empty-send-channel-to-close-connection",
+						log.Fields{
+							"device-id":      ofc.DeviceID,
+							"len of channel": len(ofc.sendChannel),
+							"event":          event.String()})
+				}
 				if state == ofcStateCreated || state == ofcStateConnected || state == ofcStateDisconnected {
 					state = ofcStateStopped
 					break top
