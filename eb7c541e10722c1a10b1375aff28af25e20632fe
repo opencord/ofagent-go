@@ -22,6 +22,30 @@
       },
       "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a451ad7d_2d3ad255",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2021-10-29T15:28:36Z",
+      "side": 1,
+      "message": "I think my code has a mistake below may be correct\n\nif len(ofc.sendChannel) !\u003d 0 {\n    logger.Debugw(ctx, \"wait-for-empty-send-channel-to-close-connection\",\n\t\t\t\t\t\tlog.Fields{\n\t\t\t\t\t\t\t\"device-id\":      ofc.DeviceID,\n\t\t\t\t\t\t\t\"len of channel\": len(ofc.sendChannel),\n\t\t\t\t\t\t\t\"event\":          event.String()})\n    for {\n        if len(ofc.sendChannel) !\u003d 0 {\n            time.Sleep(1 * time.MilliSecond)\n            continue\n        }\n        break \n    }\n}",
+      "parentUuid": "be5f9184_b11a1ca8",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 41
+      },
+      "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
