@@ -70,6 +70,30 @@
       },
       "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4682695_00b538ca",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2021-11-02T16:16:27Z",
+      "side": 1,
+      "message": "The issue with for loop doing nothing in your example is compilers optimize such code usually (at least I have seen that in c and c++) where it just removes that part of the code where it does nothing. At least we need to have a debug or a sleep or both.",
+      "parentUuid": "9b536e9d_b8fb7f38",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 41
+      },
+      "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
