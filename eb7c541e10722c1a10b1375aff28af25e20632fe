@@ -46,6 +46,30 @@
       },
       "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b536e9d_b8fb7f38",
+        "filename": "internal/pkg/openflow/connection.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-11-02T15:06:21Z",
+      "side": 1,
+      "message": "yes, this will cause a dump of the logs, but for one I do not expect this to be a huge number of messages and also with the length you actually are double-checking. \none way to do it with just one log would be \nlogger.Debugw(ctx, \"wait-for-empty-send-channel-to-close-connection\", ....\n\nfor len(ofc.sendChannel) !\u003d 0 {\n// doing nothing \n}\n\nthoughts ?",
+      "parentUuid": "a451ad7d_2d3ad255",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 41
+      },
+      "revId": "eb7c541e10722c1a10b1375aff28af25e20632fe",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
