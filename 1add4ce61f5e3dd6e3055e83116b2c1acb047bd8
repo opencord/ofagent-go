@@ -16,6 +16,24 @@
       "message": "Should the lock be before the ofa.clientMap[deviceID].Stop()?",
       "revId": "1add4ce61f5e3dd6e3055e83116b2c1acb047bd8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b590b2bd_0da0a8c1",
+        "filename": "internal/pkg/ofagent/changeEvent.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-11-19T22:15:36Z",
+      "side": 1,
+      "message": "more secure, yes",
+      "parentUuid": "3d1123bf_f4d57c9c",
+      "revId": "1add4ce61f5e3dd6e3055e83116b2c1acb047bd8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
