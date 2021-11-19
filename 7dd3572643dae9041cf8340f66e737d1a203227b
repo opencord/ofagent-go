@@ -16,6 +16,24 @@
       "message": "Is this going to spin without a backoff?   Should connection.lastUnsentMessage be access directly or behind a function that has a lock?",
       "revId": "7dd3572643dae9041cf8340f66e737d1a203227b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbf9b49d_1fad1cf5",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-11-19T19:52:21Z",
+      "side": 1,
+      "message": "unless there are errors and we do not clean up properly this will finish. The connection.lastUnsentMessage did not have a lock before, but that\u0027s actually something we shoudl probably put in, will do",
+      "parentUuid": "080a724d_720c1bc2",
+      "revId": "7dd3572643dae9041cf8340f66e737d1a203227b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
