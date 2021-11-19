@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "080a724d_720c1bc2",
+        "filename": "internal/pkg/openflow/client.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-11-19T19:43:27Z",
+      "side": 1,
+      "message": "Is this going to spin without a backoff?   Should connection.lastUnsentMessage be access directly or behind a function that has a lock?",
+      "revId": "7dd3572643dae9041cf8340f66e737d1a203227b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
