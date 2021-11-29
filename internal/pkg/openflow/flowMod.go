@@ -19,7 +19,6 @@ package openflow
 import (
 	"context"
 	"encoding/binary"
-	"encoding/json"
 	"net"
 
 	ofp "github.com/opencord/goloxi/of13"
@@ -76,11 +75,10 @@ func (ofc *OFConnection) handleFlowAdd(ctx context.Context, flowAdd *ofp.FlowAdd
 	defer span.Finish()
 
 	if logger.V(log.DebugLevel) {
-		js, _ := json.Marshal(flowAdd)
 		logger.Debugw(ctx, "handleFlowAdd called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
-				"params":    js})
+				"flow":      flowAdd})
 	}
 
 	volthaClient := ofc.VolthaClient.Get()
@@ -301,11 +299,10 @@ func (ofc *OFConnection) handleFlowMod(ctx context.Context, flowMod *ofp.FlowMod
 	defer span.Finish()
 
 	if logger.V(log.DebugLevel) {
-		js, _ := json.Marshal(flowMod)
 		logger.Debugw(ctx, "handleFlowMod called",
 			log.Fields{
 				"device-id": ofc.DeviceID,
-				"flow-mod":  js})
+				"flow-mod":  flowMod})
 	}
 	logger.Errorw(ctx, "handleFlowMod not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
@@ -316,11 +313,10 @@ func (ofc *OFConnection) handleFlowModStrict(ctx context.Context, flowModStrict 
 	defer span.Finish()
 
 	if logger.V(log.DebugLevel) {
-		js, _ := json.Marshal(flowModStrict)
 		logger.Debugw(ctx, "handleFlowModStrict called",
 			log.Fields{
 				"device-id":       ofc.DeviceID,
-				"flow-mod-strict": js})
+				"flow-mod-strict": flowModStrict})
 	}
 	logger.Error(ctx, "handleFlowModStrict not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
@@ -331,11 +327,10 @@ func (ofc *OFConnection) handleFlowDelete(ctx context.Context, flowDelete *ofp.F
 	defer span.Finish()
 
 	if logger.V(log.DebugLevel) {
-		js, _ := json.Marshal(flowDelete)
 		logger.Debugw(ctx, "handleFlowDelete called",
 			log.Fields{
 				"device-id":   ofc.DeviceID,
-				"flow-delete": js})
+				"flow-delete": flowDelete})
 	}
 	logger.Error(ctx, "handleFlowDelete not implemented",
 		log.Fields{"device-id": ofc.DeviceID})
@@ -347,11 +342,10 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	defer span.Finish()
 
 	if logger.V(log.DebugLevel) {
-		js, _ := json.Marshal(flowDeleteStrict)
 		logger.Debugw(ctx, "handleFlowDeleteStrict called",
 			log.Fields{
-				"device-id":          ofc.DeviceID,
-				"flow-delete-strict": js})
+				"device-id": ofc.DeviceID,
+				"flow":      flowDeleteStrict})
 	}
 
 	volthaClient := ofc.VolthaClient.Get()
@@ -469,11 +463,10 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 	}
 
 	if logger.V(log.DebugLevel) {
-		flowUpdateJs, _ := json.Marshal(flowUpdate)
 		logger.Debugf(ctx, "FlowDeleteStrict being sent to Voltha",
 			log.Fields{
 				"device-id":   ofc.DeviceID,
-				"flow-update": flowUpdateJs})
+				"flow-update": flowUpdate})
 	}
 
 	if _, err := volthaClient.UpdateLogicalDeviceFlowTable(log.WithSpanFromContext(context.Background(), ctx), &flowUpdate); err != nil {
