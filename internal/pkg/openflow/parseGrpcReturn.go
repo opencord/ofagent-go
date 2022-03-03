@@ -118,6 +118,11 @@ func parseOxm(ctx context.Context, ofbField *openflow_13.OfpOxmOfbField) (goloxi
 		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthDst)
 		ofpEthDst.Value = val.EthDst
 		return ofpEthDst, nil
+	case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC:
+		ofpEthSrc := ofp.NewOxmEthSrc()
+		val := ofbField.GetValue().(*openflow_13.OfpOxmOfbField_EthSrc)
+		ofpEthSrc.Value = val.EthSrc
+		return ofpEthSrc, nil
 	default:
 		if logger.V(log.WarnLevel) {
 			js, _ := json.Marshal(ofbField)
