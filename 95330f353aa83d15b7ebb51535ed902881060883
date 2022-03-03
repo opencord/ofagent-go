@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "328ac9b1_17dd0c0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2022-03-03T19:53:42Z",
+      "side": 1,
+      "message": "Looks good.\nNeeds version update to 2.1.0. The last tag version is 2.0.1, that was released for voltha-2.9 release. For voltha-2.10 let\u0027s begin with a bump in minor patch version, and that will be 2.1.0.",
+      "revId": "95330f353aa83d15b7ebb51535ed902881060883",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
