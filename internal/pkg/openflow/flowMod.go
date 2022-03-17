@@ -398,6 +398,10 @@ func (ofc *OFConnection) handleFlowDeleteStrict(ctx context.Context, flowDeleteS
 			field.Value = &openflow_13.OfpOxmOfbField_EthDst{
 				EthDst: val.(net.HardwareAddr),
 			}
+		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_ETH_SRC:
+			field.Value = &openflow_13.OfpOxmOfbField_EthSrc{
+				EthSrc: val.(net.HardwareAddr),
+			}
 		case openflow_13.OxmOfbFieldTypes_OFPXMT_OFB_UDP_SRC:
 			field.Value = &openflow_13.OfpOxmOfbField_UdpSrc{
 				UdpSrc: uint32(val.(uint16)),
