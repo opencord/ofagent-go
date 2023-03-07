@@ -15,6 +15,6 @@ require (
 	github.com/opencord/voltha-lib-go/v7 v7.1.3
 	github.com/opencord/voltha-protos/v5 v5.1.2
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
+	golang.org/x/net v0.7.0
 	google.golang.org/grpc v1.42.0
 )
