@@ -24,6 +24,8 @@ import (
 	"github.com/opencord/voltha-protos/v5/go/extension"
 	"github.com/opencord/voltha-protos/v5/go/omci"
 	"github.com/opencord/voltha-protos/v5/go/openflow_13"
+	"github.com/opencord/voltha-protos/v5/go/voip_system_profile"
+	"github.com/opencord/voltha-protos/v5/go/voip_user_profile"
 	. "github.com/opencord/voltha-protos/v5/go/voltha"
 	"google.golang.org/grpc"
 )
@@ -287,4 +289,23 @@ func (c MockVolthaClient) GetImageStatus(ctx context.Context, imageRequest *Devi
 
 func (c MockVolthaClient) GetOnuImages(ctx context.Context, id *common.ID, opts ...grpc.CallOption) (*OnuImages, error) {
 	return &OnuImages{}, nil
+}
+
+func (c MockVolthaClient) PutVoipSystemProfile(ctx context.Context, in *voip_system_profile.VoipSystemProfileRequest, opts ...grpc.CallOption) (*Empty, error) {
+
+	return nil, nil
+}
+
+func (c MockVolthaClient) DeleteVoipSystemProfile(ctx context.Context, in *common.Key, opts ...grpc.CallOption) (*Empty, error) {
+
+	return nil, nil
+}
+
+func (c MockVolthaClient) PutVoipUserProfile(ctx context.Context, in *voip_user_profile.VoipUserProfileRequest, opts ...grpc.CallOption) (*Empty, error) {
+
+	return nil, nil
+}
+
+func (c MockVolthaClient) DeleteVoipUserProfile(ctx context.Context, in *common.Key, opts ...grpc.CallOption) (*Empty, error) {
+	return nil, nil
 }
