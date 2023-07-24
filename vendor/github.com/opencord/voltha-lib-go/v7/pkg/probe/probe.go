@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-present Open Networking Foundation
+ * Copyright 2019-2023 Open Networking Foundation (ONF) and the ONF Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -275,6 +275,8 @@ func (p *Probe) ListenAndServe(ctx context.Context, address string) {
 }
 
 func (p *Probe) IsReady() bool {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
 	return p.isReady
 }
 
