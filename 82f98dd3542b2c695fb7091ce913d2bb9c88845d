@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8337f89b_3080fcca",
+        "filename": "go.mod",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000948
+      },
+      "writtenOn": "2023-07-25T16:14:08Z",
+      "side": 1,
+      "message": "v1.44.0 -- good if you did not encounter this, just be aware of a lingering upgrade problem with higher versions of grpc:\n   https://jira.opencord.org/browse/VOL-5089",
+      "revId": "82f98dd3542b2c695fb7091ce913d2bb9c88845d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3aa58412_73904759",
+        "filename": "vendor/github.com/go-redis/redis/v8/Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000948
+      },
+      "writtenOn": "2023-07-25T16:14:08Z",
+      "side": 1,
+      "message": "minor suggestions:\n  - relocate testing commands from generic all target:\n    - Named target with prefix test-*\n    - this will logically group and label commands for testing.\n  - Refactor golangci-lint into a standalone target lint-go:\n    - Available for interactive use.\n    - Target reuse becomes \"$(MAKE) --no-print-directory lint-go\"\n  - These edits support independent target use:\n    - make lint\n    - make lint-go\n    - make test\n    - make test-{something}\n\n\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n.DEFAULT_GOAL: test-{something}   # another option is define and use target \u0027help\u0027\n\nall:\n\ntest : test-{something}\n\ntest-{something} : testdeps\n   go test ./...",
+      "revId": "82f98dd3542b2c695fb7091ce913d2bb9c88845d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
