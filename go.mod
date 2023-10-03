@@ -18,3 +18,5 @@ require (
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 	google.golang.org/grpc v1.44.0
 )
+
+replace github.com/opencord/voltha-protos/v5 v5.4.6 => github.com/opencord/voltha-protos/v5 v5.4.10
