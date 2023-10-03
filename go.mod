@@ -13,7 +13,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/opencord/goloxi v1.0.1
 	github.com/opencord/voltha-lib-go/v7 v7.4.5
-	github.com/opencord/voltha-protos/v5 v5.4.9
+	github.com/opencord/voltha-protos/v5 v5.4.10
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 	google.golang.org/grpc v1.44.0
