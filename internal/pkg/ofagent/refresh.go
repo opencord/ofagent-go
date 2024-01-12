@@ -125,7 +125,7 @@ func (ofa *OFAgent) getOFClient(ctx context.Context, deviceID string) *openflow.
 	return ofc
 }
 
-//clearAllOFClient clears all OF connections for all clients
+// clearAllOFClient clears all OF connections for all clients
 func (ofa *OFAgent) clearAllOFClient() {
 	logger.Debug(context.Background(), "stopping-all-of-connections...")
 	ofa.mapLock.Lock()
