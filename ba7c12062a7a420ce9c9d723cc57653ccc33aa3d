@@ -22,6 +22,30 @@
       },
       "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "072a5f56_b23ad47e",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000218
+      },
+      "writtenOn": "2024-01-13T00:17:07Z",
+      "side": 1,
+      "message": "And also 7.5.2 seems like a version on 2.12 branch ,not on master",
+      "parentUuid": "72138d62_b41780de",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
