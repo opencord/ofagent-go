@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72138d62_b41780de",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000218
+      },
+      "writtenOn": "2024-01-13T00:06:03Z",
+      "side": 1,
+      "message": "This version of lib does not include voltha-protos 5.4.11. First voltha-lib-go should be updated for voltha-protos dependency.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
