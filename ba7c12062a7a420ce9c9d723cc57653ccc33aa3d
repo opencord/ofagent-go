@@ -70,6 +70,30 @@
       },
       "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4dcdd7b6_868f0209",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000218
+      },
+      "writtenOn": "2024-01-13T00:36:18Z",
+      "side": 1,
+      "message": "the latest version of protos on master is v5.4.10\nThe go.mod file of voltha-lib-go should be changed to include voltha-protos v5.4.10 and its version should be increased to  7.5.x.\nThen of-agent-go, voltha-openonu-adapter-go, voltha-openolt-adapter and voltha-go should be changed to include these new versions of voltha-protos and voltha-lib-go in their go.mod files. And these all should be on master.\nThen the master can be updated to -dev versions. But the release tag should be applied to the master before the -dev versions.",
+      "parentUuid": "f61b42cf_2b7dbca1",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
