@@ -46,6 +46,30 @@
       },
       "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f61b42cf_2b7dbca1",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000948
+      },
+      "writtenOn": "2024-01-13T00:25:32Z",
+      "side": 1,
+      "message": "5.4.11 -\u003e that would be sign for enough release patches for one day.\nprotos was updated for voltha-lib-go in the release branch but not master.\nWill fix this in the morning.\n\n\nv7.5.2 -- the release branch originates on the master branch.  Cleanup, update dependencies, etc then create the branch.\n\ngo.mod on the master branch can be updated to 7.6.0-dev after the release branch is created for repo:ofagent-go",
+      "parentUuid": "072a5f56_b23ad47e",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
