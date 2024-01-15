@@ -94,6 +94,30 @@
       },
       "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91f35145_b8e82d8c",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000948
+      },
+      "writtenOn": "2024-01-15T21:25:36Z",
+      "side": 1,
+      "message": "The truth for versioning atm will live on the release branch.\n\nFor ex: v5.4.11\nhttps://gerrit.opencord.org/plugins/gitiles/voltha-protos/+/refs/tags/v5.4.11\n\nThis is why I mentioned yeterday, getting tired and that was enough patching for the day\nVersions were updated for release on the branch (votha-protos) but still need to propogate up to master.\n\nVERSION (*-dev) and .gitrelease (defaultbranch\u003dmaster) were updated",
+      "parentUuid": "4dcdd7b6_868f0209",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "ba7c12062a7a420ce9c9d723cc57653ccc33aa3d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
