@@ -58,7 +58,7 @@ github.com/grpc-ecosystem/go-grpc-middleware/util/metautils
 ## explicit
 github.com/opencord/goloxi
 github.com/opencord/goloxi/of13
-# github.com/opencord/voltha-lib-go/v7 v7.5.2
+# github.com/opencord/voltha-lib-go/v7 v7.5.3
 ## explicit
 github.com/opencord/voltha-lib-go/v7/pkg/config
 github.com/opencord/voltha-lib-go/v7/pkg/db
